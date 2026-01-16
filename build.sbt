@@ -12,6 +12,8 @@ lazy val root = (project in file("."))
     name := "xskernel-chisel",
 
     Compile / unmanagedSourceDirectories ++= Seq(
+      baseDirectory.value / "OpenFloat" / "src" / "main" / "scala" / "FloatingPoint",
+      baseDirectory.value / "OpenFloat" / "src" / "main" / "scala" / "Primitives",
       baseDirectory.value / "rial-tmpfix" / "src" / "main" / "scala",
       baseDirectory.value / "berkeley-hardfloat" / "hardfloat" / "src" / "main" / "scala"
     ),
