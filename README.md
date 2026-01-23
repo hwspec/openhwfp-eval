@@ -1,5 +1,10 @@
-
 =======================
+
+This repository is under construction.
+
+It will include testbenches and use-case examples for open-source hardware floating-point libraries, along with scripts to perform area estimation using OpenROAD and to generate a web-based report.
+
+Contents will be migrated from our private repository shortly.
 
 
 ### Dependencies
