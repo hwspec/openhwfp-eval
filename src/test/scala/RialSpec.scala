@@ -9,6 +9,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import rial.arith.{FusedMulAddFPGeneric, AddFPGeneric, MultFPGeneric, RealGeneric, RealSpec, RoundSpec}
 import rial.math.FuncKind._
+import rial.math.FuncKind
 import rial.math.{MathFuncConfig, MathFuncPipelineConfig, MathFunctions}
 import rial.util.PipelineStageConfig
 import rial.util.ScalaUtil._
@@ -156,7 +157,7 @@ class FP16Test extends AnyFlatSpec {
     val nOrderFP16 = 1  // Reduced from 2 since we have less precision
     val adrWFP16 = 4    // Reduced to 4 bits (16 segments) for FP16
     val extraBitsFP16 = 2  // Reduced from 3 since we have less precision
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(Reciprocal))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(Reciprocal)))
     val spec = RealSpec.Float16Spec
 
     simulate(new MathFunctions(fncfg, spec, nOrderFP16, adrWFP16, extraBitsFP16,
@@ -198,7 +199,7 @@ class FP16Test extends AnyFlatSpec {
     val nOrderFP16 = 1  // Reduced from 2 since we have less precision
     val adrWFP16 = 4    // Reduced to 4 bits (16 segments) for FP16
     val extraBitsFP16 = 2  // Reduced from 3 since we have less precision
-    val fncfgsqrt: MathFuncConfig = new MathFuncConfig(Seq(Sqrt))
+    val fncfgsqrt: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(Sqrt)))
     val spec = RealSpec.Float16Spec
 
     simulate(new MathFunctions(fncfgsqrt, spec, nOrderFP16, adrWFP16, extraBitsFP16,
@@ -251,7 +252,7 @@ class FP16Test extends AnyFlatSpec {
     val nOrderFP16 = 1  // Reduced from 2 for less precision
     val adrWFP16 = 4   // 4 bits for 16 segments
     val extraBitsFP16 = 2  // Reduced from 3
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(Exp))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(Exp)))
     val spec = RealSpec.Float16Spec
 
     simulate(new MathFunctions(fncfg, spec, nOrderFP16, adrWFP16, extraBitsFP16,
@@ -310,7 +311,7 @@ class FP16Test extends AnyFlatSpec {
     val nOrderFP16 = 1  // Reduced from 2 since we have less precision
     val adrWFP16 = 4    // Reduced to 4 bits (16 segments) for FP16
     val extraBitsFP16 = 2
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(InvSqrt))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(InvSqrt)))
     val spec = RealSpec.Float16Spec
 
     simulate(new MathFunctions(fncfg, spec, nOrderFP16, adrWFP16, extraBitsFP16,
@@ -380,7 +381,7 @@ class FP16Test extends AnyFlatSpec {
     val nOrderFP16 = 1  // Reduced from 2 since we have less precision
     val adrWFP16 = 4    // Reduced to 4 bits (16 segments) for FP16
     val extraBitsFP16 = 2
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(Log))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(Log)))
     val spec = RealSpec.Float16Spec
 
     simulate(new MathFunctions(fncfg, spec, nOrderFP16, adrWFP16, extraBitsFP16,
@@ -438,7 +439,7 @@ class FP16Test extends AnyFlatSpec {
     val nOrderFP16 = 1
     val adrWFP16 = 4
     val extraBitsFP16 = 2
-    val fncfg = new MathFuncConfig(Seq(Sigmoid))
+    val fncfg = new MathFuncConfig(FuncKind.normalize(Seq(Sigmoid)))
     val spec = RealSpec.Float16Spec
     val rnd = new Random()
 
@@ -519,7 +520,7 @@ class FP16Test extends AnyFlatSpec {
     val nOrderFP16 = 1  // Reduced from 2 since we have less precision
     val adrWFP16 = 4    // Reduced to 4 bits (16 segments) for FP16
     val extraBitsFP16 = 2  // Reduced from 3
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(Sqrt, ACosPhase1, ACosPhase2))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(Sqrt, ACosPhase1, ACosPhase2)))
     val spec = RealSpec.Float16Spec
     val pipelineConfig = new MathFuncPipelineConfig(
       PipelineStageConfig.atOut(1),
@@ -615,7 +616,7 @@ class FP16Test extends AnyFlatSpec {
     val nOrderFP16 = 1
     val adrWFP16 = 4
     val extraBitsFP16 = 2
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(Sin))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(Sin)))
     val spec = RealSpec.Float16Spec
 
     simulate(new MathFunctions(fncfg, spec, nOrderFP16, adrWFP16, extraBitsFP16,
@@ -676,7 +677,7 @@ class FP16Test extends AnyFlatSpec {
     val nOrderFP16 = 1
     val adrWFP16 = 4
     val extraBitsFP16 = 2
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(Cos))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(Cos)))
     val spec = RealSpec.Float16Spec
 
     simulate(new MathFunctions(fncfg, spec, nOrderFP16, adrWFP16, extraBitsFP16,
@@ -736,7 +737,7 @@ class FP16Test extends AnyFlatSpec {
     val nOrderFP16 = 1
     val adrWFP16 = 4
     val extraBitsFP16 = 2
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(SoftPlus))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(SoftPlus)))
     val spec = RealSpec.Float16Spec
 
     simulate(new MathFunctions(fncfg, spec, nOrderFP16, adrWFP16, extraBitsFP16,
@@ -817,7 +818,7 @@ This test verifies the implementation against the reference implementation.
     val spec = RealSpec.Float16Spec
     val sgmA = exp(-1.0)
     val sgmB = exp(-6.0)
-    val fncfg = new MathFuncConfig(Seq(ScaleMixtureGaussian), Some((sgmA, sgmB)))
+    val fncfg = new MathFuncConfig(FuncKind.normalize(Seq(ScaleMixtureGaussian)), Some((sgmA, sgmB)))
     // Generate FP16-specific table for reference simulation
     val smg16FP16TableI = ScaleMixtureGaussianSim.tableGeneration(
       nOrderFP16, adrWFP16, spec.manW, spec.manW + extraBitsFP16, sgmA, sgmB
@@ -967,7 +968,7 @@ This test uses random inputs in Quadrants 1,2,3 and 4 to verify the pipeline.
 =========================""")
 
     val spec = RealSpec.Float16Spec
-    val fncfg = new MathFuncConfig(Seq(Reciprocal,ATan2Phase1, ATan2Phase2))
+    val fncfg = new MathFuncConfig(FuncKind.normalize(Seq(Reciprocal, ATan2Phase1, ATan2Phase2)))
     val pipelineConfig = new MathFuncPipelineConfig(
       preStage = PipelineStageConfig.atOut(1),
       preMulStage = PipelineStageConfig.atOut(1),
@@ -1218,7 +1219,7 @@ class FP32Test extends AnyFlatSpec /* with ChiselSim */ {
     val nOrderFP32 = 2
     val adrWFP32 = 8
     val extraBitsFP32 = 3
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(Reciprocal)) // MathFuncConfig.all
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(Reciprocal))) // MathFuncConfig.all
     val spec = RealSpec.Float32Spec
 
     simulate(new MathFunctions(fncfg, spec, nOrderFP32, adrWFP32, extraBitsFP32,
@@ -1259,7 +1260,7 @@ class FP32Test extends AnyFlatSpec /* with ChiselSim */ {
     val nOrderFP32 = 2
     val adrWFP32 = 8
     val extraBitsFP32 = 3
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(Sqrt))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(Sqrt)))
     val spec = RealSpec.Float32Spec
 
     simulate(new MathFunctions(fncfg, spec, nOrderFP32, adrWFP32, extraBitsFP32,
@@ -1301,7 +1302,7 @@ class FP32Test extends AnyFlatSpec /* with ChiselSim */ {
     val nOrderFP32 = 2
     val adrWFP32 = 8
     val extraBitsFP32 = 3
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(Exp))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(Exp)))
     val spec = RealSpec.Float32Spec
 
     simulate(new MathFunctions(fncfg, spec, nOrderFP32, adrWFP32, extraBitsFP32,
@@ -1361,7 +1362,7 @@ class FP32Test extends AnyFlatSpec /* with ChiselSim */ {
     val nOrderFP32 = 2
     val adrWFP32 = 8
     val extraBitsFP32 = 3
-    val fncfginvsqrt: MathFuncConfig = new MathFuncConfig(Seq(InvSqrt))
+    val fncfginvsqrt: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(InvSqrt)))
     val spec = RealSpec.Float32Spec
 
     simulate(new MathFunctions(fncfginvsqrt, spec, nOrderFP32, adrWFP32, extraBitsFP32,
@@ -1441,7 +1442,7 @@ This test uses random inputs in Quadrants 1,2,3, and 4 to verify the pipeline.
 =========================""")
 
     val spec = RealSpec.Float32Spec
-    val fncfg = new MathFuncConfig(Seq(ATan2Phase1, ATan2Phase2, Reciprocal))
+    val fncfg = new MathFuncConfig(FuncKind.normalize(Seq(ATan2Phase1, ATan2Phase2, Reciprocal)))
     val pipelineConfig = new MathFuncPipelineConfig(
       preStage = PipelineStageConfig.atOut(1),
       preMulStage = PipelineStageConfig.atOut(1),
@@ -1615,7 +1616,7 @@ Error (final):   $err4_2 (${scala.math.toDegrees(err4_2)}°)
     val nOrderFP32 = 2
     val adrWFP32 = 8
     val extraBitsFP32 = 3
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(Log))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(Log)))
     val spec = RealSpec.Float32Spec
 
     simulate(new MathFunctions(fncfg, spec, nOrderFP32, adrWFP32, extraBitsFP32,
@@ -1672,7 +1673,7 @@ Error (final):   $err4_2 (${scala.math.toDegrees(err4_2)}°)
     val nOrderFP32 = 2
     val adrWFP32 = 8
     val extraBitsFP32 = 3
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(Sqrt, ACosPhase1, ACosPhase2))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(Sqrt, ACosPhase1, ACosPhase2)))
     val spec = RealSpec.Float32Spec
     val pipelineConfig = new MathFuncPipelineConfig(
       PipelineStageConfig.atOut(1),
@@ -1795,7 +1796,7 @@ Error (final):   $err4_2 (${scala.math.toDegrees(err4_2)}°)
     val nOrderFP32 = 2
     val adrWFP32 = 8
     val extraBitsFP32 = 3
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(Sin))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(Sin)))
     val spec = RealSpec.Float32Spec
 
     simulate(new MathFunctions(fncfg, spec, nOrderFP32, adrWFP32, extraBitsFP32,
@@ -1852,7 +1853,7 @@ Error (final):   $err4_2 (${scala.math.toDegrees(err4_2)}°)
     val nOrderFP32 = 2
     val adrWFP32 = 8
     val extraBitsFP32 = 3
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(Cos))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(Cos)))
     val spec = RealSpec.Float32Spec
 
     simulate(new MathFunctions(fncfg, spec, nOrderFP32, adrWFP32, extraBitsFP32,
@@ -1905,7 +1906,7 @@ Error (final):   $err4_2 (${scala.math.toDegrees(err4_2)}°)
     val nOrderFP32 = 2
     val adrWFP32 = 8
     val extraBitsFP32 = 3
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(SoftPlus))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(SoftPlus)))
     val spec = RealSpec.Float32Spec
 
     simulate(new MathFunctions(fncfg, spec, nOrderFP32, adrWFP32, extraBitsFP32,
@@ -1984,7 +1985,7 @@ This test verifies the implementation against the reference implementation.
     val spec = RealSpec.Float32Spec
     val sgmA = exp(-1.0)
     val sgmB = exp(-6.0)
-    val fncfg = new MathFuncConfig(Seq(ScaleMixtureGaussian), Some((sgmA, sgmB)))
+    val fncfg = new MathFuncConfig(FuncKind.normalize(Seq(ScaleMixtureGaussian)), Some((sgmA, sgmB)))
 
 
     simulate(new MathFunctions(fncfg, spec, nOrderFP32, adrWFP32, extraBitsFP32,
@@ -2231,7 +2232,7 @@ class FP64Test extends AnyFlatSpec /* with ChiselSim */ {
     val nOrderFP64 = 3
     val adrWFP64 = 12
     val extraBitsFP64 = 4
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(Reciprocal))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(Reciprocal)))
     val spec = RealSpec.Float64Spec
 
     simulate(new MathFunctions(fncfg, spec, nOrderFP64, adrWFP64, extraBitsFP64,
@@ -2287,7 +2288,7 @@ class FP64Test extends AnyFlatSpec /* with ChiselSim */ {
     val nOrderFP64 = 3
     val adrWFP64 = 12
     val extraBitsFP64 = 4
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(Sqrt))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(Sqrt)))
     val spec = RealSpec.Float64Spec
 
     simulate(new MathFunctions(fncfg, spec, nOrderFP64, adrWFP64, extraBitsFP64,
@@ -2331,7 +2332,7 @@ class FP64Test extends AnyFlatSpec /* with ChiselSim */ {
     val nOrderFP64 = 3
     val adrWFP64 = 12
     val extraBitsFP64 = 4
-    val fncfg = new MathFuncConfig(Seq(Exp))
+    val fncfg = new MathFuncConfig(FuncKind.normalize(Seq(Exp)))
     val spec = RealSpec.Float64Spec
     val rnd = new Random()
 
@@ -2393,7 +2394,7 @@ class FP64Test extends AnyFlatSpec /* with ChiselSim */ {
     val nOrderFP64 = 3
     val adrWFP64 = 12
     val extraBitsFP64 = 4
-    val fncfginvsqrt = new MathFuncConfig(Seq(InvSqrt))
+    val fncfginvsqrt = new MathFuncConfig(FuncKind.normalize(Seq(InvSqrt)))
     val spec = RealSpec.Float64Spec
     val rnd = new Random()
 
@@ -2461,7 +2462,7 @@ class FP64Test extends AnyFlatSpec /* with ChiselSim */ {
     val nOrderFP64 = 3
     val adrWFP64 = 12
     val extraBitsFP64 = 4
-    val fncfg = new MathFuncConfig(Seq(Log))
+    val fncfg = new MathFuncConfig(FuncKind.normalize(Seq(Log)))
     val spec = RealSpec.Float64Spec
     val rnd = new Random()
 
@@ -2518,7 +2519,7 @@ class FP64Test extends AnyFlatSpec /* with ChiselSim */ {
     val nOrderFP64 = 3
     val adrWFP64 = 12
     val extraBitsFP64 = 4
-    val fncfg = new MathFuncConfig(Seq(Sigmoid))
+    val fncfg = new MathFuncConfig(FuncKind.normalize(Seq(Sigmoid)))
     val spec = RealSpec.Float64Spec
     val rnd = new Random()
 
@@ -2594,7 +2595,7 @@ class FP64Test extends AnyFlatSpec /* with ChiselSim */ {
     val nOrderFP64 = 3
     val adrWFP64 = 12
     val extraBitsFP64 = 4
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(Sqrt, ACosPhase1, ACosPhase2))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(Sqrt, ACosPhase1, ACosPhase2)))
     val spec = RealSpec.Float64Spec
     val rnd = new Random()
 
@@ -2718,7 +2719,7 @@ class FP64Test extends AnyFlatSpec /* with ChiselSim */ {
     val nOrderFP64 = 3
     val adrWFP64 = 12
     val extraBitsFP64 = 4
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(Sin))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(Sin)))
     val spec = RealSpec.Float64Spec
     val rnd = new Random()
 
@@ -2771,7 +2772,7 @@ class FP64Test extends AnyFlatSpec /* with ChiselSim */ {
     val nOrderFP64 = 3
     val adrWFP64 = 12
     val extraBitsFP64 = 4
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(Cos))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(Cos)))
     val spec = RealSpec.Float64Spec
     val rnd = new Random()
 
@@ -2824,7 +2825,7 @@ class FP64Test extends AnyFlatSpec /* with ChiselSim */ {
     val nOrderFP64 = 3
     val adrWFP64 = 12
     val extraBitsFP64 = 4
-    val fncfg: MathFuncConfig = new MathFuncConfig(Seq(SoftPlus))
+    val fncfg: MathFuncConfig = new MathFuncConfig(FuncKind.normalize(Seq(SoftPlus)))
     val spec = RealSpec.Float64Spec
 
     simulate(new MathFunctions(fncfg, spec, nOrderFP64, adrWFP64, extraBitsFP64,
@@ -2896,7 +2897,7 @@ This test verifies the implementation against the reference implementation.
     val spec = RealSpec.Float64Spec // Use 64-bit double-precision spec
     val sgmA = exp(-1.0)
     val sgmB = exp(-6.0)
-    val fncfg = new MathFuncConfig(Seq(ScaleMixtureGaussian), Some((sgmA, sgmB)))
+    val fncfg = new MathFuncConfig(FuncKind.normalize(Seq(ScaleMixtureGaussian)), Some((sgmA, sgmB)))
 
     // Helper functions for 64-bit double conversion
     def fp2bigint(x: Double): BigInt = {
@@ -3017,7 +3018,7 @@ This test uses random inputs in Quadrants 1,2,3,4 and special cases to verify th
 =========================""")
 
     val spec = RealSpec.Float64Spec
-    val fncfg = new MathFuncConfig(Seq(ATan2Phase1, ATan2Phase2, Reciprocal))
+    val fncfg = new MathFuncConfig(FuncKind.normalize(Seq(ATan2Phase1, ATan2Phase2, Reciprocal)))
     val pipelineConfig = new MathFuncPipelineConfig(
       preStage = PipelineStageConfig.atOut(1),
       preMulStage = PipelineStageConfig.atOut(1),
@@ -3115,7 +3116,4 @@ Error (final):   $err2 (${toDegrees(err2)}°)
       testAtan2(1.0, java.lang.Double.POSITIVE_INFINITY, "Special: Infinity input")
     }
   }
-
-
-
 }
