@@ -1,11 +1,9 @@
 package cfg
 
-import FP_Modules.FPUnits
-import chisel3.Module.clock
 import chisel3._
-import chiseltest._
-import chiseltest.formal.Formal
+import chisel3.simulator.EphemeralSimulator._
 import org.scalatest.flatspec.AnyFlatSpec
+import FloatingPoint.fpu._
 
 import scala.collection.mutable.ArrayBuffer
 import java.lang.{Float => javaFloat}
@@ -103,7 +101,7 @@ object halfBits {
 
 
 //used to test the different pipeline depths at different bit widths of addition, subtraction, and multiplication operations
-class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
+class CFGBasic extends AnyFlatSpec {
 
   val nrndtests = 20
   val rnd = new Random()
@@ -122,15 +120,15 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
         println(f"\nBW = $bw PD = $pd")
 
         //Addition
-        test(new FPUnits.FP_add(bw, pd)) { c =>
+        simulate(new FP_add(bw, pd)) { dut =>
           var expectedVals = new Array[Float](testdata.length - 1)
           var outputs = new Array[UInt](testdata.length - 1)
 
           var aVals = ArrayBuffer[Float]()
           var bVals = ArrayBuffer[Float]()
 
-          c.io.in_en.poke(true.B)
-          c.io.in_valid.poke(true.B)
+          dut.io.in_en.poke(true.B)
+          dut.io.in_valid.poke(true.B)
           var cycles: Int = 0
           for (d <- testdata.sliding(2)) {
             val a = d.head
@@ -141,36 +139,36 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
             expectedVals(cycles) = (a + b)
 
             if (bw == 16) {
-              c.io.in_a.poke(halfBits.floatToHalfBits(a))
-              c.io.in_b.poke(halfBits.floatToHalfBits(b))
+              dut.io.in_a.poke(halfBits.floatToHalfBits(a))
+              dut.io.in_b.poke(halfBits.floatToHalfBits(b))
             }
             else if (bw == 32) {
-              c.io.in_a.poke(javaFloat.floatToRawIntBits(a) & 0xffffffffL)
-              c.io.in_b.poke(javaFloat.floatToRawIntBits(b) & 0xffffffffL)
+              dut.io.in_a.poke(javaFloat.floatToRawIntBits(a) & 0xffffffffL)
+              dut.io.in_b.poke(javaFloat.floatToRawIntBits(b) & 0xffffffffL)
             }
             else if (bw == 64) {
               val rawLong_a = java.lang.Double.doubleToRawLongBits(a)
-              c.io.in_a.poke(BigInt(rawLong_a) & ((BigInt(1) << 64) - 1))
+              dut.io.in_a.poke(BigInt(rawLong_a) & ((BigInt(1) << 64) - 1))
 
               val rawLong_b = java.lang.Double.doubleToRawLongBits(b)
-              c.io.in_b.poke(BigInt(rawLong_b) & ((BigInt(1) << 64) - 1))
+              dut.io.in_b.poke(BigInt(rawLong_b) & ((BigInt(1) << 64) - 1))
             }
 
             if (cycles >= pd) {
-              outputs(cycles - pd) = c.io.out_s.peek()
+              outputs(cycles - pd) = dut.io.out_s.peek()
             }
 
-            c.clock.step()
+            dut.clock.step()
             cycles += 1
 
           }
 
-          c.io.in_valid.poke(false.B)
+          dut.io.in_valid.poke(false.B)
           val throughput = cycles / (testdata.length - 1)
 
           for (i <- 0 until pd) {
-            outputs(cycles - pd) = c.io.out_s.peek()
-            c.clock.step()
+            outputs(cycles - pd) = dut.io.out_s.peek()
+            dut.clock.step()
             cycles += 1
           }
 
@@ -193,21 +191,21 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
             }
 
             println(f"CFG $a + $b should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
-            c.clock.step()
+            dut.clock.step()
             cycles += 1
           }
         }
 
         //Subtraction
-        test(new FPUnits.FP_add(bw, pd)) { c =>
+        simulate(new FP_add(bw, pd)) { dut =>
           var expectedVals = new Array[Float](testdata.length - 1)
           var outputs = new Array[UInt](testdata.length - 1)
 
           var aVals = ArrayBuffer[Float]()
           var bVals = ArrayBuffer[Float]()
 
-          c.io.in_en.poke(true.B)
-          c.io.in_valid.poke(true.B)
+          dut.io.in_en.poke(true.B)
+          dut.io.in_valid.poke(true.B)
           var cycles: Int = 0
           for (d <- testdata.sliding(2)) {
             val a = d.head
@@ -218,36 +216,36 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
             expectedVals(cycles) = (a - b)
 
             if (bw == 16) {
-              c.io.in_a.poke(halfBits.floatToHalfBits(a))
-              c.io.in_b.poke(halfBits.floatToHalfBits(b))
+              dut.io.in_a.poke(halfBits.floatToHalfBits(a))
+              dut.io.in_b.poke(halfBits.floatToHalfBits(b))
             }
             else if (bw == 32) {
-              c.io.in_a.poke(javaFloat.floatToRawIntBits(a) & 0xffffffffL)
-              c.io.in_b.poke(javaFloat.floatToRawIntBits(b) & 0xffffffffL)
+              dut.io.in_a.poke(javaFloat.floatToRawIntBits(a) & 0xffffffffL)
+              dut.io.in_b.poke(javaFloat.floatToRawIntBits(b) & 0xffffffffL)
             }
             else if (bw == 64) {
               val rawLong_a = java.lang.Double.doubleToRawLongBits(a)
-              c.io.in_a.poke(BigInt(rawLong_a) & ((BigInt(1) << 64) - 1))
+              dut.io.in_a.poke(BigInt(rawLong_a) & ((BigInt(1) << 64) - 1))
 
               val rawLong_b = java.lang.Double.doubleToRawLongBits(b)
-              c.io.in_b.poke(BigInt(rawLong_b) & ((BigInt(1) << 64) - 1))
+              dut.io.in_b.poke(BigInt(rawLong_b) & ((BigInt(1) << 64) - 1))
             }
 
             if (cycles >= pd) {
-              outputs(cycles - pd) = c.io.out_s.peek()
+              outputs(cycles - pd) = dut.io.out_s.peek()
             }
 
-            c.clock.step()
+            dut.clock.step()
             cycles += 1
 
           }
 
-          c.io.in_valid.poke(false.B)
+          dut.io.in_valid.poke(false.B)
           val throughput = cycles / (testdata.length - 1)
 
           for (i <- 0 until pd) {
-            outputs(cycles - pd) = c.io.out_s.peek()
-            c.clock.step()
+            outputs(cycles - pd) = dut.io.out_s.peek()
+            dut.clock.step()
             cycles += 1
           }
 
@@ -270,22 +268,22 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
             }
 
             println(f"CFG $a - $b should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
-            c.clock.step()
+            dut.clock.step()
             cycles += 1
           }
         }
 
         //Multiplication
         if (pd != 11) {
-          test(new FPUnits.FP_mult(bw, pd)) { c =>
+          simulate(new FP_mult(bw, pd)) { dut =>
             var expectedVals = new Array[Float](testdata.length - 1)
             var outputs = new Array[UInt](testdata.length - 1)
 
             var aVals = ArrayBuffer[Float]()
             var bVals = ArrayBuffer[Float]()
 
-            c.io.in_en.poke(true.B)
-            c.io.in_valid.poke(true.B)
+            dut.io.in_en.poke(true.B)
+            dut.io.in_valid.poke(true.B)
             var cycles: Int = 0
             for (d <- testdata.sliding(2)) {
               val a = d.head
@@ -296,36 +294,36 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
               expectedVals(cycles) = (a * b)
 
               if (bw == 16) {
-                c.io.in_a.poke(halfBits.floatToHalfBits(a))
-                c.io.in_b.poke(halfBits.floatToHalfBits(b))
+                dut.io.in_a.poke(halfBits.floatToHalfBits(a))
+                dut.io.in_b.poke(halfBits.floatToHalfBits(b))
               }
               else if (bw == 32) {
-                c.io.in_a.poke(javaFloat.floatToRawIntBits(a) & 0xffffffffL)
-                c.io.in_b.poke(javaFloat.floatToRawIntBits(b) & 0xffffffffL)
+                dut.io.in_a.poke(javaFloat.floatToRawIntBits(a) & 0xffffffffL)
+                dut.io.in_b.poke(javaFloat.floatToRawIntBits(b) & 0xffffffffL)
               }
               else if (bw == 64) {
                 val rawLong_a = java.lang.Double.doubleToRawLongBits(a)
-                c.io.in_a.poke(BigInt(rawLong_a) & ((BigInt(1) << 64) - 1))
+                dut.io.in_a.poke(BigInt(rawLong_a) & ((BigInt(1) << 64) - 1))
 
                 val rawLong_b = java.lang.Double.doubleToRawLongBits(b)
-                c.io.in_b.poke(BigInt(rawLong_b) & ((BigInt(1) << 64) - 1))
+                dut.io.in_b.poke(BigInt(rawLong_b) & ((BigInt(1) << 64) - 1))
               }
 
               if (cycles >= pd) {
-                outputs(cycles - pd) = c.io.out_s.peek()
+                outputs(cycles - pd) = dut.io.out_s.peek()
               }
 
-              c.clock.step()
+              dut.clock.step()
               cycles += 1
 
             }
 
-            c.io.in_valid.poke(false.B)
+            dut.io.in_valid.poke(false.B)
             val throughput = cycles / (testdata.length - 1)
 
             for (i <- 0 until pd) {
-              outputs(cycles - pd) = c.io.out_s.peek()
-              c.clock.step()
+              outputs(cycles - pd) = dut.io.out_s.peek()
+              dut.clock.step()
               cycles += 1
             }
 
@@ -348,7 +346,7 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
               }
 
               println(f"CFG $a * $b should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
-              c.clock.step()
+              dut.clock.step()
               cycles += 1
             }
           }
@@ -363,7 +361,7 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
 }
 
   //to test only this class, run 'testOnly cfg.CFGTest'
-  class CFGTest extends AnyFlatSpec with ChiselScalatestTester with Formal {
+  class CFGTest extends AnyFlatSpec {
     val nrndtests = 20
     val rnd = new Random()
     val fixedtestdata: List[Float] = List(0f, 1f, -1f, 2f)
@@ -392,15 +390,15 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
     }
 
     def testFP_add(): Unit = {
-      test(new FPUnits.FP_add(bw, pd)) { c =>
+      simulate(new FP_add(bw, pd)) { dut =>
         var expectedVals = new Array[Float](testdata.length - 1)
         var outputs = new Array[UInt](testdata.length - 1)
 
         var aVals = ArrayBuffer[Float]()
         var bVals = ArrayBuffer[Float]()
 
-        c.io.in_en.poke(true.B)
-        c.io.in_valid.poke(true.B)
+        dut.io.in_en.poke(true.B)
+        dut.io.in_valid.poke(true.B)
         var cycles: Int = 0
         for (d <- testdata.sliding(2)) {
           val a = d.head
@@ -411,36 +409,36 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
           expectedVals(cycles) = (a + b)
 
           if (bw == 16) {
-            c.io.in_a.poke(halfBits.floatToHalfBits(a))
-            c.io.in_b.poke(halfBits.floatToHalfBits(b))
+            dut.io.in_a.poke(halfBits.floatToHalfBits(a))
+            dut.io.in_b.poke(halfBits.floatToHalfBits(b))
           }
           else if (bw == 32) {
-            c.io.in_a.poke(javaFloat.floatToRawIntBits(a) & 0xffffffffL)
-            c.io.in_b.poke(javaFloat.floatToRawIntBits(b) & 0xffffffffL)
+            dut.io.in_a.poke(javaFloat.floatToRawIntBits(a) & 0xffffffffL)
+            dut.io.in_b.poke(javaFloat.floatToRawIntBits(b) & 0xffffffffL)
           }
           else if (bw == 64) {
             val rawLong_a = java.lang.Double.doubleToRawLongBits(a)
-            c.io.in_a.poke(BigInt(rawLong_a) & ((BigInt(1) << 64) - 1))
+            dut.io.in_a.poke(BigInt(rawLong_a) & ((BigInt(1) << 64) - 1))
 
             val rawLong_b = java.lang.Double.doubleToRawLongBits(b)
-            c.io.in_b.poke(BigInt(rawLong_b) & ((BigInt(1) << 64) - 1))
+            dut.io.in_b.poke(BigInt(rawLong_b) & ((BigInt(1) << 64) - 1))
           }
 
           if (cycles >= pd) {
-            outputs(cycles - pd) = c.io.out_s.peek()
+            outputs(cycles - pd) = dut.io.out_s.peek()
           }
 
-          c.clock.step()
+          dut.clock.step()
           cycles += 1
 
         }
 
-        c.io.in_valid.poke(false.B)
+        dut.io.in_valid.poke(false.B)
         val throughput = cycles / (testdata.length - 1)
 
         for (i <- 0 until pd) {
-          outputs(cycles - pd) = c.io.out_s.peek()
-          c.clock.step()
+          outputs(cycles - pd) = dut.io.out_s.peek()
+          dut.clock.step()
           cycles += 1
         }
 
@@ -463,7 +461,7 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
           }
 
           println(f"CFG $a + $b should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
-          c.clock.step()
+          dut.clock.step()
           cycles += 1
         }
       }
@@ -473,15 +471,15 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
 
     //Subtraction
     def testFP_sub(): Unit = {
-      test(new FPUnits.FP_add(bw, pd)) { c =>
+      simulate(new FP_add(bw, pd)) { dut =>
         var expectedVals = new Array[Float](testdata.length - 1)
         var outputs = new Array[UInt](testdata.length - 1)
 
         var aVals = ArrayBuffer[Float]()
         var bVals = ArrayBuffer[Float]()
 
-        c.io.in_en.poke(true.B)
-        c.io.in_valid.poke(true.B)
+        dut.io.in_en.poke(true.B)
+        dut.io.in_valid.poke(true.B)
         var cycles: Int = 0
         for (d <- testdata.sliding(2)) {
           val a = d.head
@@ -492,36 +490,36 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
           expectedVals(cycles) = (a - b)
 
           if (bw == 16) {
-            c.io.in_a.poke(halfBits.floatToHalfBits(a))
-            c.io.in_b.poke(halfBits.floatToHalfBits(b))
+            dut.io.in_a.poke(halfBits.floatToHalfBits(a))
+            dut.io.in_b.poke(halfBits.floatToHalfBits(b))
           }
           else if (bw == 32) {
-            c.io.in_a.poke(javaFloat.floatToRawIntBits(a) & 0xffffffffL)
-            c.io.in_b.poke(javaFloat.floatToRawIntBits(b) & 0xffffffffL)
+            dut.io.in_a.poke(javaFloat.floatToRawIntBits(a) & 0xffffffffL)
+            dut.io.in_b.poke(javaFloat.floatToRawIntBits(b) & 0xffffffffL)
           }
           else if (bw == 64) {
             val rawLong_a = java.lang.Double.doubleToRawLongBits(a)
-            c.io.in_a.poke(BigInt(rawLong_a) & ((BigInt(1) << 64) - 1))
+            dut.io.in_a.poke(BigInt(rawLong_a) & ((BigInt(1) << 64) - 1))
 
             val rawLong_b = java.lang.Double.doubleToRawLongBits(b)
-            c.io.in_b.poke(BigInt(rawLong_b) & ((BigInt(1) << 64) - 1))
+            dut.io.in_b.poke(BigInt(rawLong_b) & ((BigInt(1) << 64) - 1))
           }
 
           if (cycles >= pd) {
-            outputs(cycles - pd) = c.io.out_s.peek()
+            outputs(cycles - pd) = dut.io.out_s.peek()
           }
 
-          c.clock.step()
+          dut.clock.step()
           cycles += 1
 
         }
 
-        c.io.in_valid.poke(false.B)
+        dut.io.in_valid.poke(false.B)
         val throughput = cycles / (testdata.length - 1)
 
         for (i <- 0 until pd) {
-          outputs(cycles - pd) = c.io.out_s.peek()
-          c.clock.step()
+          outputs(cycles - pd) = dut.io.out_s.peek()
+          dut.clock.step()
           cycles += 1
         }
 
@@ -544,7 +542,7 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
           }
 
           println(f"CFG $a - $b should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
-          c.clock.step()
+          dut.clock.step()
           cycles += 1
         }
       }
@@ -553,15 +551,15 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
 
       //Multiplication
       def testFP_mult(): Unit = {
-        test(new FPUnits.FP_mult(bw, pd)) { c =>
+        simulate(new FP_mult(bw, pd)) { dut =>
           var expectedVals = new Array[Float](testdata.length - 1)
           var outputs = new Array[UInt](testdata.length - 1)
 
           var aVals = ArrayBuffer[Float]()
           var bVals = ArrayBuffer[Float]()
 
-          c.io.in_en.poke(true.B)
-          c.io.in_valid.poke(true.B)
+          dut.io.in_en.poke(true.B)
+          dut.io.in_valid.poke(true.B)
           var cycles: Int = 0
           for (d <- testdata.sliding(2)) {
             val a = d.head
@@ -572,36 +570,36 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
             expectedVals(cycles) = (a * b)
 
             if (bw == 16) {
-              c.io.in_a.poke(halfBits.floatToHalfBits(a))
-              c.io.in_b.poke(halfBits.floatToHalfBits(b))
+              dut.io.in_a.poke(halfBits.floatToHalfBits(a))
+              dut.io.in_b.poke(halfBits.floatToHalfBits(b))
             }
             else if (bw == 32) {
-              c.io.in_a.poke(javaFloat.floatToRawIntBits(a) & 0xffffffffL)
-              c.io.in_b.poke(javaFloat.floatToRawIntBits(b) & 0xffffffffL)
+              dut.io.in_a.poke(javaFloat.floatToRawIntBits(a) & 0xffffffffL)
+              dut.io.in_b.poke(javaFloat.floatToRawIntBits(b) & 0xffffffffL)
             }
             else if (bw == 64) {
               val rawLong_a = java.lang.Double.doubleToRawLongBits(a)
-              c.io.in_a.poke(BigInt(rawLong_a) & ((BigInt(1) << 64) - 1))
+              dut.io.in_a.poke(BigInt(rawLong_a) & ((BigInt(1) << 64) - 1))
 
               val rawLong_b = java.lang.Double.doubleToRawLongBits(b)
-              c.io.in_b.poke(BigInt(rawLong_b) & ((BigInt(1) << 64) - 1))
+              dut.io.in_b.poke(BigInt(rawLong_b) & ((BigInt(1) << 64) - 1))
             }
 
             if (cycles >= pd) {
-              outputs(cycles - pd) = c.io.out_s.peek()
+              outputs(cycles - pd) = dut.io.out_s.peek()
             }
 
-            c.clock.step()
+            dut.clock.step()
             cycles += 1
 
           }
 
-          c.io.in_valid.poke(false.B)
+          dut.io.in_valid.poke(false.B)
           val throughput = cycles / (testdata.length - 1)
 
           for (i <- 0 until pd) {
-            outputs(cycles - pd) = c.io.out_s.peek()
-            c.clock.step()
+            outputs(cycles - pd) = dut.io.out_s.peek()
+            dut.clock.step()
             cycles += 1
           }
 
@@ -624,7 +622,7 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
             }
 
             println(f"CFG $a * $b should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
-            c.clock.step()
+            dut.clock.step()
             cycles += 1
           }
         }
@@ -634,7 +632,8 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
 
       //Division
       def testFP_div(): Unit = {
-        test(new FPUnits.FP_div(bw, nmantissabits(bw))) { c =>
+        // FP_div(bw, L, latency)
+        simulate(new FP_div(bw, 15, 15)) { dut =>
           for (d <- testdata.sliding(2)) {
             val a = d.head
             val b = d.tail.head
@@ -642,8 +641,8 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
               var cycles: Int = 0
               val expected = a / b
 
-              while (c.io.out_valid.peekBoolean()) {
-                step(1)
+              while (dut.io.out_valid.peek().litToBoolean) {
+                dut.clock.step(1)
                 cycles += 1
               }
               val waitready = cycles
@@ -651,29 +650,29 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
 
               //Initialization
               if (bw == 16) {
-                c.io.in_a.poke(halfBits.floatToHalfBits(a))
-                c.io.in_b.poke(halfBits.floatToHalfBits(b))
+                dut.io.in_a.poke(halfBits.floatToHalfBits(a))
+                dut.io.in_b.poke(halfBits.floatToHalfBits(b))
               }
               else if (bw == 32) {
-                c.io.in_a.poke(javaFloat.floatToRawIntBits(a) & 0xffffffffL)
-                c.io.in_b.poke(javaFloat.floatToRawIntBits(b) & 0xffffffffL)
+                dut.io.in_a.poke(javaFloat.floatToRawIntBits(a) & 0xffffffffL)
+                dut.io.in_b.poke(javaFloat.floatToRawIntBits(b) & 0xffffffffL)
               }
               else if (bw == 64) {
                 val rawLong_a = java.lang.Double.doubleToRawLongBits(a)
-                c.io.in_a.poke(BigInt(rawLong_a) & ((BigInt(1) << 64) - 1))
+                dut.io.in_a.poke(BigInt(rawLong_a) & ((BigInt(1) << 64) - 1))
 
                 val rawLong_b = java.lang.Double.doubleToRawLongBits(b)
-                c.io.in_b.poke(BigInt(rawLong_b) & ((BigInt(1) << 64) - 1))
+                dut.io.in_b.poke(BigInt(rawLong_b) & ((BigInt(1) << 64) - 1))
               }
 
-              c.io.in_valid.poke(true.B)
-              c.io.in_en.poke(true.B)
-              step(1)
+              dut.io.in_valid.poke(true.B)
+              dut.io.in_en.poke(true.B)
+              dut.clock.step(1)
               cycles += 1
-              c.io.in_valid.poke(false.B)
+              dut.io.in_valid.poke(false.B)
 
-              while (!c.io.out_valid.peekBoolean()) {
-                step(1)
+              while (!dut.io.out_valid.peek().litToBoolean) {
+                dut.clock.step(1)
                 cycles += 1
               }
 
@@ -681,13 +680,13 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
               throughput = cycles - waitready
               var resultFloat = 0.0
               if (bw == 16) {
-                resultFloat = halfBits.halfBitsToFloat(c.io.out_s.peek().litValue.toInt)
+                resultFloat = halfBits.halfBitsToFloat(dut.io.out_s.peek().litValue.toInt)
               }
               if (bw == 32) {
-                resultFloat = javaFloat.intBitsToFloat(c.io.out_s.peek().litValue.toLong.toInt)
+                resultFloat = javaFloat.intBitsToFloat(dut.io.out_s.peek().litValue.toLong.toInt)
               }
               if (bw == 64) {
-                val longBits = (c.io.out_s.peek().litValue & ((BigInt(1) << 64) - 1)).toLong
+                val longBits = (dut.io.out_s.peek().litValue & ((BigInt(1) << 64) - 1)).toLong
                 resultFloat = java.lang.Double.longBitsToDouble(longBits)
               }
               println(f"CFG $a / $b should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
@@ -703,7 +702,8 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
 
       //Sqrt
       def testFP_sqrt(): Unit = {
-        test(new FPUnits.FP_sqrt(bw, nmantissabits(bw))) { c =>
+        // FP_sqrt(bw, L, latency)
+        simulate(new FP_sqrt(bw, nmantissabits(bw), nmantissabits(bw))) { dut =>
           for (s <- testdata) {
             if (s >= 0.0f) {
               var cycles: Int = 0
@@ -713,39 +713,39 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
               var throughput = 0
 
               //Initialization
-              c.io.in_en.poke(true.B)
-              c.io.in_valid.poke(true.B)
+              dut.io.in_en.poke(true.B)
+              dut.io.in_valid.poke(true.B)
 
               if (bw == 16) {
-                c.io.in_a.poke(halfBits.floatToHalfBits(s))
+                dut.io.in_a.poke(halfBits.floatToHalfBits(s))
               }
               else if (bw == 32) {
-                c.io.in_a.poke(javaFloat.floatToRawIntBits(s) & 0xffffffffL)
+                dut.io.in_a.poke(javaFloat.floatToRawIntBits(s) & 0xffffffffL)
               }
               else if (bw == 64) {
                 val rawLong = java.lang.Double.doubleToRawLongBits(s)
-                c.io.in_a.poke(BigInt(rawLong) & ((BigInt(1) << 64) - 1))
+                dut.io.in_a.poke(BigInt(rawLong) & ((BigInt(1) << 64) - 1))
               }
 
-              step(1)
+              dut.clock.step(1)
               cycles += 1
-              c.io.in_valid.poke(false.B)
+              dut.io.in_valid.poke(false.B)
 
-              while (!c.io.out_valid.peekBoolean()) {
-                step(1)
+              while (!dut.io.out_valid.peek().litToBoolean) {
+                dut.clock.step(1)
                 cycles += 1
               }
 
               throughput = cycles - wait
               var resultFloat = 0.0
               if (bw == 16) {
-                resultFloat = halfBits.halfBitsToFloat(c.io.out_s.peek().litValue.toInt)
+                resultFloat = halfBits.halfBitsToFloat(dut.io.out_s.peek().litValue.toInt)
               }
               if (bw == 32) {
-                resultFloat = javaFloat.intBitsToFloat(c.io.out_s.peek().litValue.toLong.toInt)
+                resultFloat = javaFloat.intBitsToFloat(dut.io.out_s.peek().litValue.toLong.toInt)
               }
               if (bw == 64) {
-                val longBits = (c.io.out_s.peek().litValue & ((BigInt(1) << 64) - 1)).toLong
+                val longBits = (dut.io.out_s.peek().litValue & ((BigInt(1) << 64) - 1)).toLong
                 resultFloat = java.lang.Double.longBitsToDouble(longBits)
               }
               println(f"CFG sqrt($s) should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
@@ -759,51 +759,51 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
 
       //Cos
       def testFP_cos(): Unit = {
-        test(new FPUnits.FP_cos(bw, nmantissabits(bw))) { c =>
+        simulate(new FP_cos(bw, nmantissabits(bw))) { dut =>
           for (a <- testdata) {
             var cycles: Int = 0
             val expected = javaMath.cos(a)
 
-            while (c.io.out_valid.peekBoolean()) {
-              step(1)
+            while (dut.io.out_valid.peek().litToBoolean) {
+              dut.clock.step(1)
               cycles += 1
             }
             val waitready = cycles
             var throughput = 0
 
             //Initialization
-            c.io.in_valid.poke(true.B)
-            c.io.in_en.poke(true.B)
+            dut.io.in_valid.poke(true.B)
+            dut.io.in_en.poke(true.B)
             if (bw == 16) {
-              c.io.in_angle.poke(halfBits.floatToHalfBits(a))
+              dut.io.in_angle.poke(halfBits.floatToHalfBits(a))
             }
             else if (bw == 32) {
-              c.io.in_angle.poke(javaFloat.floatToRawIntBits(a) & 0xffffffffL)
+              dut.io.in_angle.poke(javaFloat.floatToRawIntBits(a) & 0xffffffffL)
             }
             else if (bw == 64) {
               val rawLong = java.lang.Double.doubleToRawLongBits(a)
-              c.io.in_angle.poke(BigInt(rawLong) & ((BigInt(1) << 64) - 1))
+              dut.io.in_angle.poke(BigInt(rawLong) & ((BigInt(1) << 64) - 1))
             }
 
-            step(1)
+            dut.clock.step(1)
             cycles += 1
-            c.io.in_valid.poke(false.B)
+            dut.io.in_valid.poke(false.B)
 
-            while (!c.io.out_valid.peekBoolean()) {
-              step(1)
+            while (!dut.io.out_valid.peek().litToBoolean) {
+              dut.clock.step(1)
               cycles += 1
             }
 
             throughput = cycles - waitready
             var resultFloat = 0.0
             if (bw == 16) {
-              resultFloat = halfBits.halfBitsToFloat(c.io.out_cos.peek().litValue.toInt)
+              resultFloat = halfBits.halfBitsToFloat(dut.io.out_cos.peek().litValue.toInt)
             }
             if (bw == 32) {
-              resultFloat = javaFloat.intBitsToFloat(c.io.out_cos.peek().litValue.toLong.toInt)
+              resultFloat = javaFloat.intBitsToFloat(dut.io.out_cos.peek().litValue.toLong.toInt)
             }
             if (bw == 64) {
-              val longBits = (c.io.out_cos.peek().litValue & ((BigInt(1) << 64) - 1)).toLong
+              val longBits = (dut.io.out_cos.peek().litValue & ((BigInt(1) << 64) - 1)).toLong
               resultFloat = java.lang.Double.longBitsToDouble(longBits)
             }
             println(f"CFG cos($a) should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
@@ -814,63 +814,8 @@ class CFGBasic extends AnyFlatSpec with ChiselScalatestTester with Formal {
 
       "FP_Cos" should "pass" in testFP_cos()
 
-      //Sin
-      def testFP_sin(): Unit = {
-        test(new FPUnits.FP_sin(bw, nmantissabits(bw))) { c =>
-          for (a <- testdata) {
-            var cycles: Int = 0
-            val expected = javaMath.sin(a)
-
-            while (c.io.out_valid.peekBoolean()) {
-              step(1)
-              cycles += 1
-            }
-            val waitready = cycles
-            var throughput = 0
-
-            //Initialization
-            c.io.in_valid.poke(true.B)
-            c.io.in_en.poke(true.B)
-            if (bw == 16) {
-              c.io.in_angle.poke(halfBits.floatToHalfBits(a))
-            }
-            else if (bw == 32) {
-              c.io.in_angle.poke(javaFloat.floatToRawIntBits(a) & 0xffffffffL)
-            }
-            else if (bw == 64) {
-              val rawLong = java.lang.Double.doubleToRawLongBits(a)
-              c.io.in_angle.poke(BigInt(rawLong) & ((BigInt(1) << 64) - 1))
-            }
-
-            step(1)
-            cycles += 1
-            c.io.in_valid.poke(false.B)
-
-            while (!c.io.out_valid.peekBoolean()) {
-              step(1)
-              cycles += 1
-            }
-
-
-            throughput = cycles - waitready
-            var resultFloat = 0.0
-            if (bw == 16) {
-              resultFloat = halfBits.halfBitsToFloat(c.io.out_sin.peek().litValue.toInt)
-            }
-            if (bw == 32) {
-              resultFloat = javaFloat.intBitsToFloat(c.io.out_sin.peek().litValue.toLong.toInt)
-            }
-            if (bw == 64) {
-              val longBits = (c.io.out_sin.peek().litValue & ((BigInt(1) << 64) - 1)).toLong
-              resultFloat = java.lang.Double.longBitsToDouble(longBits)
-            }
-            println(f"CFG sin($a) should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
-
-          }
-        }
-      }
-
-      "FP_Sin" should "pass" in testFP_sin()
+      // NOTE: FP_sin is not available in the current OpenFloat fpu.
+      // The original CFG sin test is disabled until a matching module exists.
 
 
 
