@@ -15,7 +15,7 @@ We recommend LTS releases Java 8 and Java 11. You can install the JDK as recomme
 
 #### SBT
 
-SBT is the most common built tool in the Scala community. You can download it [here]([https://www.scala-sbt.org/download.html](https://www.scala-sbt.org/index.html)).  
+SBT is the most common built tool in the Scala community. You can download it [here](https://www.scala-sbt.org/index.html).  
 
 ```Debian package 
    echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | sudo tee /etc/apt/sources.list.d/sbt.list
