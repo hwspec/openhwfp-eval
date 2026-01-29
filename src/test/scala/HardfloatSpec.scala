@@ -1,38 +1,15 @@
-package xs
+package hardfloat
 
 import org.scalatest.flatspec.AnyFlatSpec
-
-/**
- * NOTE:
- * The original Hardfloat tests in this repo depended on wrapper modules
- * `FPTest`, `FPOPTest`, `FPOPTestMode`, `FPDIVTest`, and `FPSqrtTest`
- * that are not present in this tree.
- *
- * Rather than fail compilation, I disabled these tests for now.
- * When/if those wrapper modules are re‑ported, this file should be
- * replaced with real tests again.
- */
-class HardfloatSpecDisabled extends AnyFlatSpec {
-  "Hardfloat wrapper tests" should "be disabled until FPTest wrappers are ported" in {
-    assert(true)
-  }
-}
-
-
-
-/**
-
-UNCOMMENT WHEN FIXED
-
 import chisel3._
 import chisel3.simulator.EphemeralSimulator._
-//import xs.{FPDIVTest, FPOPTest, FPTest}
+import hardfloat.{FPDIVTest, FPOPTest, FPOPTestMode, FPTest, FPSqrtTest}
 import java.lang.{Float => javaFloat}
 import java.lang.Double.{doubleToLongBits, longBitsToDouble}
 import scala.util.Random
 
 class FPTestSpec32 extends AnyFlatSpec {
-  behavior of "FPtest"
+  behavior of "Hardfloat FP32 Tests"
   val debug = true
   val nrndtests = 20
   val rnd = new Random()
@@ -46,18 +23,25 @@ class FPTestSpec32 extends AnyFlatSpec {
 
   // this just does convert IEEE float into RecFN and back to IEEE float
   "FPTest" should "pass" in {
+    println("\n=================\nHardfloat FP32 FPTest BEGIN\n=================\n")
     simulate(new FPTest) { dut =>
       for (d <- testdata) {
         dut.io.in.poke(Float2Long(d))
         val result = dut.io.out.peek().litValue.toLong // litValue returns BigInt
         val resultFloat = Long2Float(result)
-        if (debug) println(f"input=$d  output=$resultFloat")
+        if (debug) println(f"Hardfloat FP32: input=$d output=$resultFloat")
         dut.io.out.expect(Float2Long(d))
       }
     }
   }
 
   def testFPOPTest(m: FPOPTestMode.Mode): Unit = {
+    val opName = m match {
+      case FPOPTestMode.ADD => "ADD"
+      case FPOPTestMode.SUB => "SUB"
+      case FPOPTestMode.MUL => "MUL"
+    }
+    println(s"\n=================\nHardfloat FP32 FPOPTest $opName BEGIN\n=================\n")
     simulate(new FPOPTest(mode=m)) { dut =>
       for (d <- testdata.sliding(2)) {
         val a = d.head
@@ -77,7 +61,7 @@ class FPTestSpec32 extends AnyFlatSpec {
             case FPOPTestMode.SUB => "-"
             case _ => "+"
           }
-          println(f"$a $opstr $b should equal to $expected: $resultFloat")
+          println(f"Hardfloat FP32: $a $opstr $b should equal to $expected: out=$resultFloat")
         }
         dut.io.out.expect(Float2Long(expected))
       }
@@ -91,6 +75,7 @@ class FPTestSpec32 extends AnyFlatSpec {
   "FPOPTest MUL" should "pass" in testFPOPTest(FPOPTestMode.MUL)
 
   def testFPDIVTest(): Unit = {
+    println("\n=================\nHardfloat FP32 FPDIVTest BEGIN\n=================\n")
     simulate(new FPDIVTest()) { dut =>
       for (d <- testdata.sliding(2)) {
         val a = d.head
@@ -121,7 +106,7 @@ class FPTestSpec32 extends AnyFlatSpec {
           val result = dut.io.out.peek().litValue.toLong
           val resultFloat = Long2Float(result)
           if (debug) {
-            println(f"$a is divided by $b should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
+            println(f"Hardfloat FP32: $a / $b should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
           }
           dut.io.out.expect(Float2Long(expected))
         }
@@ -135,6 +120,7 @@ class FPTestSpec32 extends AnyFlatSpec {
 
   "FPSqrtTest" should "pass" in testFPSqrtTest()
   def testFPSqrtTest(): Unit = {
+    println("\n=================\nHardfloat FP32 FPSqrtTest BEGIN\n=================\n")
     simulate(new FPSqrtTest()) { dut =>
       for (d <- testdata) {
         if (d >= 0.0f){ //Only test non-nagative numbers
@@ -161,7 +147,7 @@ class FPTestSpec32 extends AnyFlatSpec {
           val result = dut.io.out.peek().litValue.toLong
           val resultFloat = Long2Float(result)
           if (debug) {
-            println(f"sqrt($d) should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
+            println(f"Hardfloat FP32: sqrt($d) should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
           }
           dut.io.out.expect(Float2Long(expected))
         }
@@ -176,7 +162,7 @@ class FPTestSpec32 extends AnyFlatSpec {
 
 
 class FPTestSpec64 extends AnyFlatSpec {
-  behavior of "FPtest"
+  behavior of "Hardfloat FP64 Tests"
   val debug = true
   val nrndtests = 20
   val rnd = new Random()
@@ -196,6 +182,12 @@ class FPTestSpec64 extends AnyFlatSpec {
   }
 
   def testFPOPTest(m: FPOPTestMode.Mode): Unit = {
+    val opName = m match {
+      case FPOPTestMode.ADD => "ADD"
+      case FPOPTestMode.SUB => "SUB"
+      case FPOPTestMode.MUL => "MUL"
+    }
+    println(s"\n=================\nHardfloat FP64 FPOPTest $opName BEGIN\n=================\n")
     simulate(new FPOPTest(expW = 11, sigW = 53, mode = m)) { dut =>
       for (d <- testdata.sliding(2, 2)) {
         if (d.length == 2) { // Ensure we have a pair
@@ -227,7 +219,7 @@ class FPTestSpec64 extends AnyFlatSpec {
               case FPOPTestMode.SUB => "-"
               case _ => "+"
             }
-            println(f"$a $opstr $b should equal $expected (bits: 0x$expectedBits%X), got: $resultDouble (bits: 0x$resultBits%X)")
+            println(f"Hardfloat FP64: $a $opstr $b should equal $expected: out=$resultDouble")
           }
 
           // Expect output
@@ -245,6 +237,7 @@ class FPTestSpec64 extends AnyFlatSpec {
 
   "FPTest div" should "pass" in testFPDIVTest()
   def testFPDIVTest(): Unit = {
+      println("\n=================\nHardfloat FP64 FPDIVTest BEGIN\n=================\n")
       simulate(new FPDIVTest(11, 53)) { dut =>
         for (d <- testdata.sliding(2)) {
           val a = d.head
@@ -276,7 +269,7 @@ class FPTestSpec64 extends AnyFlatSpec {
             val result = dut.io.out.peek().litValue
             val resultDub = uInt64ToDouble(result)
             if (debug) {
-              println(f"$a is divided by $b should equal to $expected: out=$resultDub cycles=$cycles throughput=$throughput")
+              println(f"Hardfloat FP64: $a / $b should equal to $expected: out=$resultDub cycles=$cycles throughput=$throughput")
             }
             dut.io.out.expect(doubleToUInt64(expected))
           }
@@ -286,6 +279,7 @@ class FPTestSpec64 extends AnyFlatSpec {
 
   "FPTest sqrt" should "pass" in testFPSqrtTest()
   def testFPSqrtTest(): Unit = {
+    println("\n=================\nHardfloat FP64 FPSqrtTest BEGIN\n=================\n")
     simulate(new FPSqrtTest(11, 53)) { dut =>
       for (d <- testdata) {
         if (d >= 0.0){ //Only test non-negative numbers
@@ -312,11 +306,11 @@ class FPTestSpec64 extends AnyFlatSpec {
           val result = dut.io.out.peek().litValue
           val resultDub = uInt64ToDouble(result)
           if (debug) {
-            println(f"sqrt($d) should equal to $expected: out=$resultDub cycles=$cycles throughput=$throughput")
+            println(f"Hardfloat FP64: sqrt($d) should equal to $expected: out=$resultDub cycles=$cycles throughput=$throughput")
           }
           dut.io.out.expect(doubleToUInt64(expected))
         }
       }
     }
-
-    */
+  }
+}
