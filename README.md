@@ -19,9 +19,6 @@ SBT is the most common built tool in the Scala community. You can download it [h
 
 
 Official sbt Debian Package Setup
-
-
-Needed OpenJDK 17
 ```
 sudo apt update
 sudo apt install openjdk-17-jdk
