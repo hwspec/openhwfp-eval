@@ -36,7 +36,9 @@ sudo apt install openjdk-17-jdk
    
 #### Verilator
 Start clean
+```
 make distclean || true
+```
 
 Tested with v5.010. Below is a local build instruction:
 
