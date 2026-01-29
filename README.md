@@ -50,22 +50,31 @@ ________________________________________________________________________________
 If using Verilator 5.020 2024-01-01 rev (Debian 5.020-1) you may run into a a thread pool cleanup bug
 where ChiselSim calls Verilator with -j 0 (use all threads) if this is the case, v5.044 will fix this!!! 
 ```
-# Install build dependencies
-sudo apt-get install -y git build-essential autoconf flex bison
+#Dependencies needed:
+sudo apt install -y \
+  git autoconf automake libtool \
+  make g++ flex bison \
+  libfl-dev zlib1g-dev \
+  help2man
 
-# Clone and build Verilator
-git clone https://github.com/verilator/verilator.git && cd verilator
-git checkout v5.042
+# Clone and Checkout
+git clone https://github.com/verilator/verilator.git
+cd verilator
+
+git checkout tags/v5.044 -b v5.044build
+
+# Build and Install 
 autoconf
-./configure --prefix=$HOME/verilator-latest  # or use /usr/local for system-wide install
+./configure --prefix=$HOME/verilator-5.044
 make -j$(nproc)
 make install
 
-# Add to PATH (add to ~/.bashrc for persistence)
-export PATH=$HOME/verilator-latest/bin:$PATH
-echo 'export PATH=$HOME/verilator-latest/bin:$PATH' >> ~/.bashrc
+# Add to PATH 
+echo 'export PATH=$HOME/verilator-5.044/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
 
-# Verify installation
+#Verify 
+which verilator
 verilator --version
 ```
 ________________________________________________________________________________________________________
