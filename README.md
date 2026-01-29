@@ -77,6 +77,9 @@ $ sbt test
 ```
 
 
-Please contact Kazutomo Yoshii <kazutomo@anl.gov> if you have any question.
 
+
+If you have any question please contact:
+Kazutomo Yoshii <kazutomo@anl.gov> 
+Connor Bohannon <cbohannon@anl.gov>
 
