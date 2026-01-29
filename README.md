@@ -46,6 +46,10 @@ autoconf
 make
 make install
 ```
+========================================================================================================
+If using Verilator 5.020 2024-01-01 rev (Debian 5.020-1) you may run into a a thread pool cleanup bug
+where ChiselSim calls Verilator with -j 0 (use all threads) if this is the case, v5.044 will fix this!!! 
+========================================================================================================
 
 ### To run tests
 
