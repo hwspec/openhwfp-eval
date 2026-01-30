@@ -1,5 +1,6 @@
 ### Project Specific stuff
 test_run_dir/*
+filelist.f
 ### XilinxISE template
 # intermediate build files
 *.bgn
@@ -325,6 +326,20 @@ project/plugins/project/
 # Scala-IDE specific
 .scala_dependencies
 .worksheet
+
+# Generated Verilog files
+generated/
+openroad_results/
+wrapper_modules/
+cell_count_report.xml
+yosys_output.log
+# Root-level generated .sv (leftover from old runs; use generated/ for PPA)
+/*.sv
+# CIRCT formal verification output (not used; formal verification disabled)
+verification/
+# Yosys/estimate.py temp files
+tmp_*.sv
+tmp_*.ys
 ### Java template
 *.class
 
