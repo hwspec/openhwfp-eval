@@ -340,6 +340,12 @@ verification/
 # Yosys/estimate.py temp files
 tmp_*.sv
 tmp_*.ys
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
 ### Java template
 *.class
 
