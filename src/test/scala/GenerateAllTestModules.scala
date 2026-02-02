@@ -8,6 +8,7 @@ import rial.util.PipelineStageConfig
 import chisel3._
 import circt.stage.ChiselStage
 import java.io.{File, PrintWriter}
+import scala.math.exp
 
 object GenerateAllTestModules extends App {
   /** Firtool options for Yosys-friendly SystemVerilog.
@@ -57,14 +58,22 @@ object GenerateAllTestModules extends App {
   println("OpenFloat Modules")
   println("=" * 80)
   val openfloatDir = s"$baseDir/openfloat"
-  val bw = 32
-  val pd = 1
-  
-  genVerilog(new FP_add(bw, pd), openfloatDir, "FP_add_32_1")
-  genVerilog(new FP_mult(bw, pd), openfloatDir, "FP_mult_32_1")
-  genVerilog(new FP_div(bw, 15, 15), openfloatDir, "FP_divider_32_15_15")
-  genVerilog(new FP_sqrt(bw, 23, 23), openfloatDir, "FP_sqrt_32_23_23")
-  genVerilog(new FP_cos(bw, 23), openfloatDir, "FP_cos_32_23")
+  // OpenFloatSpec (bw=32, pd=1) + OpenFloatBasicSpec iterTest (bw in 32,64; pd in 1,7,13)
+  genVerilog(new FP_add(32, 1), openfloatDir, "FP_add_32_1")
+  genVerilog(new FP_add(32, 7), openfloatDir, "FP_add_32_7")
+  genVerilog(new FP_add(32, 13), openfloatDir, "FP_add_32_13")
+  genVerilog(new FP_add(64, 1), openfloatDir, "FP_add_64_1")
+  genVerilog(new FP_add(64, 7), openfloatDir, "FP_add_64_7")
+  genVerilog(new FP_add(64, 13), openfloatDir, "FP_add_64_13")
+  genVerilog(new FP_mult(32, 1), openfloatDir, "FP_mult_32_1")
+  genVerilog(new FP_mult(32, 7), openfloatDir, "FP_mult_32_7")
+  genVerilog(new FP_mult(32, 13), openfloatDir, "FP_mult_32_13")
+  genVerilog(new FP_mult(64, 1), openfloatDir, "FP_mult_64_1")
+  genVerilog(new FP_mult(64, 7), openfloatDir, "FP_mult_64_7")
+  genVerilog(new FP_mult(64, 13), openfloatDir, "FP_mult_64_13")
+  genVerilog(new FP_div(32, 15, 15), openfloatDir, "FP_divider_32_15_15")
+  genVerilog(new FP_sqrt(32, 23, 23), openfloatDir, "FP_sqrt_32_23_23")
+  genVerilog(new FP_cos(32, 23), openfloatDir, "FP_cos_32_23")
 
   // ============================================================================
   // HardFloat Modules
@@ -145,8 +154,39 @@ object GenerateAllTestModules extends App {
                                 MathFuncPipelineConfig.none), rialDir, "RialSinFP16")
   
   val fncfgFP16_cos = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.Cos)))
-  genVerilog(new MathFunctions(fncfgFP16_cos, fp16Spec, nOrderFP16, adrWFP16, extraBitsFP16, 
+  genVerilog(new MathFunctions(fncfgFP16_cos, fp16Spec, nOrderFP16, adrWFP16, extraBitsFP16,
                                MathFuncPipelineConfig.none), rialDir, "RialCosFP16")
+  
+  val fncfgFP16_reciprocal = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.Reciprocal)))
+  genVerilog(new MathFunctions(fncfgFP16_reciprocal, fp16Spec, nOrderFP16, adrWFP16, extraBitsFP16,
+                               MathFuncPipelineConfig.none), rialDir, "RialReciprocalFP16")
+  
+  val fncfgFP16_exp = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.Exp)))
+  genVerilog(new MathFunctions(fncfgFP16_exp, fp16Spec, nOrderFP16, adrWFP16, extraBitsFP16,
+                               MathFuncPipelineConfig.none), rialDir, "RialExpFP16")
+  
+  val fncfgFP16_log = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.Log)))
+  genVerilog(new MathFunctions(fncfgFP16_log, fp16Spec, nOrderFP16, adrWFP16, extraBitsFP16,
+                               MathFuncPipelineConfig.none), rialDir, "RialLogFP16")
+  
+  val fncfgFP16_sigmoid = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.Sigmoid)))
+  genVerilog(new MathFunctions(fncfgFP16_sigmoid, fp16Spec, nOrderFP16, adrWFP16, extraBitsFP16,
+                               MathFuncPipelineConfig.none), rialDir, "RialSigmoidFP16")
+  
+  val fncfgFP16_acos = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.Sqrt, FuncKind.ACosPhase1, FuncKind.ACosPhase2)))
+  genVerilog(new MathFunctions(fncfgFP16_acos, fp16Spec, nOrderFP16, adrWFP16, extraBitsFP16,
+                               MathFuncPipelineConfig.none), rialDir, "RialAcosFP16")
+  
+  val fncfgFP16_softplus = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.SoftPlus)))
+  genVerilog(new MathFunctions(fncfgFP16_softplus, fp16Spec, nOrderFP16, adrWFP16, 1,
+                               MathFuncPipelineConfig.none), rialDir, "RialSoftPlusFP16")
+  
+  val fncfgFP16_smg = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.ScaleMixtureGaussian)), Some((exp(-1.0), exp(-6.0))))
+  genVerilog(new MathFunctions(fncfgFP16_smg, fp16Spec, nOrderFP16, adrWFP16, extraBitsFP16,
+                               MathFuncPipelineConfig.none), rialDir, "RialSMGFP16")
+  
+  val fncfgFP16_atan2 = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.Reciprocal, FuncKind.ATan2Phase1, FuncKind.ATan2Phase2)))
+  genVerilog(new MathFunctions(fncfgFP16_atan2, fp16Spec, 0, 8, 0, MathFuncPipelineConfig.none), rialDir, "RialAtan2FP16")
   
   // Math Functions - FP32
   val nOrderFP32 = 3
@@ -182,8 +222,23 @@ object GenerateAllTestModules extends App {
                                MathFuncPipelineConfig.none), rialDir, "RialReciprocalFP32")
   
   val fncfgFP32_sigmoid = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.Sigmoid)))
-  genVerilog(new MathFunctions(fncfgFP32_sigmoid, fp32Spec, nOrderFP32, adrWFP32, extraBitsFP32, 
+  genVerilog(new MathFunctions(fncfgFP32_sigmoid, fp32Spec, nOrderFP32, adrWFP32, extraBitsFP32,
                                MathFuncPipelineConfig.none), rialDir, "RialSigmoidFP32")
+  
+  val fncfgFP32_acos = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.Sqrt, FuncKind.ACosPhase1, FuncKind.ACosPhase2)))
+  genVerilog(new MathFunctions(fncfgFP32_acos, fp32Spec, nOrderFP32, adrWFP32, extraBitsFP32,
+                               MathFuncPipelineConfig.none), rialDir, "RialAcosFP32")
+  
+  val fncfgFP32_softplus = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.SoftPlus)))
+  genVerilog(new MathFunctions(fncfgFP32_softplus, fp32Spec, nOrderFP32, adrWFP32, 1,
+                               MathFuncPipelineConfig.none), rialDir, "RialSoftPlusFP32")
+  
+  val fncfgFP32_smg = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.ScaleMixtureGaussian)), Some((exp(-1.0), exp(-6.0))))
+  genVerilog(new MathFunctions(fncfgFP32_smg, fp32Spec, nOrderFP32, adrWFP32, extraBitsFP32,
+                               MathFuncPipelineConfig.none), rialDir, "RialSMGFP32")
+  
+  val fncfgFP32_atan2 = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.Reciprocal, FuncKind.ATan2Phase1, FuncKind.ATan2Phase2)))
+  genVerilog(new MathFunctions(fncfgFP32_atan2, fp32Spec, 0, 8, 0, MathFuncPipelineConfig.none), rialDir, "RialAtan2FP32")
   
   // Math Functions - FP64
   val nOrderFP64 = 3
@@ -207,16 +262,44 @@ object GenerateAllTestModules extends App {
                                MathFuncPipelineConfig.none), rialDir, "RialLogFP64")
   
   val fncfgFP64_sigmoid = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.Sigmoid)))
-  genVerilog(new MathFunctions(fncfgFP64_sigmoid, fp64Spec, nOrderFP64, adrWFP64, extraBitsFP64, 
+  genVerilog(new MathFunctions(fncfgFP64_sigmoid, fp64Spec, nOrderFP64, adrWFP64, extraBitsFP64,
                                MathFuncPipelineConfig.none), rialDir, "RialSigmoidFP64")
+  
+  val fncfgFP64_reciprocal = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.Reciprocal)))
+  genVerilog(new MathFunctions(fncfgFP64_reciprocal, fp64Spec, nOrderFP64, adrWFP64, extraBitsFP64,
+                               MathFuncPipelineConfig.none), rialDir, "RialReciprocalFP64")
+  
+  val fncfgFP64_acos = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.Sqrt, FuncKind.ACosPhase1, FuncKind.ACosPhase2)))
+  genVerilog(new MathFunctions(fncfgFP64_acos, fp64Spec, nOrderFP64, adrWFP64, extraBitsFP64,
+                               MathFuncPipelineConfig.none), rialDir, "RialAcosFP64")
+  
+  val fncfgFP64_sin = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.Sin)))
+  genVerilog(new MathFunctions(fncfgFP64_sin, fp64Spec, nOrderFP64, adrWFP64, extraBitsFP64,
+                               MathFuncPipelineConfig.none), rialDir, "RialSinFP64")
+  
+  val fncfgFP64_cos = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.Cos)))
+  genVerilog(new MathFunctions(fncfgFP64_cos, fp64Spec, nOrderFP64, adrWFP64, extraBitsFP64,
+                               MathFuncPipelineConfig.none), rialDir, "RialCosFP64")
+  
+  val fncfgFP64_softplus = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.SoftPlus)))
+  genVerilog(new MathFunctions(fncfgFP64_softplus, fp64Spec, nOrderFP64, adrWFP64, 1,
+                               MathFuncPipelineConfig.none), rialDir, "RialSoftPlusFP64")
+  
+  val fncfgFP64_smg = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.ScaleMixtureGaussian)), Some((exp(-1.0), exp(-6.0))))
+  genVerilog(new MathFunctions(fncfgFP64_smg, fp64Spec, nOrderFP64, adrWFP64, extraBitsFP64,
+                               MathFuncPipelineConfig.none), rialDir, "RialSMGFP64")
+  
+  val fncfgFP64_atan2 = new MathFuncConfig(FuncKind.normalize(Seq(FuncKind.Reciprocal, FuncKind.ATan2Phase1, FuncKind.ATan2Phase2)))
+  genVerilog(new MathFunctions(fncfgFP64_atan2, fp64Spec, 0, 8, 0, MathFuncPipelineConfig.none), rialDir, "RialAtan2FP64")
   
   println()
   println("=" * 80)
   println("Verilog generation complete!")
   println("=" * 80)
   println(s"All files generated in: $baseDir/")
-  println(s"  - OpenFloat: $openfloatDir/")
+  println(s"  - OpenFloat: $openfloatDir/ (ADD/SUB/MULT/Div/Sqrt/Cos at configs used by 60 tests)")
   println(s"  - HardFloat: $hardfloatDir/")
-  println(s"  - Rial: $rialDir/")
+  println(s"  - Rial: $rialDir/ (all FP16/32/64 ops: Add, Mult, FMA, Sqrt, InvSqrt, Sin, Cos, Exp, Log, Reciprocal, Sigmoid, Acos, SoftPlus, SMG, Atan2)")
+  println("Run these .sv files through Yosys for PPA/synthesis.")
   println("=" * 80)
 }
