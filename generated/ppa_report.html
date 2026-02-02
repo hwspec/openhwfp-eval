@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPA Analysis Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #1a1a2e;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #16213e;
+            color: #e8e8e8;
+            padding: 40px;
+            text-align: center;
+            border-bottom: 2px solid #0f3460;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .tech-badge {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 16px;
+            background: #0f3460;
+            border: 1px solid #e94560;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            color: #e94560;
+        }
+
+        .estimate-notice {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.9em;
+            color: #a0a0a0;
+            font-style: italic;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            padding: 25px;
+            background: #f5f5f5;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            text-align: center;
+            border-left: 3px solid #0f3460;
+        }
+
+        .summary-card h3 {
+            color: #0f3460;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .summary-card .value {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: #16213e;
+            font-family: 'Courier New', monospace;
+        }
+
+        .summary-card .unit {
+            font-size: 0.8em;
+            color: #666;
+            margin-left: 4px;
+        }
+
+        .content {
+            padding: 25px;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            color: #16213e;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #0f3460;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: white;
+            font-size: 0.9em;
+        }
+
+        thead {
+            background: #16213e;
+            color: #e8e8e8;
+        }
+
+        th {
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8em;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tbody tr:hover {
+            background: #f8f8f8;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .module-name {
+            font-weight: 600;
+            color: #0f3460;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+        }
+
+        .number {
+            font-family: 'Courier New', monospace;
+            text-align: right;
+        }
+
+        .footer {
+            padding: 15px;
+            text-align: center;
+            color: #555;
+            font-size: 0.8em;
+            background: #f0f0f0;
+            border-top: 1px solid #ddd;
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.7em;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .badge-openfloat {
+            background: #1a3a5c;
+            color: #4da6ff;
+        }
+
+        .badge-hardfloat {
+            background: #3d2c1a;
+            color: #ffb74d;
+        }
+
+        .badge-rial {
+            background: #2d1a3d;
+            color: #ce93d8;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.5em; }
+            table { font-size: 0.8em; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>PPA Analysis Report</h1>
+            <p>Generated: 2026-01-30 19:25:34</p>
+            <span class="tech-badge">7nm Technology Node</span>
+            <span class="estimate-notice">Preliminary estimates via Yosys synthesis (no PDK)</span>
+        </div>
+
+        <div class="summary">
+            <div class="summary-card">
+                <h3>Total Modules</h3>
+                <div class="value">42<span class="unit">modules</span></div>
+            </div>
+            <div class="summary-card">
+                <h3>Total Cells</h3>
+                <div class="value">33,128,413<span class="unit">cells</span></div>
+            </div>
+            <div class="summary-card">
+                <h3>Total Area</h3>
+                <div class="value">3312.8<span class="unit">mm²</span></div>
+            </div>
+            <div class="summary-card">
+                <h3>Technology</h3>
+                <div class="value">7nm</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <h2 class="section-title">Module Statistics</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Module Name</th>
+                        <th>Wire Bits</th>
+                        <th>Cells</th>
+                        <th>Area (nm²)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="module-name">RialInvSqrtFP64</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">7</td>
+                        <td class="number">7,637,900</td>
+                        <td class="number">763,790,000</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialSqrtFP64</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">7</td>
+                        <td class="number">7,565,256</td>
+                        <td class="number">756,525,600</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialSigmoidFP64</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">7</td>
+                        <td class="number">4,056,583</td>
+                        <td class="number">405,658,300</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialLogFP64</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">9,525,828</td>
+                        <td class="number">3,796,798</td>
+                        <td class="number">379,679,800</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialExpFP64</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">3,365,139</td>
+                        <td class="number">1,456,112</td>
+                        <td class="number">145,611,200</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialInvSqrtFP32</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">6,133,373</td>
+                        <td class="number">1,314,566</td>
+                        <td class="number">131,456,600</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialSqrtFP32</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">6,062,047</td>
+                        <td class="number">1,281,150</td>
+                        <td class="number">128,115,000</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialSigmoidFP32</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">3,186,456</td>
+                        <td class="number">783,629</td>
+                        <td class="number">78,362,900</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialLogFP32</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">2,203,423</td>
+                        <td class="number">757,725</td>
+                        <td class="number">75,772,500</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialCosFP32</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">2,947,406</td>
+                        <td class="number">712,132</td>
+                        <td class="number">71,213,200</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialSinFP32</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">2,947,406</td>
+                        <td class="number">712,132</td>
+                        <td class="number">71,213,200</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialReciprocalFP32</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">2,945,984</td>
+                        <td class="number">684,211</td>
+                        <td class="number">68,421,100</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialInvSqrtFP16</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">2,705,617</td>
+                        <td class="number">492,459</td>
+                        <td class="number">49,245,900</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialSqrtFP16</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">2,672,277</td>
+                        <td class="number">476,021</td>
+                        <td class="number">47,602,100</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialExpFP32</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">772,268</td>
+                        <td class="number">286,282</td>
+                        <td class="number">28,628,200</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialCosFP16</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">1,286,607</td>
+                        <td class="number">260,860</td>
+                        <td class="number">26,086,000</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialSinFP16</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">1,286,607</td>
+                        <td class="number">260,860</td>
+                        <td class="number">26,086,000</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">FP_cos_32_23</span><span class="category-badge badge-openfloat">OpenFloat</span></td>
+                        <td class="number">157,393</td>
+                        <td class="number">119,656</td>
+                        <td class="number">11,965,600</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialFusedMulAddFP64</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">98,321</td>
+                        <td class="number">94,614</td>
+                        <td class="number">9,461,400</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">FPMUL_11_53</span><span class="category-badge badge-hardfloat">HardFloat</span></td>
+                        <td class="number">76,014</td>
+                        <td class="number">72,989</td>
+                        <td class="number">7,298,900</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialMultFP64</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">69,379</td>
+                        <td class="number">68,853</td>
+                        <td class="number">6,885,300</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">FP_sqrt_32_23_23</span><span class="category-badge badge-openfloat">OpenFloat</span></td>
+                        <td class="number">59,747</td>
+                        <td class="number">57,703</td>
+                        <td class="number">5,770,300</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialFusedMulAddFP32</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">28,227</td>
+                        <td class="number">26,520</td>
+                        <td class="number">2,652,000</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">FP_divider_32_15_15</span><span class="category-badge badge-openfloat">OpenFloat</span></td>
+                        <td class="number">23,545</td>
+                        <td class="number">21,741</td>
+                        <td class="number">2,174,100</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">FPMUL_8_24</span><span class="category-badge badge-hardfloat">HardFloat</span></td>
+                        <td class="number">18,509</td>
+                        <td class="number">16,647</td>
+                        <td class="number">1,664,700</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">FP_mult_32_1</span><span class="category-badge badge-openfloat">OpenFloat</span></td>
+                        <td class="number">15,044</td>
+                        <td class="number">14,643</td>
+                        <td class="number">1,464,300</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialMultFP32</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">14,854</td>
+                        <td class="number">14,598</td>
+                        <td class="number">1,459,800</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">FPSUB_11_53</span><span class="category-badge badge-hardfloat">HardFloat</span></td>
+                        <td class="number">13,921</td>
+                        <td class="number">10,947</td>
+                        <td class="number">1,094,700</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">FPADD_11_53</span><span class="category-badge badge-hardfloat">HardFloat</span></td>
+                        <td class="number">13,920</td>
+                        <td class="number">10,946</td>
+                        <td class="number">1,094,600</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialFusedMulAddFP16</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">9,778</td>
+                        <td class="number">8,969</td>
+                        <td class="number">896,900</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">FPDIV_11_53</span><span class="category-badge badge-hardfloat">HardFloat</span></td>
+                        <td class="number">11,805</td>
+                        <td class="number">8,704</td>
+                        <td class="number">870,400</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">FPSQRT_11_53</span><span class="category-badge badge-hardfloat">HardFloat</span></td>
+                        <td class="number">10,304</td>
+                        <td class="number">7,823</td>
+                        <td class="number">782,300</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialAddFP64</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">7,713</td>
+                        <td class="number">6,944</td>
+                        <td class="number">694,400</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">FPSUB_8_24</span><span class="category-badge badge-hardfloat">HardFloat</span></td>
+                        <td class="number">7,276</td>
+                        <td class="number">5,447</td>
+                        <td class="number">544,700</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">FPADD_8_24</span><span class="category-badge badge-hardfloat">HardFloat</span></td>
+                        <td class="number">7,275</td>
+                        <td class="number">5,446</td>
+                        <td class="number">544,600</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">FPDIV_8_24</span><span class="category-badge badge-hardfloat">HardFloat</span></td>
+                        <td class="number">6,423</td>
+                        <td class="number">4,510</td>
+                        <td class="number">451,000</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">FPSQRT_8_24</span><span class="category-badge badge-hardfloat">HardFloat</span></td>
+                        <td class="number">5,678</td>
+                        <td class="number">4,057</td>
+                        <td class="number">405,700</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialAddFP32</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">3,783</td>
+                        <td class="number">3,403</td>
+                        <td class="number">340,300</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialMultFP16</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">3,451</td>
+                        <td class="number">3,321</td>
+                        <td class="number">332,100</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">FP_add_32_1</span><span class="category-badge badge-openfloat">OpenFloat</span></td>
+                        <td class="number">4,128</td>
+                        <td class="number">2,711</td>
+                        <td class="number">271,100</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">RialAddFP16</span><span class="category-badge badge-rial">Rial</span></td>
+                        <td class="number">1,918</td>
+                        <td class="number">1,715</td>
+                        <td class="number">171,500</td>
+                    </tr>
+                    <tr>
+                        <td><span class="module-name">FPTest_8_24</span><span class="category-badge badge-hardfloat">HardFloat</span></td>
+                        <td class="number">1,141</td>
+                        <td class="number">830</td>
+                        <td class="number">83,000</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>Yosys Synthesis Estimate | Area: 100 nm²/cell (7nm assumption)</p>
+            <p style="color:#888; font-size:0.75em; margin-top:4px;">Note: Preliminary estimates without PDK. Actual silicon area will vary.</p>
+        </div>
+    </div>
+</body>
+</html>
