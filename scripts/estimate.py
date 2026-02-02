@@ -28,8 +28,10 @@ logger = logging.getLogger(__name__)
 # Constants
 AREA_PER_CELL = 100  # nm² for 7nm technology
 CACHE_SIZE = 128  # Number of results to cache
-MAX_WORKERS = multiprocessing.cpu_count()  # Use all available CPU cores
-TIMEOUT = 600  # Increased timeout to 10 minutes
+MAX_WORKERS = 4  # Use all available CPU cores
+TIMEOUT = 7200  # 2 hours per file (per Yosys run).
+# Max total time (worst case, every file hits timeout): ceil(num_files / MAX_WORKERS) * TIMEOUT
+# Example: 72 files, 4 workers, 60s → ceil(72/4)*60 = 18*60 = 1080 s ≈ 18 minutes.
 
 @lru_cache(maxsize=CACHE_SIZE)
 def prettify_name(filename: str) -> str:
