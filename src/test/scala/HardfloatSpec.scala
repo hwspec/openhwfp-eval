@@ -2,13 +2,13 @@ package hardfloat
 
 import org.scalatest.flatspec.AnyFlatSpec
 import chisel3._
-import chisel3.simulator.EphemeralSimulator._
+import chisel3.simulator.scalatest.ChiselSim
 import hardfloat.{FPDIVTest, FPOPTest, FPOPTestMode, FPTest, FPSqrtTest}
 import java.lang.{Float => javaFloat}
 import java.lang.Double.{doubleToLongBits, longBitsToDouble}
 import scala.util.Random
 
-class FPTestSpec32 extends AnyFlatSpec {
+class FPTestSpec32 extends AnyFlatSpec with ChiselSim {
   behavior of "Hardfloat FP32 Tests"
   val debug = true
   val nrndtests = 20
@@ -161,7 +161,7 @@ class FPTestSpec32 extends AnyFlatSpec {
 
 
 
-class FPTestSpec64 extends AnyFlatSpec {
+class FPTestSpec64 extends AnyFlatSpec with ChiselSim {
   behavior of "Hardfloat FP64 Tests"
   val debug = true
   val nrndtests = 20
