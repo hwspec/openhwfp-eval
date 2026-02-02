@@ -10,6 +10,18 @@ import java.lang.{Float => javaFloat}
 import java.lang.{Math => javaMath}
 import scala.util.Random
 
+/** Tolerance comparison for OpenFloat ADD/SUB/MULT: handles NaN, Inf, and relative/absolute error. */
+object OpenFloatTolerance {
+  /** absTol=1e-6 allows FP32 rounding near zero (e.g. 1.0 + -1.0 => tiny residual). */
+  def nearlyEqual(dut: Double, ref: Double, relTol: Double = 1e-5, absTol: Double = 1e-6): Boolean = {
+    if (java.lang.Double.isNaN(dut) && java.lang.Double.isNaN(ref)) return true
+    if (java.lang.Double.isInfinite(dut) && java.lang.Double.isInfinite(ref)) return (dut > 0) == (ref > 0)
+    if (java.lang.Double.isNaN(dut) || java.lang.Double.isNaN(ref)) return false
+    if (java.lang.Double.isInfinite(dut) || java.lang.Double.isInfinite(ref)) return false
+    val diff = math.abs(dut - ref)
+    diff <= absTol || diff <= relTol * math.max(math.abs(ref), 1e-30)
+  }
+}
 
 //Helper functions for OpenFloatBasicSpec
 object halfBits {
@@ -196,13 +208,14 @@ class OpenFloatBasicSpec extends AnyFlatSpec with ChiselSim {
               resultFloat = java.lang.Double.longBitsToDouble(longBits)
             }
 
+            assert(OpenFloatTolerance.nearlyEqual(resultFloat, expected), f"OpenFloat ADD $a + $b: dut=$resultFloat ref=$expected")
             println(f"OpenFloat $a + $b should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
             dut.clock.step()
             cycles += 1
           }
         }
 
-        //Subtraction
+        // Subtraction: FP_add computes a + b; feed (a, -b) to get a - b.
         println("\n=================\nOpenFloat SUB BEGIN\n=================\n")
         simulate(new FP_add(bw, pd)) { dut =>
           var expectedVals = new Array[Float](testdata.length - 1)
@@ -217,6 +230,7 @@ class OpenFloatBasicSpec extends AnyFlatSpec with ChiselSim {
           for (d <- testdata.sliding(2)) {
             val a = d.head
             val b = d.tail.head
+            val negB = -b
 
             aVals += a
             bVals += b
@@ -224,18 +238,18 @@ class OpenFloatBasicSpec extends AnyFlatSpec with ChiselSim {
 
             if (bw == 16) {
               dut.io.in_a.poke(halfBits.floatToHalfBits(a))
-              dut.io.in_b.poke(halfBits.floatToHalfBits(b))
+              dut.io.in_b.poke(halfBits.floatToHalfBits(negB))
             }
             else if (bw == 32) {
               dut.io.in_a.poke(javaFloat.floatToRawIntBits(a) & 0xffffffffL)
-              dut.io.in_b.poke(javaFloat.floatToRawIntBits(b) & 0xffffffffL)
+              dut.io.in_b.poke(javaFloat.floatToRawIntBits(negB) & 0xffffffffL)
             }
             else if (bw == 64) {
               val rawLong_a = java.lang.Double.doubleToRawLongBits(a)
               dut.io.in_a.poke(BigInt(rawLong_a) & ((BigInt(1) << 64) - 1))
 
-              val rawLong_b = java.lang.Double.doubleToRawLongBits(b)
-              dut.io.in_b.poke(BigInt(rawLong_b) & ((BigInt(1) << 64) - 1))
+              val rawLong_negB = java.lang.Double.doubleToRawLongBits(negB)
+              dut.io.in_b.poke(BigInt(rawLong_negB) & ((BigInt(1) << 64) - 1))
             }
 
             if (cycles >= pd) {
@@ -274,6 +288,7 @@ class OpenFloatBasicSpec extends AnyFlatSpec with ChiselSim {
               resultFloat = java.lang.Double.longBitsToDouble(longBits)
             }
 
+            assert(OpenFloatTolerance.nearlyEqual(resultFloat, expected), f"OpenFloat SUB $a - $b: dut=$resultFloat ref=$expected")
             println(f"OpenFloat $a - $b should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
             dut.clock.step()
             cycles += 1
@@ -353,6 +368,7 @@ class OpenFloatBasicSpec extends AnyFlatSpec with ChiselSim {
                 resultFloat = java.lang.Double.longBitsToDouble(longBits)
               }
 
+              assert(OpenFloatTolerance.nearlyEqual(resultFloat, expected), f"OpenFloat MULT $a * $b: dut=$resultFloat ref=$expected")
               println(f"OpenFloat $a * $b should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
               dut.clock.step()
               cycles += 1
@@ -470,6 +486,7 @@ class OpenFloatBasicSpec extends AnyFlatSpec with ChiselSim {
             resultFloat = java.lang.Double.longBitsToDouble(longBits)
           }
 
+          assert(OpenFloatTolerance.nearlyEqual(resultFloat, expected), f"OpenFloat ADD $a + $b: dut=$resultFloat ref=$expected")
           println(f"OpenFloat $a + $b should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
           dut.clock.step()
           cycles += 1
@@ -479,7 +496,7 @@ class OpenFloatBasicSpec extends AnyFlatSpec with ChiselSim {
 
     "FP_Add" should "pass" in testFP_add()
 
-    //Subtraction
+    // Subtraction: FP_add computes a + b; to get a - b we feed (a, -b).
     def testFP_sub(): Unit = {
       println("\n=================\nOpenFloat FP_Sub BEGIN\n=================\n")
       simulate(new FP_add(bw, pd)) { dut =>
@@ -495,6 +512,7 @@ class OpenFloatBasicSpec extends AnyFlatSpec with ChiselSim {
         for (d <- testdata.sliding(2)) {
           val a = d.head
           val b = d.tail.head
+          val negB = -b
 
           aVals += a
           bVals += b
@@ -502,18 +520,18 @@ class OpenFloatBasicSpec extends AnyFlatSpec with ChiselSim {
 
           if (bw == 16) {
             dut.io.in_a.poke(halfBits.floatToHalfBits(a))
-            dut.io.in_b.poke(halfBits.floatToHalfBits(b))
+            dut.io.in_b.poke(halfBits.floatToHalfBits(negB)) // feed -b so adder computes a - b
           }
           else if (bw == 32) {
             dut.io.in_a.poke(javaFloat.floatToRawIntBits(a) & 0xffffffffL)
-            dut.io.in_b.poke(javaFloat.floatToRawIntBits(b) & 0xffffffffL)
+            dut.io.in_b.poke(javaFloat.floatToRawIntBits(negB) & 0xffffffffL)
           }
           else if (bw == 64) {
             val rawLong_a = java.lang.Double.doubleToRawLongBits(a)
             dut.io.in_a.poke(BigInt(rawLong_a) & ((BigInt(1) << 64) - 1))
 
-            val rawLong_b = java.lang.Double.doubleToRawLongBits(b)
-            dut.io.in_b.poke(BigInt(rawLong_b) & ((BigInt(1) << 64) - 1))
+            val rawLong_negB = java.lang.Double.doubleToRawLongBits(negB)
+            dut.io.in_b.poke(BigInt(rawLong_negB) & ((BigInt(1) << 64) - 1))
           }
 
           if (cycles >= pd) {
@@ -552,6 +570,7 @@ class OpenFloatBasicSpec extends AnyFlatSpec with ChiselSim {
             resultFloat = java.lang.Double.longBitsToDouble(longBits)
           }
 
+          assert(OpenFloatTolerance.nearlyEqual(resultFloat, expected), f"OpenFloat SUB $a - $b: dut=$resultFloat ref=$expected")
           println(f"OpenFloat $a - $b should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
           dut.clock.step()
           cycles += 1
@@ -633,6 +652,7 @@ class OpenFloatBasicSpec extends AnyFlatSpec with ChiselSim {
               resultFloat = java.lang.Double.longBitsToDouble(longBits)
             }
 
+            assert(OpenFloatTolerance.nearlyEqual(resultFloat, expected), f"OpenFloat MULT $a * $b: dut=$resultFloat ref=$expected")
             println(f"OpenFloat $a * $b should equal to $expected: out=$resultFloat cycles=$cycles throughput=$throughput")
             dut.clock.step()
             cycles += 1
@@ -826,6 +846,8 @@ class OpenFloatBasicSpec extends AnyFlatSpec with ChiselSim {
         }
       }
 
+      // Ignored: Verilator fails on generated cordic_32_23.sv (WIDTHEXPAND: 3-bit index in ADD).
+      // Fix would require changing OpenFloat primitives.scala (cordic index width).
       "FP_Cos" should "pass" ignore testFP_cos()
 
       // NOTE: FP_sin is not available in the current OpenFloat fpu.
