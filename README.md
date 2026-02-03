@@ -6,6 +6,12 @@ It will include testbenches and use-case examples for open-source hardware float
 
 Contents will be migrated from our private repository shortly.
 
+### Cloning the Repository with Submodules
+
+You can clone this repository **with all submodules** in one step:
+
+```bash
+git clone --recurse-submodules <repo_url>
 
 ### Dependencies
 
