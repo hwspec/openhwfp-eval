@@ -7,3 +7,6 @@
 [submodule "OpenFloat"]
 	path = OpenFloat
 	url = https://github.com/VegaMario/OpenFloat.git
+[submodule "openroad-setup"]
+	path = openroad-setup
+	url = https://github.com/csbohan/openroad-setup.git
