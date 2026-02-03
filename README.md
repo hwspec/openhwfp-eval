@@ -12,6 +12,11 @@ You can clone this repository **with all submodules** in one step:
 
 ```bash
 git clone --recurse-submodules <repo_url>
+```
+or, if you alreadt cloned the repo w/o submodules, initialize and update them with:
+```bash
+git submodule update --init --recursive
+```
 
 ### Dependencies
 
