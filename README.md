@@ -11,7 +11,7 @@ Contents will be migrated from our private repository shortly.
 You can clone this repository **with all submodules** in one step:
 
 ```bash
-git clone --recurse-submodules <repo_url>
+git clone --recurse-submodules https://github.com/hwspec/openhwfp-eval.git
 ```
 or, if you alreadt cloned the repo w/o submodules, initialize and update them with:
 ```bash
