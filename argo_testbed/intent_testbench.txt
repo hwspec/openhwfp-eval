@@ -1,0 +1,23 @@
+Goal: Generate a ScalaTest/ChiselSim testbench for FP32 addition.
+
+We are working in this repository:
+- OpenFloat FP_add(32, pd=1) with io.in_a, io.in_b, io.out_s, io.in_en, io.in_valid, io.out_valid.
+- Berkeley Hardfloat FPOPTest(8, 24, ADD).
+- Rial AddFPGeneric(Float32Spec, ..., RoundSpec.roundToEven) with io.x, io.y, io.z.
+
+Testbench intent (first version):
+- Focus on FP32 add correctness and IEEE-754 corner cases.
+- Compare the DUT against a software oracle implemented using Java Float (floatToRawIntBits / intBitsToFloat).
+- Include directed tests for:
+  - Normal + normal (sanity).
+  - -1.0 + 1.0 and other cancellations.
+  - NaN propagation.
+  - +Inf / -Inf combinations.
+  - Subnormals and near-subnormal boundaries.
+  - Signed zero (+0.0 and -0.0).
+  - Near-overflow exponent boundary values.
+- Use ChiselSim to clock the DUT, respecting any pipeline latency / valid signals.
+- Produce clear assertions or mismatch messages when the DUT disagrees with the software oracle.
+
+You may choose one DUT to target for now (for example, OpenFloat FP_add(32, pd=1)), but structure the testbench so we can later adapt it to other FP32 adders in this repo.
+

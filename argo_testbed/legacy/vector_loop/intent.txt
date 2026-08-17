@@ -1,0 +1,19 @@
+Goal: Directed functional verification for floating-point add in FP32.
+
+We want to stress numerically sensitive IEEE-754 edge cases for op=add and fp_format=fp32:
+  - NaN (including multiple payload patterns)
+  - +Inf / -Inf
+  - Subnormal (denormals) inputs and near-subnormal boundaries
+  - Signed zero (+0 and -0)
+  - Near-overflow / exponent boundary cases
+
+Rounding mode: nearest-even.
+
+Verification targets:
+  - Generate vectors that are likely to trigger divergence or incorrect special-case handling.
+  - Use differential testing across OpenFloat, Hardfloat, and Rial.
+  - Use a software oracle as a correctness baseline.
+
+Feedback loop:
+  - In later iterations, use `argo_testbed/llm_runs/smoke1/failures.json` to focus the next vector batch on patterns that previously mismatched.
+

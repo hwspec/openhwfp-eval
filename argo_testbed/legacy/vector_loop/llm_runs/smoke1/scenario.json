@@ -1,0 +1,46 @@
+{
+  "scenario": {
+    "targets": [
+      "openfloat",
+      "hardfloat",
+      "rial"
+    ],
+    "op": "add",
+    "fp_format": "fp32",
+    "rounding_mode": "nearest_even"
+  },
+  "vectors": [
+    {
+      "a_hex": "0x7fc00000",
+      "b_hex": "0x7fc00000"
+    },
+    {
+      "a_hex": "0xff800000",
+      "b_hex": "0x00000000"
+    },
+    {
+      "a_hex": "0x00000001",
+      "b_hex": "0x00000002"
+    },
+    {
+      "a_hex": "0x7f7fffff",
+      "b_hex": "0x7f7fffff"
+    },
+    {
+      "a_hex": "0x00000000",
+      "b_hex": "0x80000000"
+    },
+    {
+      "a_hex": "0x007fffff",
+      "b_hex": "0x00800000"
+    },
+    {
+      "a_hex": "0x7f800000",
+      "b_hex": "0x7f800000"
+    },
+    {
+      "a_hex": "0x7f7fffff",
+      "b_hex": "0x7f7fffff"
+    }
+  ]
+}
