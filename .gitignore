@@ -330,6 +330,11 @@ project/plugins/project/
 # Generated Verilog files
 generated/
 openroad_results/
+results/
+orfs_designs/src/
+orfs_designs/asap7/
+dataset/flow_instances.json
+dataset/flow_instances.jsonl
 wrapper_modules/
 cell_count_report.xml
 yosys_output.log

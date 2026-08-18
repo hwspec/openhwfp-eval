@@ -84,3 +84,13 @@ echo ""
 echo "Yosys results: generated/cell_count_report.xml"
 echo "HTML report: generated/ppa_report.html"
 echo "=========================================="
+
+# Step 3: flow-instance records (Table 2 / dataset schema)
+echo ""
+echo "Step 3: Exporting flow-instance records..."
+if python3 scripts/export_flow_instances.py; then
+    echo "  ✓ dataset/flow_instances.jsonl"
+    echo "  Archive with: bash scripts/archive_phase1.sh"
+else
+    echo "  ✗ export failed (Yosys XML still in generated/)"
+fi

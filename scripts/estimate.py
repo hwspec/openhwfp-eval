@@ -580,6 +580,7 @@ def create_xml_report(results: List[Tuple[str, Tuple[int, int]]]) -> None:
         for fn, (nwirebits, ncells) in results:
             module = ET.SubElement(modules, "Module")
             ET.SubElement(module, "Name").text = prettify_name(fn)
+            ET.SubElement(module, "SourcePath").text = fn.replace("\\", "/")
             ET.SubElement(module, "WireBits").text = str(nwirebits)
             ET.SubElement(module, "Cells").text = str(ncells)
             ET.SubElement(module, "Area_nm2").text = f"{estimate_area_nm2(ncells):.0f}"

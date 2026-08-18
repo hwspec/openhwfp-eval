@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hwspec.org/openhwfp-eval/flow_instance.schema.json",
+  "title": "OpenHWFP flow instance",
+  "description": "One attempt to process an FP operator configuration through verification, synthesis, and (optionally) physical implementation.",
+  "type": "object",
+  "required": ["flow_instance_id", "design_id", "library", "operator"],
+  "properties": {
+    "flow_instance_id": { "type": "string" },
+    "design_id": { "type": "string" },
+    "library": { "type": "string", "enum": ["openfloat", "hardfloat", "rial", "fpnew", "flopoco", "fpu", "unknown"] },
+    "operator": { "type": ["string", "null"] },
+    "precision": { "type": ["string", "null"] },
+    "exponent_width": { "type": ["integer", "null"] },
+    "mantissa_width": { "type": ["integer", "null"] },
+    "bitwidth": { "type": ["integer", "null"] },
+    "pipeline_depth": { "type": ["integer", "null"] },
+    "source_path": { "type": ["string", "null"] },
+    "source_commit": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "environment": {
+      "type": "object",
+      "properties": {
+        "java": { "type": "string" },
+        "sbt": { "type": "string" },
+        "verilator": { "type": "string" },
+        "yosys": { "type": "string" },
+        "openroad": { "type": "string" },
+        "host": { "type": "string" },
+        "timestamp": { "type": "string" }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "properties": {
+        "status": { "type": "string", "enum": ["pass", "fail", "ignored", "unknown", "not_run"] },
+        "failure_stage": { "type": ["string", "null"] },
+        "failure_category": { "type": ["string", "null"] },
+        "failure_message": { "type": ["string", "null"] }
+      }
+    },
+    "synthesis": {
+      "type": "object",
+      "properties": {
+        "status": { "type": "string", "enum": ["pass", "fail", "unknown", "not_run"] },
+        "backend": { "type": "string" },
+        "cell_count": { "type": ["integer", "null"] },
+        "wire_bits": { "type": ["integer", "null"] },
+        "estimated_area_nm2": { "type": ["number", "null"] },
+        "area_note": { "type": "string" }
+      }
+    },
+    "implementation": {
+      "type": "object",
+      "properties": {
+        "status": { "type": "string", "enum": ["pass", "fail", "unknown", "not_run"] },
+        "backend": { "type": "string" },
+        "platform": { "type": ["string", "null"] },
+        "clock_period_ps": { "type": ["number", "null"] },
+        "wns": { "type": ["number", "null"] },
+        "tns": { "type": ["number", "null"] },
+        "fmax_mhz": { "type": ["number", "null"] },
+        "util_percent": { "type": ["number", "null"] },
+        "report_dir": { "type": ["string", "null"] },
+        "failure_stage": { "type": ["string", "null"] },
+        "failure_message": { "type": ["string", "null"] }
+      }
+    },
+    "overall_status": { "type": "string" }
+  }
+}

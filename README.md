@@ -101,8 +101,43 @@ ________________________________________________________________________________
 $ sbt test
 ```
 
+#### Yosys (generic cell-count / Phase-1 PPA)
 
+```bash
+sudo apt install -y yosys
+bash scripts/run_ppa_estimation.sh
+bash scripts/archive_phase1.sh
+```
 
+This writes Verilog under `generated/`, Yosys cell counts, `generated/ppa_report.html`, and flow-instance records in `dataset/flow_instances.jsonl`. Archive copies XML/HTML/logs/records into `results/phase1-<timestamp>/`.
+
+Those cell counts are **generic Yosys estimates**, not routed ASAP7 area.
+
+#### OpenROAD / ASAP7 (physical implementation)
+
+**Docker is the default** (pull a prebuilt image). **Local source build** works on Ubuntu 24.04 but takes 1–3 hours and needs `sudo ./setup.sh`. Skip Bazel; that path is for OpenROAD developers.
+
+```bash
+# Docker (recommended unless you cannot use Docker)
+bash scripts/setup_openroad.sh
+
+# or local build
+bash scripts/setup_openroad.sh --local
+```
+
+Then, with Verilog already in `generated/`:
+
+```bash
+python3 scripts/prepare_orfs_design.py generated/openfloat/FP_add_32_1.sv --period 2000
+# if you built locally:
+export ORFS_MODE=local
+bash scripts/run_openroad_design.sh openfloat_FP_add_32_1
+python3 scripts/extract_orfs_metrics.py --nickname openfloat_FP_add_32_1
+```
+
+`setup_openroad.sh` clones OpenROAD-flow-scripts and runs the ASAP7 `gcd` smoke test. Start with one FP32 adder; a failed route or timing miss is still a valid dataset row. After a local build, always `source ~/OpenROAD-flow-scripts/env.sh` so you do not pick up Ubuntu’s Yosys 0.33.
+
+See `orfs_designs/README.md` for the small add/mul sweep.
 
 If you have any question please contact:
 Kazutomo Yoshii <kazutomo@anl.gov> 
