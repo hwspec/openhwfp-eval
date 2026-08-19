@@ -1,0 +1,5326 @@
+{
+  "creator": "Yosys 0.68+ (git sha1 a5af9d690, Release, GNU /usr/bin/c++ 13.3.0) [github.com/The-OpenROAD-Project/yosys at HEAD]",
+  "modules": {
+    "FP_add_32_1": {
+      "attributes": {
+        "top": "00000000000000000000000000000001",
+        "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:258.8"
+      },
+      "ports": {
+        "reset": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "clock": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "io_in_en": {
+          "direction": "input",
+          "bits": [ 4 ]
+        },
+        "io_in_valid": {
+          "direction": "input",
+          "bits": [ 5 ]
+        },
+        "io_in_a": {
+          "direction": "input",
+          "bits": [ 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37 ]
+        },
+        "io_in_b": {
+          "direction": "input",
+          "bits": [ 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69 ]
+        },
+        "io_out_s": {
+          "direction": "output",
+          "bits": [ 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101 ]
+        },
+        "io_out_valid": {
+          "direction": "output",
+          "bits": [ 102 ]
+        }
+      },
+      "cells": {
+        "$1": {
+          "hide_name": 1,
+          "type": "$logic_not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:277.9-277.31"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 29, 30, 31, 32, 33, 34, 35, 36 ],
+            "Y": [ 103 ]
+          }
+        },
+        "$12": {
+          "hide_name": 1,
+          "type": "$and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:282.31-282.87"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 104 ],
+            "B": [ 105 ],
+            "Y": [ 106 ]
+          }
+        },
+        "$14": {
+          "hide_name": 1,
+          "type": "$or",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:283.22-283.62"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 107 ],
+            "B": [ 106 ],
+            "Y": [ 108 ]
+          }
+        },
+        "$19": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000010111"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:287.16-287.61"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60 ],
+            "B": [ 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28 ],
+            "S": [ 106 ],
+            "Y": [ 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131 ]
+          }
+        },
+        "$2": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:277.9-277.55"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 29, 30, 31, 32, 33, 34, 35, 36 ],
+            "B": [ "1", "0", "0", "0", "0", "0", "0", "0" ],
+            "S": [ 103 ],
+            "Y": [ 132, 133, 134, 135, 136, 137, 138, 139 ]
+          }
+        },
+        "$23": {
+          "hide_name": 1,
+          "type": "$xor",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:288.27-288.52"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 37 ],
+            "B": [ 69 ],
+            "Y": [ 140 ]
+          }
+        },
+        "$25": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:293.25-293.75"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 141, 142, 143, 144, 145, 146, 147, 148 ],
+            "B": [ 149, 150, 151, 152, 153, 154, 155, 156 ],
+            "S": [ 107 ],
+            "Y": [ 157, 158, 159, 160, 161, 162, 163, 164 ]
+          }
+        },
+        "$3": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:275.5-277.55"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0", "1", "1", "1", "1", "1", "1", "1" ],
+            "B": [ 132, 133, 134, 135, 136, 137, 138, 139 ],
+            "S": [ 165 ],
+            "Y": [ 141, 142, 143, 144, 145, 146, 147, 148 ]
+          }
+        },
+        "$33": {
+          "hide_name": 1,
+          "type": "$logic_not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:298.40-298.51"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 166, 167, 168, 169, 170, 171, 172, 173, 174 ],
+            "Y": [ 175 ]
+          }
+        },
+        "$39": {
+          "hide_name": 1,
+          "type": "$shl",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000010111",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000101",
+            "Y_WIDTH": "00000000000000000000000000010111"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:306.60-306.87"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198 ],
+            "B": [ 199, 200, 201, 202, 203 ],
+            "Y": [ 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226 ]
+          }
+        },
+        "$40": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000010111"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:306.18-306.87"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226 ],
+            "B": [ "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" ],
+            "S": [ 227 ],
+            "Y": [ 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250 ]
+          }
+        },
+        "$41": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000010111"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:304.14-306.87"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250 ],
+            "B": [ 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198 ],
+            "S": [ 251 ],
+            "Y": [ 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274 ]
+          }
+        },
+        "$43": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000010111"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:309.19-311.49"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 251 ],
+            "B": [ "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1" ],
+            "S": [ 275 ],
+            "Y": [ 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298 ]
+          }
+        },
+        "$44": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000010111"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:308.14-312.44"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198 ],
+            "B": [ 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298 ],
+            "S": [ 299 ],
+            "Y": [ 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322 ]
+          }
+        },
+        "$45": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000010111"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:303.9-312.45"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322 ],
+            "B": [ 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274 ],
+            "S": [ 140 ],
+            "Y": [ 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345 ]
+          }
+        },
+        "$46": {
+          "hide_name": 1,
+          "type": "$or",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:317.18-317.49"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 174 ],
+            "B": [ 175 ],
+            "Y": [ 227 ]
+          }
+        },
+        "$47": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:317.18-317.67"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 166, 167, 168, 169, 170, 171, 172, 173 ],
+            "B": [ "1", "0", "0", "0", "0", "0", "0", "0" ],
+            "S": [ 227 ],
+            "Y": [ 346, 347, 348, 349, 350, 351, 352, 353 ]
+          }
+        },
+        "$48": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:315.14-317.67"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 346, 347, 348, 349, 350, 351, 352, 353 ],
+            "B": [ 157, 158, 159, 160, 161, 162, 163, 164 ],
+            "S": [ 251 ],
+            "Y": [ 354, 355, 356, 357, 358, 359, 360, 361 ]
+          }
+        },
+        "$49": {
+          "hide_name": 1,
+          "type": "$or",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:319.18-319.50"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 362 ],
+            "B": [ 363 ],
+            "Y": [ 275 ]
+          }
+        },
+        "$50": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:319.18-319.69"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 364, 365, 366, 367, 368, 369, 370, 371 ],
+            "B": [ "0", "1", "1", "1", "1", "1", "1", "1" ],
+            "S": [ 275 ],
+            "Y": [ 372, 373, 374, 375, 376, 377, 378, 379 ]
+          }
+        },
+        "$51": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:318.13-320.24"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 157, 158, 159, 160, 161, 162, 163, 164 ],
+            "B": [ 372, 373, 374, 375, 376, 377, 378, 379 ],
+            "S": [ 299 ],
+            "Y": [ 380, 381, 382, 383, 384, 385, 386, 387 ]
+          }
+        },
+        "$52": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:314.9-320.24"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 380, 381, 382, 383, 384, 385, 386, 387 ],
+            "B": [ 354, 355, 356, 357, 358, 359, 360, 361 ],
+            "S": [ 140 ],
+            "Y": [ 388, 389, 390, 391, 392, 393, 394, 395 ]
+          }
+        },
+        "$53": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:324.16-324.41"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 396, 397, 398, 399, 400, 401, 402, 403 ],
+            "Y": [ 404, 405, 406, 407, 408, 409, 410, 411 ]
+          }
+        },
+        "$55": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:323.12-325.40"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 396, 397, 398, 399, 400, 401, 402, 403 ],
+            "B": [ 412, 413, 414, 415, 416, 417, 418, 419 ],
+            "S": [ 107 ],
+            "Y": [ 420, 421, 422, 423, 424, 425, 426, 427 ]
+          }
+        },
+        "$57": {
+          "hide_name": 1,
+          "type": "$and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:322.9-325.49"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 140 ],
+            "B": [ 428 ],
+            "Y": [ 429 ]
+          }
+        },
+        "$58": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:325.52-325.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 299 ],
+            "Y": [ 430 ]
+          }
+        },
+        "$59": {
+          "hide_name": 1,
+          "type": "$and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:322.9-325.73"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 429 ],
+            "B": [ 430 ],
+            "Y": [ 431 ]
+          }
+        },
+        "$6": {
+          "hide_name": 1,
+          "type": "$logic_not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:281.9-281.31"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 61, 62, 63, 64, 65, 66, 67, 68 ],
+            "Y": [ 432 ]
+          }
+        },
+        "$60": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:326.12-326.44"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 37 ],
+            "B": [ 69 ],
+            "S": [ 108 ],
+            "Y": [ 433 ]
+          }
+        },
+        "$61": {
+          "hide_name": 1,
+          "type": "$xor",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:322.9-326.45"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 431 ],
+            "B": [ 433 ],
+            "Y": [ 434 ]
+          }
+        },
+        "$66": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000010111"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:337.23-337.59"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28 ],
+            "B": [ 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60 ],
+            "S": [ 108 ],
+            "Y": [ 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457 ]
+          }
+        },
+        "$67": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000011000",
+            "Y_WIDTH": "00000000000000000000000000011000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:338.28-338.41"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481 ],
+            "Y": [ 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505 ]
+          }
+        },
+        "$69": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000011000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:338.16-338.64"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481 ],
+            "B": [ 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529 ],
+            "S": [ 140 ],
+            "Y": [ 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553 ]
+          }
+        },
+        "$7": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:281.9-281.55"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 61, 62, 63, 64, 65, 66, 67, 68 ],
+            "B": [ "1", "0", "0", "0", "0", "0", "0", "0" ],
+            "S": [ 432 ],
+            "Y": [ 554, 555, 556, 557, 558, 559, 560, 561 ]
+          }
+        },
+        "$8": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:279.5-281.55"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0", "1", "1", "1", "1", "1", "1", "1" ],
+            "B": [ 554, 555, 556, 557, 558, 559, 560, 561 ],
+            "S": [ 562 ],
+            "Y": [ 149, 150, 151, 152, 153, 154, 155, 156 ]
+          }
+        },
+        "$auto$alumacc.cc:110:get_cf$4286": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:275.5-275.35"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 563 ],
+            "Y": [ 564 ]
+          }
+        },
+        "$auto$alumacc.cc:110:get_cf$4297": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:279.5-279.35"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 565 ],
+            "Y": [ 566 ]
+          }
+        },
+        "$auto$alumacc.cc:110:get_cf$4308": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:282.58-282.87"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 567 ],
+            "Y": [ 568 ]
+          }
+        },
+        "$auto$alumacc.cc:110:get_cf$4319": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:299.41-299.52"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 569 ],
+            "Y": [ 570 ]
+          }
+        },
+        "$auto$alumacc.cc:110:get_cf$4330": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:323.11-325.49"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 571 ],
+            "Y": [ 428 ]
+          }
+        },
+        "$auto$alumacc.cc:548:replace_alu$4283": {
+          "hide_name": 1,
+          "type": "$alu",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001000",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:275.5-275.35"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "BI": "input",
+            "CI": "input",
+            "CO": "output",
+            "X": "output",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 29, 30, 31, 32, 33, 34, 35, 36 ],
+            "B": [ "0", "1", "1", "1", "1", "1", "1", "1" ],
+            "BI": [ "1" ],
+            "CI": [ "1" ],
+            "CO": [ 572, 573, 574, 575, 576, 577, 578, 563 ],
+            "X": [ 579, 580, 581, 582, 583, 584, 585, 586 ],
+            "Y": [ 587, 588, 589, 590, 591, 592, 593, 594 ]
+          }
+        },
+        "$auto$alumacc.cc:548:replace_alu$4294": {
+          "hide_name": 1,
+          "type": "$alu",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001000",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:279.5-279.35"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "BI": "input",
+            "CI": "input",
+            "CO": "output",
+            "X": "output",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 61, 62, 63, 64, 65, 66, 67, 68 ],
+            "B": [ "0", "1", "1", "1", "1", "1", "1", "1" ],
+            "BI": [ "1" ],
+            "CI": [ "1" ],
+            "CO": [ 595, 596, 597, 598, 599, 600, 601, 565 ],
+            "X": [ 602, 603, 604, 605, 606, 607, 608, 609 ],
+            "Y": [ 610, 611, 612, 613, 614, 615, 616, 617 ]
+          }
+        },
+        "$auto$alumacc.cc:548:replace_alu$4305": {
+          "hide_name": 1,
+          "type": "$alu",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000010111",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000010111",
+            "Y_WIDTH": "00000000000000000000000000010111"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:282.58-282.87"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "BI": "input",
+            "CI": "input",
+            "CO": "output",
+            "X": "output",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60 ],
+            "B": [ 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28 ],
+            "BI": [ "1" ],
+            "CI": [ "1" ],
+            "CO": [ 618, 619, 620, 621, 622, 623, 624, 625, 626, 627, 628, 629, 630, 631, 632, 633, 634, 635, 636, 637, 638, 639, 567 ],
+            "X": [ 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, 650, 651, 652, 653, 654, 655, 656, 657, 658, 659, 660, 661, 662 ],
+            "Y": [ 663, 664, 665, 666, 667, 668, 669, 670, 671, 672, 673, 674, 675, 676, 677, 678, 679, 680, 681, 682, 683, 684, 685 ]
+          }
+        },
+        "$auto$alumacc.cc:548:replace_alu$4316": {
+          "hide_name": 1,
+          "type": "$alu",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000001001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:299.41-299.52"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "BI": "input",
+            "CI": "input",
+            "CO": "output",
+            "X": "output",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 364, 365, 366, 367, 368, 369, 370, 371, 362 ],
+            "B": [ "0", "1", "1", "1", "1", "1", "1", "1" ],
+            "BI": [ "1" ],
+            "CI": [ "1" ],
+            "CO": [ 686, 687, 688, 689, 690, 691, 692, 693, 569 ],
+            "X": [ 694, 695, 696, 697, 698, 699, 700, 701, 702 ],
+            "Y": [ 703, 704, 705, 706, 707, 708, 709, 710, 711 ]
+          }
+        },
+        "$auto$alumacc.cc:548:replace_alu$4327": {
+          "hide_name": 1,
+          "type": "$alu",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001000",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000101",
+            "Y_WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:323.11-325.49"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "BI": "input",
+            "CI": "input",
+            "CO": "output",
+            "X": "output",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 420, 421, 422, 423, 424, 425, 426, 427 ],
+            "B": [ "0", "0", "0", "1", "1" ],
+            "BI": [ "1" ],
+            "CI": [ "1" ],
+            "CO": [ 712, 713, 714, 715, 716, 717, 718, 571 ],
+            "X": [ 719, 720, 721, 722, 723, 724, 725, 726 ],
+            "Y": [ 727, 728, 729, 730, 731, 732, 733, 734 ]
+          }
+        },
+        "$auto$alumacc.cc:548:replace_alu$4332": {
+          "hide_name": 1,
+          "type": "$alu",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:324.16-324.48"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "BI": "input",
+            "CI": "input",
+            "CO": "output",
+            "X": "output",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "1" ],
+            "B": [ 404, 405, 406, 407, 408, 409, 410, 411 ],
+            "BI": [ "0" ],
+            "CI": [ "0" ],
+            "CO": [ 735, 736, 737, 738, 739, 740, 741, 742 ],
+            "X": [ 743, 744, 745, 746, 747, 748, 749, 750 ],
+            "Y": [ 412, 413, 414, 415, 416, 417, 418, 419 ]
+          }
+        },
+        "$auto$alumacc.cc:548:replace_alu$4335": {
+          "hide_name": 1,
+          "type": "$alu",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000001001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:296.21-296.34"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "BI": "input",
+            "CI": "input",
+            "CO": "output",
+            "X": "output",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "1" ],
+            "B": [ 157, 158, 159, 160, 161, 162, 163, 164 ],
+            "BI": [ "0" ],
+            "CI": [ "0" ],
+            "CO": [ 751, 752, 753, 754, 755, 756, 757, 758, 759 ],
+            "X": [ 760, 761, 762, 763, 764, 765, 766, 767, 768 ],
+            "Y": [ 364, 365, 366, 367, 368, 369, 370, 371, 362 ]
+          }
+        },
+        "$auto$alumacc.cc:548:replace_alu$4338": {
+          "hide_name": 1,
+          "type": "$alu",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001000",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000101",
+            "Y_WIDTH": "00000000000000000000000000001001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:295.21-295.55"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "BI": "input",
+            "CI": "input",
+            "CO": "output",
+            "X": "output",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 157, 158, 159, 160, 161, 162, 163, 164 ],
+            "B": [ 199, 200, 201, 202, 203 ],
+            "BI": [ "1" ],
+            "CI": [ "1" ],
+            "CO": [ 769, 770, 771, 772, 773, 774, 775, 776, 777 ],
+            "X": [ 778, 779, 780, 781, 782, 783, 784, 785, 786 ],
+            "Y": [ 166, 167, 168, 169, 170, 171, 172, 173, 174 ]
+          }
+        },
+        "$auto$alumacc.cc:548:replace_alu$4341": {
+          "hide_name": 1,
+          "type": "$alu",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000011000",
+            "Y_WIDTH": "00000000000000000000000000011000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:338.28-338.49"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "BI": "input",
+            "CI": "input",
+            "CO": "output",
+            "X": "output",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "1" ],
+            "B": [ 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505 ],
+            "BI": [ "0" ],
+            "CI": [ "0" ],
+            "CO": [ 787, 788, 789, 790, 791, 792, 793, 794, 795, 796, 797, 798, 799, 800, 801, 802, 803, 804, 805, 806, 807, 808, 809, 810 ],
+            "X": [ 811, 812, 813, 814, 815, 816, 817, 818, 819, 820, 821, 822, 823, 824, 825, 826, 827, 828, 829, 830, 831, 832, 833, 834 ],
+            "Y": [ 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529 ]
+          }
+        },
+        "$auto$alumacc.cc:548:replace_alu$4344": {
+          "hide_name": 1,
+          "type": "$alu",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000011000",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000011000",
+            "Y_WIDTH": "00000000000000000000000000011001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:21.24-21.57"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "BI": "input",
+            "CI": "input",
+            "CO": "output",
+            "X": "output",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553 ],
+            "B": [ 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457, "1" ],
+            "BI": [ "0" ],
+            "CI": [ "0" ],
+            "CO": [ 835, 836, 837, 838, 839, 840, 841, 842, 843, 844, 845, 846, 847, 848, 849, 850, 851, 852, 853, 854, 855, 856, 857, 858, 859 ],
+            "X": [ 860, 861, 862, 863, 864, 865, 866, 867, 868, 869, 870, 871, 872, 873, 874, 875, 876, 877, 878, 879, 880, 881, 882, 883, 884 ],
+            "Y": [ 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 251, 299 ]
+          }
+        },
+        "$auto$alumacc.cc:548:replace_alu$4347": {
+          "hide_name": 1,
+          "type": "$alu",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001000",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000001001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:9.23-9.56"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "BI": "input",
+            "CI": "input",
+            "CO": "output",
+            "X": "output",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 141, 142, 143, 144, 145, 146, 147, 148 ],
+            "B": [ 149, 150, 151, 152, 153, 154, 155, 156 ],
+            "BI": [ "1" ],
+            "CI": [ "1" ],
+            "CO": [ 885, 886, 887, 888, 889, 890, 891, 892, 893 ],
+            "X": [ 894, 895, 896, 897, 898, 899, 900, 901, 902 ],
+            "Y": [ 396, 397, 398, 399, 400, 401, 402, 403, 107 ]
+          }
+        },
+        "$auto$alumacc.cc:86:get_gt$4290": {
+          "hide_name": 1,
+          "type": "$or",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 564 ],
+            "B": [ 903 ],
+            "Y": [ 165 ]
+          }
+        },
+        "$auto$alumacc.cc:86:get_gt$4301": {
+          "hide_name": 1,
+          "type": "$or",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 566 ],
+            "B": [ 904 ],
+            "Y": [ 562 ]
+          }
+        },
+        "$auto$alumacc.cc:86:get_gt$4312": {
+          "hide_name": 1,
+          "type": "$or",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 568 ],
+            "B": [ 905 ],
+            "Y": [ 906 ]
+          }
+        },
+        "$auto$alumacc.cc:86:get_gt$4323": {
+          "hide_name": 1,
+          "type": "$or",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 570 ],
+            "B": [ 907 ],
+            "Y": [ 908 ]
+          }
+        },
+        "$auto$alumacc.cc:87:get_gt$4314": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:282.58-282.87"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 906 ],
+            "Y": [ 105 ]
+          }
+        },
+        "$auto$alumacc.cc:87:get_gt$4325": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:299.41-299.52"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 908 ],
+            "Y": [ 363 ]
+          }
+        },
+        "$auto$alumacc.cc:96:get_eq$4288": {
+          "hide_name": 1,
+          "type": "$reduce_and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:275.5-275.35"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 579, 580, 581, 582, 583, 584, 585, 586 ],
+            "Y": [ 903 ]
+          }
+        },
+        "$auto$alumacc.cc:96:get_eq$4299": {
+          "hide_name": 1,
+          "type": "$reduce_and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:279.5-279.35"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 602, 603, 604, 605, 606, 607, 608, 609 ],
+            "Y": [ 904 ]
+          }
+        },
+        "$auto$alumacc.cc:96:get_eq$4310": {
+          "hide_name": 1,
+          "type": "$reduce_and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000010111",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:282.58-282.87"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, 650, 651, 652, 653, 654, 655, 656, 657, 658, 659, 660, 661, 662 ],
+            "Y": [ 905 ]
+          }
+        },
+        "$auto$alumacc.cc:96:get_eq$4321": {
+          "hide_name": 1,
+          "type": "$reduce_and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:299.41-299.52"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 694, 695, 696, 697, 698, 699, 700, 701, 702 ],
+            "Y": [ 907 ]
+          }
+        },
+        "$auto$alumacc.cc:96:get_eq$4350": {
+          "hide_name": 1,
+          "type": "$reduce_and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000001001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:9.23-9.56"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 894, 895, 896, 897, 898, 899, 900, 901, 902 ],
+            "Y": [ 104 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$4264": {
+          "hide_name": 1,
+          "type": "$dffe",
+          "parameters": {
+            "CLK_POLARITY": "00000000000000000000000000000001",
+            "EN_POLARITY": "00000000000000000000000000000001",
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:300.3"
+          },
+          "port_directions": {
+            "CLK": "input",
+            "D": "input",
+            "EN": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "CLK": [ 3 ],
+            "D": [ 434 ],
+            "EN": [ 4 ],
+            "Q": [ 101 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$4265": {
+          "hide_name": 1,
+          "type": "$dffe",
+          "parameters": {
+            "CLK_POLARITY": "00000000000000000000000000000001",
+            "EN_POLARITY": "00000000000000000000000000000001",
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:300.3"
+          },
+          "port_directions": {
+            "CLK": "input",
+            "D": "input",
+            "EN": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "CLK": [ 3 ],
+            "D": [ 5 ],
+            "EN": [ 4 ],
+            "Q": [ 102 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$4272": {
+          "hide_name": 1,
+          "type": "$dffe",
+          "parameters": {
+            "CLK_POLARITY": "00000000000000000000000000000001",
+            "EN_POLARITY": "00000000000000000000000000000001",
+            "WIDTH": "00000000000000000000000000010111"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:300.3"
+          },
+          "port_directions": {
+            "CLK": "input",
+            "D": "input",
+            "EN": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "CLK": [ 3 ],
+            "D": [ 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345 ],
+            "EN": [ 4 ],
+            "Q": [ 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92 ]
+          }
+        },
+        "$auto$ff.cc:337:slice$4273": {
+          "hide_name": 1,
+          "type": "$dffe",
+          "parameters": {
+            "CLK_POLARITY": "00000000000000000000000000000001",
+            "EN_POLARITY": "00000000000000000000000000000001",
+            "WIDTH": "00000000000000000000000000001000"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:300.3"
+          },
+          "port_directions": {
+            "CLK": "input",
+            "D": "input",
+            "EN": "input",
+            "Q": "output"
+          },
+          "connections": {
+            "CLK": [ 3 ],
+            "D": [ 388, 389, 390, 391, 392, 393, 394, 395 ],
+            "EN": [ 4 ],
+            "Q": [ 93, 94, 95, 96, 97, 98, 99, 100 ]
+          }
+        },
+        "$auto$share.cc:656:make_supercell$4356": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000011000"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, "1" ],
+            "B": [ 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, "1" ],
+            "S": [ 107 ],
+            "Y": [ 909, 910, 911, 912, 913, 914, 915, 916, 917, 918, 919, 920, 921, 922, 923, 924, 925, 926, 927, 928, 929, 930, 931, 932 ]
+          }
+        },
+        "$auto$share.cc:663:make_supercell$4359": {
+          "hide_name": 1,
+          "type": "$shr",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000011000",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000001000",
+            "Y_WIDTH": "00000000000000000000000000011000"
+          },
+          "attributes": {
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 909, 910, 911, 912, 913, 914, 915, 916, 917, 918, 919, 920, 921, 922, 923, 924, 925, 926, 927, 928, 929, 930, 931, 932 ],
+            "B": [ 420, 421, 422, 423, 424, 425, 426, 427 ],
+            "Y": [ 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2.$0": {
+          "hide_name": 1,
+          "type": "$and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:41.6-41.29"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 933 ],
+            "B": [ 934 ],
+            "Y": [ 935 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2.$1": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:42.19-42.32"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 934 ],
+            "Y": [ 936 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2.$2": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:42.6-42.45"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "B": [ 936 ],
+            "S": [ 933 ],
+            "Y": [ 937 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2.$3": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:43.6-43.42"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 938 ],
+            "B": [ 939 ],
+            "S": [ 933 ],
+            "Y": [ 940 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_1.$0": {
+          "hide_name": 1,
+          "type": "$and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:41.6-41.29"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 941 ],
+            "B": [ 942 ],
+            "Y": [ 943 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_1.$1": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:42.19-42.32"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 942 ],
+            "Y": [ 944 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_1.$2": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:42.6-42.45"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "B": [ 944 ],
+            "S": [ 941 ],
+            "Y": [ 945 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_1.$3": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:43.6-43.42"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 946 ],
+            "B": [ 947 ],
+            "S": [ 941 ],
+            "Y": [ 948 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_2.$0": {
+          "hide_name": 1,
+          "type": "$and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:41.6-41.29"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 949 ],
+            "B": [ 950 ],
+            "Y": [ 951 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_2.$1": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:42.19-42.32"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 950 ],
+            "Y": [ 952 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_2.$2": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:42.6-42.45"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "B": [ 952 ],
+            "S": [ 949 ],
+            "Y": [ 953 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_2.$3": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:43.6-43.42"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 954 ],
+            "B": [ 955 ],
+            "S": [ 949 ],
+            "Y": [ 956 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_3.$0": {
+          "hide_name": 1,
+          "type": "$and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:41.6-41.29"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 957 ],
+            "B": [ 958 ],
+            "Y": [ 959 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_3.$1": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:42.19-42.32"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 958 ],
+            "Y": [ 960 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_3.$2": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:42.6-42.45"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "B": [ 960 ],
+            "S": [ 957 ],
+            "Y": [ 961 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_3.$3": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:43.6-43.42"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 962 ],
+            "B": [ 963 ],
+            "S": [ 957 ],
+            "Y": [ 964 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_4.$0": {
+          "hide_name": 1,
+          "type": "$and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:41.6-41.29"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 965 ],
+            "B": [ 966 ],
+            "Y": [ 967 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_4.$1": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:42.19-42.32"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 966 ],
+            "Y": [ 968 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_4.$2": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:42.6-42.45"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "B": [ 968 ],
+            "S": [ 965 ],
+            "Y": [ 969 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_4.$3": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:43.6-43.42"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 970 ],
+            "B": [ 971 ],
+            "S": [ 965 ],
+            "Y": [ 972 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_5.$0": {
+          "hide_name": 1,
+          "type": "$and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:41.6-41.29"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 973 ],
+            "B": [ 974 ],
+            "Y": [ 975 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_5.$1": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:42.19-42.32"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 974 ],
+            "Y": [ 976 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_5.$2": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:42.6-42.45"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "B": [ 976 ],
+            "S": [ 973 ],
+            "Y": [ 977 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_5.$3": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:43.6-43.42"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 978 ],
+            "B": [ 979 ],
+            "S": [ 973 ],
+            "Y": [ 980 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge3.$0": {
+          "hide_name": 1,
+          "type": "$and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:53.6-53.29"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 935 ],
+            "B": [ 943 ],
+            "Y": [ 981 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge3.$1": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:54.19-54.32"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 943 ],
+            "Y": [ 982 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge3.$2": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:54.6-54.45"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "B": [ 982 ],
+            "S": [ 935 ],
+            "Y": [ 983 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge3.$3": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:55.6-55.46"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 940, 937 ],
+            "B": [ 948, 945 ],
+            "S": [ 935 ],
+            "Y": [ 984, 985 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge3_1.$0": {
+          "hide_name": 1,
+          "type": "$and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:53.6-53.29"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 951 ],
+            "B": [ 959 ],
+            "Y": [ 986 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge3_1.$1": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:54.19-54.32"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 959 ],
+            "Y": [ 987 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge3_1.$2": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:54.6-54.45"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "B": [ 987 ],
+            "S": [ 951 ],
+            "Y": [ 988 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge3_1.$3": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:55.6-55.46"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 956, 953 ],
+            "B": [ 964, 961 ],
+            "S": [ 951 ],
+            "Y": [ 989, 990 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge3_2.$0": {
+          "hide_name": 1,
+          "type": "$and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:53.6-53.29"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 967 ],
+            "B": [ 975 ],
+            "Y": [ 991 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge3_2.$1": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:54.19-54.32"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 975 ],
+            "Y": [ 992 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge3_2.$2": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:54.6-54.45"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "B": [ 992 ],
+            "S": [ 967 ],
+            "Y": [ 993 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge3_2.$3": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:55.6-55.46"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 972, 969 ],
+            "B": [ 980, 977 ],
+            "S": [ 967 ],
+            "Y": [ 994, 995 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge4.$0": {
+          "hide_name": 1,
+          "type": "$and",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "B_SIGNED": "00000000000000000000000000000000",
+            "B_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:65.6-65.29"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 981 ],
+            "B": [ 986 ],
+            "Y": [ 996 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge4.$1": {
+          "hide_name": 1,
+          "type": "$not",
+          "parameters": {
+            "A_SIGNED": "00000000000000000000000000000000",
+            "A_WIDTH": "00000000000000000000000000000001",
+            "Y_WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:66.19-66.32"
+          },
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 986 ],
+            "Y": [ 997 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge4.$2": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:66.6-66.45"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "B": [ 997 ],
+            "S": [ 981 ],
+            "Y": [ 998 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge4.$3": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000011"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:67.6-67.46"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 984, 985, 983 ],
+            "B": [ 989, 990, 988 ],
+            "S": [ 981 ],
+            "Y": [ 999, 1000, 1001 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge4_1.$2": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:66.6-66.45"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "B": [ "1" ],
+            "S": [ 991 ],
+            "Y": [ 1002 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge4_1.$3": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000011"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:67.6-67.46"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 994, 995, 993 ],
+            "B": [ "0", "0", "0" ],
+            "S": [ 991 ],
+            "Y": [ 1003, 1004, 1005 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge5.$2": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000001"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:78.6-78.45"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0" ],
+            "B": [ "1" ],
+            "S": [ 996 ],
+            "Y": [ 203 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge5.$3": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000100"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:79.6-79.46"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 999, 1000, 1001, 998 ],
+            "B": [ 1003, 1004, 1005, 1002 ],
+            "S": [ 996 ],
+            "Y": [ 199, 200, 201, 202 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_10.$0": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.41-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0", "1" ],
+            "B": [ "1", "0" ],
+            "S": [ 188 ],
+            "Y": [ 1006, 1007 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_10.$1": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.21-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 1006, 1007 ],
+            "B": [ "0", "0" ],
+            "S": [ 189 ],
+            "Y": [ 955, 950 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_11.$0": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.41-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0", "1" ],
+            "B": [ "1", "0" ],
+            "S": [ 190 ],
+            "Y": [ 1008, 1009 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_11.$1": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.21-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 1008, 1009 ],
+            "B": [ "0", "0" ],
+            "S": [ 191 ],
+            "Y": [ 954, 949 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_12.$0": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.41-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0", "1" ],
+            "B": [ "1", "0" ],
+            "S": [ 192 ],
+            "Y": [ 1010, 1011 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_12.$1": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.21-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 1010, 1011 ],
+            "B": [ "0", "0" ],
+            "S": [ 193 ],
+            "Y": [ 947, 942 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_13.$0": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.41-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0", "1" ],
+            "B": [ "1", "0" ],
+            "S": [ 194 ],
+            "Y": [ 1012, 1013 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_13.$1": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.21-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 1012, 1013 ],
+            "B": [ "0", "0" ],
+            "S": [ 195 ],
+            "Y": [ 946, 941 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_14.$0": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.41-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0", "1" ],
+            "B": [ "1", "0" ],
+            "S": [ 196 ],
+            "Y": [ 1014, 1015 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_14.$1": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.21-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 1014, 1015 ],
+            "B": [ "0", "0" ],
+            "S": [ 197 ],
+            "Y": [ 939, 934 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_15.$0": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.41-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0", "1" ],
+            "B": [ "1", "0" ],
+            "S": [ 198 ],
+            "Y": [ 1016, 1017 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_15.$1": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.21-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 1016, 1017 ],
+            "B": [ "0", "0" ],
+            "S": [ 251 ],
+            "Y": [ 938, 933 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_4.$0": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.41-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0", "1" ],
+            "B": [ "1", "0" ],
+            "S": [ 176 ],
+            "Y": [ 1018, 1019 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_4.$1": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.21-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 1018, 1019 ],
+            "B": [ "0", "0" ],
+            "S": [ 177 ],
+            "Y": [ 979, 974 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_5.$0": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.41-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0", "1" ],
+            "B": [ "1", "0" ],
+            "S": [ 178 ],
+            "Y": [ 1020, 1021 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_5.$1": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.21-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 1020, 1021 ],
+            "B": [ "0", "0" ],
+            "S": [ 179 ],
+            "Y": [ 978, 973 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_6.$0": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.41-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0", "1" ],
+            "B": [ "1", "0" ],
+            "S": [ 180 ],
+            "Y": [ 1022, 1023 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_6.$1": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.21-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 1022, 1023 ],
+            "B": [ "0", "0" ],
+            "S": [ 181 ],
+            "Y": [ 971, 966 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_7.$0": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.41-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0", "1" ],
+            "B": [ "1", "0" ],
+            "S": [ 182 ],
+            "Y": [ 1024, 1025 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_7.$1": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.21-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 1024, 1025 ],
+            "B": [ "0", "0" ],
+            "S": [ 183 ],
+            "Y": [ 970, 965 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_8.$0": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.41-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0", "1" ],
+            "B": [ "1", "0" ],
+            "S": [ 184 ],
+            "Y": [ 1026, 1027 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_8.$1": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.21-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 1026, 1027 ],
+            "B": [ "0", "0" ],
+            "S": [ 185 ],
+            "Y": [ 963, 958 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_9.$0": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.41-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ "0", "1" ],
+            "B": [ "1", "0" ],
+            "S": [ 186 ],
+            "Y": [ 1028, 1029 ]
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_9.$1": {
+          "hide_name": 1,
+          "type": "$mux",
+          "parameters": {
+            "WIDTH": "00000000000000000000000000000010"
+          },
+          "attributes": {
+            "src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:31.21-31.65"
+          },
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "S": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [ 1028, 1029 ],
+            "B": [ "0", "0" ],
+            "S": [ 187 ],
+            "Y": [ 962, 957 ]
+          }
+        },
+        "LZC32_2": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:342.11",
+            "hdlname": "LZC32_2",
+            "module": "LZC32_2$FP_add_32_1.LZC32_2",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:82.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_Merge2": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:181.14",
+            "hdlname": "LZC32_2 LZC_Merge2",
+            "module": "LZC_Merge2$FP_add_32_1.LZC32_2.LZC_Merge2",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:34.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_Merge2_1": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:186.14",
+            "hdlname": "LZC32_2 LZC_Merge2_1",
+            "module": "LZC_Merge2$FP_add_32_1.LZC32_2.LZC_Merge2_1",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:34.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_Merge2_2": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:191.14",
+            "hdlname": "LZC32_2 LZC_Merge2_2",
+            "module": "LZC_Merge2$FP_add_32_1.LZC32_2.LZC_Merge2_2",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:34.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_Merge2_3": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:196.14",
+            "hdlname": "LZC32_2 LZC_Merge2_3",
+            "module": "LZC_Merge2$FP_add_32_1.LZC32_2.LZC_Merge2_3",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:34.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_Merge2_4": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:201.14",
+            "hdlname": "LZC32_2 LZC_Merge2_4",
+            "module": "LZC_Merge2$FP_add_32_1.LZC32_2.LZC_Merge2_4",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:34.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_Merge2_5": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:206.14",
+            "hdlname": "LZC32_2 LZC_Merge2_5",
+            "module": "LZC_Merge2$FP_add_32_1.LZC32_2.LZC_Merge2_5",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:34.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_Merge2_6": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:211.14",
+            "hdlname": "LZC32_2 LZC_Merge2_6",
+            "module": "LZC_Merge2$FP_add_32_1.LZC32_2.LZC_Merge2_6",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:34.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_Merge2_7": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:216.14",
+            "hdlname": "LZC32_2 LZC_Merge2_7",
+            "module": "LZC_Merge2$FP_add_32_1.LZC32_2.LZC_Merge2_7",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:34.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_Merge3": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:221.14",
+            "hdlname": "LZC32_2 LZC_Merge3",
+            "module": "LZC_Merge3$FP_add_32_1.LZC32_2.LZC_Merge3",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:46.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_Merge3_1": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:226.14",
+            "hdlname": "LZC32_2 LZC_Merge3_1",
+            "module": "LZC_Merge3$FP_add_32_1.LZC32_2.LZC_Merge3_1",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:46.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_Merge3_2": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:231.14",
+            "hdlname": "LZC32_2 LZC_Merge3_2",
+            "module": "LZC_Merge3$FP_add_32_1.LZC32_2.LZC_Merge3_2",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:46.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_Merge3_3": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:236.14",
+            "hdlname": "LZC32_2 LZC_Merge3_3",
+            "module": "LZC_Merge3$FP_add_32_1.LZC32_2.LZC_Merge3_3",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:46.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_Merge4": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:241.14",
+            "hdlname": "LZC32_2 LZC_Merge4",
+            "module": "LZC_Merge4$FP_add_32_1.LZC32_2.LZC_Merge4",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:58.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_Merge4_1": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:246.14",
+            "hdlname": "LZC32_2 LZC_Merge4_1",
+            "module": "LZC_Merge4$FP_add_32_1.LZC32_2.LZC_Merge4_1",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:58.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_Merge5": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:251.14",
+            "hdlname": "LZC32_2 LZC_Merge5",
+            "module": "LZC_Merge5$FP_add_32_1.LZC32_2.LZC_Merge5",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:70.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_enc2": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:117.12",
+            "hdlname": "LZC32_2 LZC_enc2",
+            "module": "LZC_enc2$FP_add_32_1.LZC32_2.LZC_enc2",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:26.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_enc2_1": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:121.12",
+            "hdlname": "LZC32_2 LZC_enc2_1",
+            "module": "LZC_enc2$FP_add_32_1.LZC32_2.LZC_enc2_1",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:26.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_enc2_10": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:157.12",
+            "hdlname": "LZC32_2 LZC_enc2_10",
+            "module": "LZC_enc2$FP_add_32_1.LZC32_2.LZC_enc2_10",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:26.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_enc2_11": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:161.12",
+            "hdlname": "LZC32_2 LZC_enc2_11",
+            "module": "LZC_enc2$FP_add_32_1.LZC32_2.LZC_enc2_11",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:26.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_enc2_12": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:165.12",
+            "hdlname": "LZC32_2 LZC_enc2_12",
+            "module": "LZC_enc2$FP_add_32_1.LZC32_2.LZC_enc2_12",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:26.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_enc2_13": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:169.12",
+            "hdlname": "LZC32_2 LZC_enc2_13",
+            "module": "LZC_enc2$FP_add_32_1.LZC32_2.LZC_enc2_13",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:26.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_enc2_14": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:173.12",
+            "hdlname": "LZC32_2 LZC_enc2_14",
+            "module": "LZC_enc2$FP_add_32_1.LZC32_2.LZC_enc2_14",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:26.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_enc2_15": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:177.12",
+            "hdlname": "LZC32_2 LZC_enc2_15",
+            "module": "LZC_enc2$FP_add_32_1.LZC32_2.LZC_enc2_15",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:26.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_enc2_2": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:125.12",
+            "hdlname": "LZC32_2 LZC_enc2_2",
+            "module": "LZC_enc2$FP_add_32_1.LZC32_2.LZC_enc2_2",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:26.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_enc2_3": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:129.12",
+            "hdlname": "LZC32_2 LZC_enc2_3",
+            "module": "LZC_enc2$FP_add_32_1.LZC32_2.LZC_enc2_3",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:26.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_enc2_4": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:133.12",
+            "hdlname": "LZC32_2 LZC_enc2_4",
+            "module": "LZC_enc2$FP_add_32_1.LZC32_2.LZC_enc2_4",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:26.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_enc2_5": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:137.12",
+            "hdlname": "LZC32_2 LZC_enc2_5",
+            "module": "LZC_enc2$FP_add_32_1.LZC32_2.LZC_enc2_5",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:26.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_enc2_6": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:141.12",
+            "hdlname": "LZC32_2 LZC_enc2_6",
+            "module": "LZC_enc2$FP_add_32_1.LZC32_2.LZC_enc2_6",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:26.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_enc2_7": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:145.12",
+            "hdlname": "LZC32_2 LZC_enc2_7",
+            "module": "LZC_enc2$FP_add_32_1.LZC32_2.LZC_enc2_7",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:26.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_enc2_8": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:149.12",
+            "hdlname": "LZC32_2 LZC_enc2_8",
+            "module": "LZC_enc2$FP_add_32_1.LZC32_2.LZC_enc2_8",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:26.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "LZC32_2.LZC_enc2_9": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:153.12",
+            "hdlname": "LZC32_2 LZC_enc2_9",
+            "module": "LZC_enc2$FP_add_32_1.LZC32_2.LZC_enc2_9",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:26.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "exp_subtractor": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:330.19",
+            "hdlname": "exp_subtractor",
+            "module": "full_subtractor$FP_add_32_1.exp_subtractor",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:2.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "full_adder": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:336.14",
+            "hdlname": "full_adder",
+            "module": "full_adder$FP_add_32_1.full_adder",
+            "module_src": "../../openhwfp-eval/orfs_designs/src/openfloat_FP_add_32_1/FP_add_32_1.sv:14.8"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        }
+      },
+      "netnames": {
+        "$10y": {
+          "hide_name": 1,
+          "bits": [ 104 ],
+          "attributes": {
+          }
+        },
+        "$11y": {
+          "hide_name": 1,
+          "bits": [ 105 ],
+          "attributes": {
+          }
+        },
+        "$16y": {
+          "hide_name": 1,
+          "bits": [ 404, 405, 406, 407, 408, 409, 410, 411 ],
+          "attributes": {
+          }
+        },
+        "$17y": {
+          "hide_name": 1,
+          "bits": [ 412, 413, 414, 415, 416, 417, 418, 419 ],
+          "attributes": {
+          }
+        },
+        "$19y": {
+          "hide_name": 1,
+          "bits": [ 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131 ],
+          "attributes": {
+          }
+        },
+        "$1y": {
+          "hide_name": 1,
+          "bits": [ 103 ],
+          "attributes": {
+          }
+        },
+        "$2y": {
+          "hide_name": 1,
+          "bits": [ 132, 133, 134, 135, 136, 137, 138, 139 ],
+          "attributes": {
+          }
+        },
+        "$38y": {
+          "hide_name": 1,
+          "bits": [ 227 ],
+          "attributes": {
+          }
+        },
+        "$39y": {
+          "hide_name": 1,
+          "bits": [ 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226 ],
+          "attributes": {
+          }
+        },
+        "$40y": {
+          "hide_name": 1,
+          "bits": [ 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250 ],
+          "attributes": {
+          }
+        },
+        "$41y": {
+          "hide_name": 1,
+          "bits": [ 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274 ],
+          "attributes": {
+          }
+        },
+        "$42y": {
+          "hide_name": 1,
+          "bits": [ 275 ],
+          "attributes": {
+          }
+        },
+        "$43y": {
+          "hide_name": 1,
+          "bits": [ 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298 ],
+          "attributes": {
+          }
+        },
+        "$44y": {
+          "hide_name": 1,
+          "bits": [ 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322 ],
+          "attributes": {
+          }
+        },
+        "$45y": {
+          "hide_name": 1,
+          "bits": [ 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345 ],
+          "attributes": {
+          }
+        },
+        "$47y": {
+          "hide_name": 1,
+          "bits": [ 346, 347, 348, 349, 350, 351, 352, 353 ],
+          "attributes": {
+          }
+        },
+        "$48y": {
+          "hide_name": 1,
+          "bits": [ 354, 355, 356, 357, 358, 359, 360, 361 ],
+          "attributes": {
+          }
+        },
+        "$50y": {
+          "hide_name": 1,
+          "bits": [ 372, 373, 374, 375, 376, 377, 378, 379 ],
+          "attributes": {
+          }
+        },
+        "$51y": {
+          "hide_name": 1,
+          "bits": [ 380, 381, 382, 383, 384, 385, 386, 387 ],
+          "attributes": {
+          }
+        },
+        "$52y": {
+          "hide_name": 1,
+          "bits": [ 388, 389, 390, 391, 392, 393, 394, 395 ],
+          "attributes": {
+          }
+        },
+        "$55y": {
+          "hide_name": 1,
+          "bits": [ 420, 421, 422, 423, 424, 425, 426, 427 ],
+          "attributes": {
+          }
+        },
+        "$56y": {
+          "hide_name": 1,
+          "bits": [ 428 ],
+          "attributes": {
+          }
+        },
+        "$57y": {
+          "hide_name": 1,
+          "bits": [ 429 ],
+          "attributes": {
+          }
+        },
+        "$58y": {
+          "hide_name": 1,
+          "bits": [ 430 ],
+          "attributes": {
+          }
+        },
+        "$59y": {
+          "hide_name": 1,
+          "bits": [ 431 ],
+          "attributes": {
+          }
+        },
+        "$60y": {
+          "hide_name": 1,
+          "bits": [ 433 ],
+          "attributes": {
+          }
+        },
+        "$61y": {
+          "hide_name": 1,
+          "bits": [ 434 ],
+          "attributes": {
+          }
+        },
+        "$67y": {
+          "hide_name": 1,
+          "bits": [ 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505 ],
+          "attributes": {
+          }
+        },
+        "$68y": {
+          "hide_name": 1,
+          "bits": [ 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529 ],
+          "attributes": {
+          }
+        },
+        "$6y": {
+          "hide_name": 1,
+          "bits": [ 432 ],
+          "attributes": {
+          }
+        },
+        "$7y": {
+          "hide_name": 1,
+          "bits": [ 554, 555, 556, 557, 558, 559, 560, 561 ],
+          "attributes": {
+          }
+        },
+        "$auto$alumacc.cc:483:extract_cmp_alu$4278": {
+          "hide_name": 1,
+          "bits": [ 727, 728, 729, 730, 731, 732, 733, 734 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6 7"
+          }
+        },
+        "$auto$alumacc.cc:483:extract_cmp_alu$4279": {
+          "hide_name": 1,
+          "bits": [ 703, 704, 705, 706, 707, 708, 709, 710, 711 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6 7 8"
+          }
+        },
+        "$auto$alumacc.cc:483:extract_cmp_alu$4280": {
+          "hide_name": 1,
+          "bits": [ 663, 664, 665, 666, 667, 668, 669, 670, 671, 672, 673, 674, 675, 676, 677, 678, 679, 680, 681, 682, 683, 684, 685 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22"
+          }
+        },
+        "$auto$alumacc.cc:483:extract_cmp_alu$4281": {
+          "hide_name": 1,
+          "bits": [ 610, 611, 612, 613, 614, 615, 616, 617 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6 7"
+          }
+        },
+        "$auto$alumacc.cc:483:extract_cmp_alu$4282": {
+          "hide_name": 1,
+          "bits": [ 587, 588, 589, 590, 591, 592, 593, 594 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6 7"
+          }
+        },
+        "$auto$alumacc.cc:564:replace_alu$4284": {
+          "hide_name": 1,
+          "bits": [ 579, 580, 581, 582, 583, 584, 585, 586 ],
+          "attributes": {
+          }
+        },
+        "$auto$alumacc.cc:564:replace_alu$4295": {
+          "hide_name": 1,
+          "bits": [ 602, 603, 604, 605, 606, 607, 608, 609 ],
+          "attributes": {
+          }
+        },
+        "$auto$alumacc.cc:564:replace_alu$4306": {
+          "hide_name": 1,
+          "bits": [ 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, 650, 651, 652, 653, 654, 655, 656, 657, 658, 659, 660, 661, 662 ],
+          "attributes": {
+          }
+        },
+        "$auto$alumacc.cc:564:replace_alu$4317": {
+          "hide_name": 1,
+          "bits": [ 694, 695, 696, 697, 698, 699, 700, 701, 702 ],
+          "attributes": {
+          }
+        },
+        "$auto$alumacc.cc:564:replace_alu$4328": {
+          "hide_name": 1,
+          "bits": [ 719, 720, 721, 722, 723, 724, 725, 726 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6 7"
+          }
+        },
+        "$auto$alumacc.cc:564:replace_alu$4333": {
+          "hide_name": 1,
+          "bits": [ 743, 744, 745, 746, 747, 748, 749, 750 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6 7"
+          }
+        },
+        "$auto$alumacc.cc:564:replace_alu$4336": {
+          "hide_name": 1,
+          "bits": [ 760, 761, 762, 763, 764, 765, 766, 767, 768 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6 7 8"
+          }
+        },
+        "$auto$alumacc.cc:564:replace_alu$4339": {
+          "hide_name": 1,
+          "bits": [ 778, 779, 780, 781, 782, 783, 784, 785, 786 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6 7 8"
+          }
+        },
+        "$auto$alumacc.cc:564:replace_alu$4342": {
+          "hide_name": 1,
+          "bits": [ 811, 812, 813, 814, 815, 816, 817, 818, 819, 820, 821, 822, 823, 824, 825, 826, 827, 828, 829, 830, 831, 832, 833, 834 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+          }
+        },
+        "$auto$alumacc.cc:564:replace_alu$4345": {
+          "hide_name": 1,
+          "bits": [ 860, 861, 862, 863, 864, 865, 866, 867, 868, 869, 870, 871, 872, 873, 874, 875, 876, 877, 878, 879, 880, 881, 882, 883, 884 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"
+          }
+        },
+        "$auto$alumacc.cc:564:replace_alu$4348": {
+          "hide_name": 1,
+          "bits": [ 894, 895, 896, 897, 898, 899, 900, 901, 902 ],
+          "attributes": {
+          }
+        },
+        "$auto$alumacc.cc:565:replace_alu$4285": {
+          "hide_name": 1,
+          "bits": [ 572, 573, 574, 575, 576, 577, 578, 563 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6"
+          }
+        },
+        "$auto$alumacc.cc:565:replace_alu$4296": {
+          "hide_name": 1,
+          "bits": [ 595, 596, 597, 598, 599, 600, 601, 565 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6"
+          }
+        },
+        "$auto$alumacc.cc:565:replace_alu$4307": {
+          "hide_name": 1,
+          "bits": [ 618, 619, 620, 621, 622, 623, 624, 625, 626, 627, 628, 629, 630, 631, 632, 633, 634, 635, 636, 637, 638, 639, 567 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21"
+          }
+        },
+        "$auto$alumacc.cc:565:replace_alu$4318": {
+          "hide_name": 1,
+          "bits": [ 686, 687, 688, 689, 690, 691, 692, 693, 569 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6 7"
+          }
+        },
+        "$auto$alumacc.cc:565:replace_alu$4329": {
+          "hide_name": 1,
+          "bits": [ 712, 713, 714, 715, 716, 717, 718, 571 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6"
+          }
+        },
+        "$auto$alumacc.cc:565:replace_alu$4334": {
+          "hide_name": 1,
+          "bits": [ 735, 736, 737, 738, 739, 740, 741, 742 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6 7"
+          }
+        },
+        "$auto$alumacc.cc:565:replace_alu$4337": {
+          "hide_name": 1,
+          "bits": [ 751, 752, 753, 754, 755, 756, 757, 758, 759 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6 7 8"
+          }
+        },
+        "$auto$alumacc.cc:565:replace_alu$4340": {
+          "hide_name": 1,
+          "bits": [ 769, 770, 771, 772, 773, 774, 775, 776, 777 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6 7 8"
+          }
+        },
+        "$auto$alumacc.cc:565:replace_alu$4343": {
+          "hide_name": 1,
+          "bits": [ 787, 788, 789, 790, 791, 792, 793, 794, 795, 796, 797, 798, 799, 800, 801, 802, 803, 804, 805, 806, 807, 808, 809, 810 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+          }
+        },
+        "$auto$alumacc.cc:565:replace_alu$4346": {
+          "hide_name": 1,
+          "bits": [ 835, 836, 837, 838, 839, 840, 841, 842, 843, 844, 845, 846, 847, 848, 849, 850, 851, 852, 853, 854, 855, 856, 857, 858, 859 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24"
+          }
+        },
+        "$auto$alumacc.cc:565:replace_alu$4349": {
+          "hide_name": 1,
+          "bits": [ 885, 886, 887, 888, 889, 890, 891, 892, 893 ],
+          "attributes": {
+            "unused_bits": "0 1 2 3 4 5 6 7 8"
+          }
+        },
+        "$auto$rtlil.cc:3267:Not$4287": {
+          "hide_name": 1,
+          "bits": [ 564 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3267:Not$4298": {
+          "hide_name": 1,
+          "bits": [ 566 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3267:Not$4309": {
+          "hide_name": 1,
+          "bits": [ 568 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3267:Not$4320": {
+          "hide_name": 1,
+          "bits": [ 570 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3270:ReduceAnd$4289": {
+          "hide_name": 1,
+          "bits": [ 903 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3270:ReduceAnd$4300": {
+          "hide_name": 1,
+          "bits": [ 904 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3270:ReduceAnd$4311": {
+          "hide_name": 1,
+          "bits": [ 905 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3270:ReduceAnd$4322": {
+          "hide_name": 1,
+          "bits": [ 907 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3315:Or$4291": {
+          "hide_name": 1,
+          "bits": [ 165 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3315:Or$4302": {
+          "hide_name": 1,
+          "bits": [ 562 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3315:Or$4313": {
+          "hide_name": 1,
+          "bits": [ 906 ],
+          "attributes": {
+          }
+        },
+        "$auto$rtlil.cc:3315:Or$4324": {
+          "hide_name": 1,
+          "bits": [ 908 ],
+          "attributes": {
+          }
+        },
+        "$auto$share.cc:653:make_supercell$4354": {
+          "hide_name": 1,
+          "bits": [ 909, 910, 911, 912, 913, 914, 915, 916, 917, 918, 919, 920, 921, 922, 923, 924, 925, 926, 927, 928, 929, 930, 931, 932 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2.$1y": {
+          "hide_name": 1,
+          "bits": [ 936 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_1.$1y": {
+          "hide_name": 1,
+          "bits": [ 944 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_2.$1y": {
+          "hide_name": 1,
+          "bits": [ 952 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_3.$1y": {
+          "hide_name": 1,
+          "bits": [ 960 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_4.$1y": {
+          "hide_name": 1,
+          "bits": [ 968 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge2_5.$1y": {
+          "hide_name": 1,
+          "bits": [ 976 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge3.$1y": {
+          "hide_name": 1,
+          "bits": [ 982 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge3_1.$1y": {
+          "hide_name": 1,
+          "bits": [ 987 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge3_2.$1y": {
+          "hide_name": 1,
+          "bits": [ 992 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_Merge4.$1y": {
+          "hide_name": 1,
+          "bits": [ 997 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_10.$0y": {
+          "hide_name": 1,
+          "bits": [ 1006, 1007 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_11.$0y": {
+          "hide_name": 1,
+          "bits": [ 1008, 1009 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_12.$0y": {
+          "hide_name": 1,
+          "bits": [ 1010, 1011 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_13.$0y": {
+          "hide_name": 1,
+          "bits": [ 1012, 1013 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_14.$0y": {
+          "hide_name": 1,
+          "bits": [ 1014, 1015 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_15.$0y": {
+          "hide_name": 1,
+          "bits": [ 1016, 1017 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_4.$0y": {
+          "hide_name": 1,
+          "bits": [ 1018, 1019 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_5.$0y": {
+          "hide_name": 1,
+          "bits": [ 1020, 1021 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_6.$0y": {
+          "hide_name": 1,
+          "bits": [ 1022, 1023 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_7.$0y": {
+          "hide_name": 1,
+          "bits": [ 1024, 1025 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_8.$0y": {
+          "hide_name": 1,
+          "bits": [ 1026, 1027 ],
+          "attributes": {
+          }
+        },
+        "$flatten\\LZC32_2.\\LZC_enc2_9.$0y": {
+          "hide_name": 1,
+          "bits": [ 1028, 1029 ],
+          "attributes": {
+          }
+        },
+        "LZC32_2.LZC_Merge2.io_in_h": {
+          "hide_name": 0,
+          "bits": [ 938, 933 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2 io_in_h"
+          }
+        },
+        "LZC32_2.LZC_Merge2.io_in_l": {
+          "hide_name": 0,
+          "bits": [ 939, 934 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2 io_in_l"
+          }
+        },
+        "LZC32_2.LZC_Merge2.io_out_m": {
+          "hide_name": 0,
+          "bits": [ 940, 937, 935 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2 io_out_m"
+          }
+        },
+        "LZC32_2.LZC_Merge2_1.io_in_h": {
+          "hide_name": 0,
+          "bits": [ 946, 941 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_1 io_in_h"
+          }
+        },
+        "LZC32_2.LZC_Merge2_1.io_in_l": {
+          "hide_name": 0,
+          "bits": [ 947, 942 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_1 io_in_l"
+          }
+        },
+        "LZC32_2.LZC_Merge2_1.io_out_m": {
+          "hide_name": 0,
+          "bits": [ 948, 945, 943 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_1 io_out_m"
+          }
+        },
+        "LZC32_2.LZC_Merge2_2.io_in_h": {
+          "hide_name": 0,
+          "bits": [ 954, 949 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_2 io_in_h"
+          }
+        },
+        "LZC32_2.LZC_Merge2_2.io_in_l": {
+          "hide_name": 0,
+          "bits": [ 955, 950 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_2 io_in_l"
+          }
+        },
+        "LZC32_2.LZC_Merge2_2.io_out_m": {
+          "hide_name": 0,
+          "bits": [ 956, 953, 951 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_2 io_out_m"
+          }
+        },
+        "LZC32_2.LZC_Merge2_3.io_in_h": {
+          "hide_name": 0,
+          "bits": [ 962, 957 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_3 io_in_h"
+          }
+        },
+        "LZC32_2.LZC_Merge2_3.io_in_l": {
+          "hide_name": 0,
+          "bits": [ 963, 958 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_3 io_in_l"
+          }
+        },
+        "LZC32_2.LZC_Merge2_3.io_out_m": {
+          "hide_name": 0,
+          "bits": [ 964, 961, 959 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_3 io_out_m"
+          }
+        },
+        "LZC32_2.LZC_Merge2_4.io_in_h": {
+          "hide_name": 0,
+          "bits": [ 970, 965 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_4 io_in_h"
+          }
+        },
+        "LZC32_2.LZC_Merge2_4.io_in_l": {
+          "hide_name": 0,
+          "bits": [ 971, 966 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_4 io_in_l"
+          }
+        },
+        "LZC32_2.LZC_Merge2_4.io_out_m": {
+          "hide_name": 0,
+          "bits": [ 972, 969, 967 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_4 io_out_m"
+          }
+        },
+        "LZC32_2.LZC_Merge2_5.io_in_h": {
+          "hide_name": 0,
+          "bits": [ 978, 973 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_5 io_in_h"
+          }
+        },
+        "LZC32_2.LZC_Merge2_5.io_in_l": {
+          "hide_name": 0,
+          "bits": [ 979, 974 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_5 io_in_l"
+          }
+        },
+        "LZC32_2.LZC_Merge2_5.io_out_m": {
+          "hide_name": 0,
+          "bits": [ 980, 977, 975 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_5 io_out_m"
+          }
+        },
+        "LZC32_2.LZC_Merge2_6.io_in_h": {
+          "hide_name": 0,
+          "bits": [ "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_6 io_in_h"
+          }
+        },
+        "LZC32_2.LZC_Merge2_6.io_in_l": {
+          "hide_name": 0,
+          "bits": [ "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_6 io_in_l"
+          }
+        },
+        "LZC32_2.LZC_Merge2_6.io_out_m": {
+          "hide_name": 0,
+          "bits": [ "0", "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_6 io_out_m"
+          }
+        },
+        "LZC32_2.LZC_Merge2_7.io_in_h": {
+          "hide_name": 0,
+          "bits": [ "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_7 io_in_h"
+          }
+        },
+        "LZC32_2.LZC_Merge2_7.io_in_l": {
+          "hide_name": 0,
+          "bits": [ "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_7 io_in_l"
+          }
+        },
+        "LZC32_2.LZC_Merge2_7.io_out_m": {
+          "hide_name": 0,
+          "bits": [ "0", "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge2_7 io_out_m"
+          }
+        },
+        "LZC32_2.LZC_Merge3.io_in_h": {
+          "hide_name": 0,
+          "bits": [ 940, 937, 935 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge3 io_in_h"
+          }
+        },
+        "LZC32_2.LZC_Merge3.io_in_l": {
+          "hide_name": 0,
+          "bits": [ 948, 945, 943 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge3 io_in_l"
+          }
+        },
+        "LZC32_2.LZC_Merge3.io_out_m": {
+          "hide_name": 0,
+          "bits": [ 984, 985, 983, 981 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge3 io_out_m"
+          }
+        },
+        "LZC32_2.LZC_Merge3_1.io_in_h": {
+          "hide_name": 0,
+          "bits": [ 956, 953, 951 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge3_1 io_in_h"
+          }
+        },
+        "LZC32_2.LZC_Merge3_1.io_in_l": {
+          "hide_name": 0,
+          "bits": [ 964, 961, 959 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge3_1 io_in_l"
+          }
+        },
+        "LZC32_2.LZC_Merge3_1.io_out_m": {
+          "hide_name": 0,
+          "bits": [ 989, 990, 988, 986 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge3_1 io_out_m"
+          }
+        },
+        "LZC32_2.LZC_Merge3_2.io_in_h": {
+          "hide_name": 0,
+          "bits": [ 972, 969, 967 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge3_2 io_in_h"
+          }
+        },
+        "LZC32_2.LZC_Merge3_2.io_in_l": {
+          "hide_name": 0,
+          "bits": [ 980, 977, 975 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge3_2 io_in_l"
+          }
+        },
+        "LZC32_2.LZC_Merge3_2.io_out_m": {
+          "hide_name": 0,
+          "bits": [ 994, 995, 993, 991 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge3_2 io_out_m"
+          }
+        },
+        "LZC32_2.LZC_Merge3_3.io_in_h": {
+          "hide_name": 0,
+          "bits": [ "0", "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge3_3 io_in_h"
+          }
+        },
+        "LZC32_2.LZC_Merge3_3.io_in_l": {
+          "hide_name": 0,
+          "bits": [ "0", "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge3_3 io_in_l"
+          }
+        },
+        "LZC32_2.LZC_Merge3_3.io_out_m": {
+          "hide_name": 0,
+          "bits": [ "0", "0", "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge3_3 io_out_m"
+          }
+        },
+        "LZC32_2.LZC_Merge4.io_in_h": {
+          "hide_name": 0,
+          "bits": [ 984, 985, 983, 981 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge4 io_in_h"
+          }
+        },
+        "LZC32_2.LZC_Merge4.io_in_l": {
+          "hide_name": 0,
+          "bits": [ 989, 990, 988, 986 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge4 io_in_l"
+          }
+        },
+        "LZC32_2.LZC_Merge4.io_out_m": {
+          "hide_name": 0,
+          "bits": [ 999, 1000, 1001, 998, 996 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge4 io_out_m"
+          }
+        },
+        "LZC32_2.LZC_Merge4_1.io_in_h": {
+          "hide_name": 0,
+          "bits": [ 994, 995, 993, 991 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge4_1 io_in_h"
+          }
+        },
+        "LZC32_2.LZC_Merge4_1.io_in_l": {
+          "hide_name": 0,
+          "bits": [ "0", "0", "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge4_1 io_in_l"
+          }
+        },
+        "LZC32_2.LZC_Merge4_1.io_out_m": {
+          "hide_name": 0,
+          "bits": [ 1003, 1004, 1005, 1002, "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge4_1 io_out_m"
+          }
+        },
+        "LZC32_2.LZC_Merge5.io_in_h": {
+          "hide_name": 0,
+          "bits": [ 999, 1000, 1001, 998, 996 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge5 io_in_h"
+          }
+        },
+        "LZC32_2.LZC_Merge5.io_in_l": {
+          "hide_name": 0,
+          "bits": [ 1003, 1004, 1005, 1002, "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge5 io_in_l"
+          }
+        },
+        "LZC32_2.LZC_Merge5.io_out_m": {
+          "hide_name": 0,
+          "bits": [ 199, 200, 201, 202, 203, "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_Merge5 io_out_m"
+          }
+        },
+        "LZC32_2.LZC_enc2.io_in_r": {
+          "hide_name": 0,
+          "bits": [ "1", "1" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2 io_in_r"
+          }
+        },
+        "LZC32_2.LZC_enc2.io_out_e": {
+          "hide_name": 0,
+          "bits": [ "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2 io_out_e"
+          }
+        },
+        "LZC32_2.LZC_enc2_1.io_in_r": {
+          "hide_name": 0,
+          "bits": [ "1", "1" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_1 io_in_r"
+          }
+        },
+        "LZC32_2.LZC_enc2_1.io_out_e": {
+          "hide_name": 0,
+          "bits": [ "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_1 io_out_e"
+          }
+        },
+        "LZC32_2.LZC_enc2_10.io_in_r": {
+          "hide_name": 0,
+          "bits": [ 188, 189 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_10 io_in_r"
+          }
+        },
+        "LZC32_2.LZC_enc2_10.io_out_e": {
+          "hide_name": 0,
+          "bits": [ 955, 950 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_10 io_out_e"
+          }
+        },
+        "LZC32_2.LZC_enc2_11.io_in_r": {
+          "hide_name": 0,
+          "bits": [ 190, 191 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_11 io_in_r"
+          }
+        },
+        "LZC32_2.LZC_enc2_11.io_out_e": {
+          "hide_name": 0,
+          "bits": [ 954, 949 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_11 io_out_e"
+          }
+        },
+        "LZC32_2.LZC_enc2_12.io_in_r": {
+          "hide_name": 0,
+          "bits": [ 192, 193 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_12 io_in_r"
+          }
+        },
+        "LZC32_2.LZC_enc2_12.io_out_e": {
+          "hide_name": 0,
+          "bits": [ 947, 942 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_12 io_out_e"
+          }
+        },
+        "LZC32_2.LZC_enc2_13.io_in_r": {
+          "hide_name": 0,
+          "bits": [ 194, 195 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_13 io_in_r"
+          }
+        },
+        "LZC32_2.LZC_enc2_13.io_out_e": {
+          "hide_name": 0,
+          "bits": [ 946, 941 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_13 io_out_e"
+          }
+        },
+        "LZC32_2.LZC_enc2_14.io_in_r": {
+          "hide_name": 0,
+          "bits": [ 196, 197 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_14 io_in_r"
+          }
+        },
+        "LZC32_2.LZC_enc2_14.io_out_e": {
+          "hide_name": 0,
+          "bits": [ 939, 934 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_14 io_out_e"
+          }
+        },
+        "LZC32_2.LZC_enc2_15.io_in_r": {
+          "hide_name": 0,
+          "bits": [ 198, 251 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_15 io_in_r"
+          }
+        },
+        "LZC32_2.LZC_enc2_15.io_out_e": {
+          "hide_name": 0,
+          "bits": [ 938, 933 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_15 io_out_e"
+          }
+        },
+        "LZC32_2.LZC_enc2_2.io_in_r": {
+          "hide_name": 0,
+          "bits": [ "1", "1" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_2 io_in_r"
+          }
+        },
+        "LZC32_2.LZC_enc2_2.io_out_e": {
+          "hide_name": 0,
+          "bits": [ "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_2 io_out_e"
+          }
+        },
+        "LZC32_2.LZC_enc2_3.io_in_r": {
+          "hide_name": 0,
+          "bits": [ "1", "1" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_3 io_in_r"
+          }
+        },
+        "LZC32_2.LZC_enc2_3.io_out_e": {
+          "hide_name": 0,
+          "bits": [ "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_3 io_out_e"
+          }
+        },
+        "LZC32_2.LZC_enc2_4.io_in_r": {
+          "hide_name": 0,
+          "bits": [ 176, 177 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_4 io_in_r"
+          }
+        },
+        "LZC32_2.LZC_enc2_4.io_out_e": {
+          "hide_name": 0,
+          "bits": [ 979, 974 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_4 io_out_e"
+          }
+        },
+        "LZC32_2.LZC_enc2_5.io_in_r": {
+          "hide_name": 0,
+          "bits": [ 178, 179 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_5 io_in_r"
+          }
+        },
+        "LZC32_2.LZC_enc2_5.io_out_e": {
+          "hide_name": 0,
+          "bits": [ 978, 973 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_5 io_out_e"
+          }
+        },
+        "LZC32_2.LZC_enc2_6.io_in_r": {
+          "hide_name": 0,
+          "bits": [ 180, 181 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_6 io_in_r"
+          }
+        },
+        "LZC32_2.LZC_enc2_6.io_out_e": {
+          "hide_name": 0,
+          "bits": [ 971, 966 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_6 io_out_e"
+          }
+        },
+        "LZC32_2.LZC_enc2_7.io_in_r": {
+          "hide_name": 0,
+          "bits": [ 182, 183 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_7 io_in_r"
+          }
+        },
+        "LZC32_2.LZC_enc2_7.io_out_e": {
+          "hide_name": 0,
+          "bits": [ 970, 965 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_7 io_out_e"
+          }
+        },
+        "LZC32_2.LZC_enc2_8.io_in_r": {
+          "hide_name": 0,
+          "bits": [ 184, 185 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_8 io_in_r"
+          }
+        },
+        "LZC32_2.LZC_enc2_8.io_out_e": {
+          "hide_name": 0,
+          "bits": [ 963, 958 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_8 io_out_e"
+          }
+        },
+        "LZC32_2.LZC_enc2_9.io_in_r": {
+          "hide_name": 0,
+          "bits": [ 186, 187 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_9 io_in_r"
+          }
+        },
+        "LZC32_2.LZC_enc2_9.io_out_e": {
+          "hide_name": 0,
+          "bits": [ 962, 957 ],
+          "attributes": {
+            "hdlname": "LZC32_2 LZC_enc2_9 io_out_e"
+          }
+        },
+        "LZC32_2._LZC_Merge2_1_io_out_m": {
+          "hide_name": 0,
+          "bits": [ 948, 945, 943 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_Merge2_1_io_out_m"
+          }
+        },
+        "LZC32_2._LZC_Merge2_2_io_out_m": {
+          "hide_name": 0,
+          "bits": [ 956, 953, 951 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_Merge2_2_io_out_m"
+          }
+        },
+        "LZC32_2._LZC_Merge2_3_io_out_m": {
+          "hide_name": 0,
+          "bits": [ 964, 961, 959 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_Merge2_3_io_out_m"
+          }
+        },
+        "LZC32_2._LZC_Merge2_4_io_out_m": {
+          "hide_name": 0,
+          "bits": [ 972, 969, 967 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_Merge2_4_io_out_m"
+          }
+        },
+        "LZC32_2._LZC_Merge2_5_io_out_m": {
+          "hide_name": 0,
+          "bits": [ 980, 977, 975 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_Merge2_5_io_out_m"
+          }
+        },
+        "LZC32_2._LZC_Merge2_6_io_out_m": {
+          "hide_name": 0,
+          "bits": [ "0", "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_Merge2_6_io_out_m"
+          }
+        },
+        "LZC32_2._LZC_Merge2_7_io_out_m": {
+          "hide_name": 0,
+          "bits": [ "0", "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_Merge2_7_io_out_m"
+          }
+        },
+        "LZC32_2._LZC_Merge2_io_out_m": {
+          "hide_name": 0,
+          "bits": [ 940, 937, 935 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_Merge2_io_out_m"
+          }
+        },
+        "LZC32_2._LZC_Merge3_1_io_out_m": {
+          "hide_name": 0,
+          "bits": [ 989, 990, 988, 986 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_Merge3_1_io_out_m"
+          }
+        },
+        "LZC32_2._LZC_Merge3_2_io_out_m": {
+          "hide_name": 0,
+          "bits": [ 994, 995, 993, 991 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_Merge3_2_io_out_m"
+          }
+        },
+        "LZC32_2._LZC_Merge3_3_io_out_m": {
+          "hide_name": 0,
+          "bits": [ "0", "0", "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_Merge3_3_io_out_m"
+          }
+        },
+        "LZC32_2._LZC_Merge3_io_out_m": {
+          "hide_name": 0,
+          "bits": [ 984, 985, 983, 981 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_Merge3_io_out_m"
+          }
+        },
+        "LZC32_2._LZC_Merge4_1_io_out_m": {
+          "hide_name": 0,
+          "bits": [ 1003, 1004, 1005, 1002, "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_Merge4_1_io_out_m"
+          }
+        },
+        "LZC32_2._LZC_Merge4_io_out_m": {
+          "hide_name": 0,
+          "bits": [ 999, 1000, 1001, 998, 996 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_Merge4_io_out_m"
+          }
+        },
+        "LZC32_2._LZC_enc2_10_io_out_e": {
+          "hide_name": 0,
+          "bits": [ 955, 950 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_enc2_10_io_out_e"
+          }
+        },
+        "LZC32_2._LZC_enc2_11_io_out_e": {
+          "hide_name": 0,
+          "bits": [ 954, 949 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_enc2_11_io_out_e"
+          }
+        },
+        "LZC32_2._LZC_enc2_12_io_out_e": {
+          "hide_name": 0,
+          "bits": [ 947, 942 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_enc2_12_io_out_e"
+          }
+        },
+        "LZC32_2._LZC_enc2_13_io_out_e": {
+          "hide_name": 0,
+          "bits": [ 946, 941 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_enc2_13_io_out_e"
+          }
+        },
+        "LZC32_2._LZC_enc2_14_io_out_e": {
+          "hide_name": 0,
+          "bits": [ 939, 934 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_enc2_14_io_out_e"
+          }
+        },
+        "LZC32_2._LZC_enc2_15_io_out_e": {
+          "hide_name": 0,
+          "bits": [ 938, 933 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_enc2_15_io_out_e"
+          }
+        },
+        "LZC32_2._LZC_enc2_1_io_out_e": {
+          "hide_name": 0,
+          "bits": [ "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_enc2_1_io_out_e"
+          }
+        },
+        "LZC32_2._LZC_enc2_2_io_out_e": {
+          "hide_name": 0,
+          "bits": [ "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_enc2_2_io_out_e"
+          }
+        },
+        "LZC32_2._LZC_enc2_3_io_out_e": {
+          "hide_name": 0,
+          "bits": [ "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_enc2_3_io_out_e"
+          }
+        },
+        "LZC32_2._LZC_enc2_4_io_out_e": {
+          "hide_name": 0,
+          "bits": [ 979, 974 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_enc2_4_io_out_e"
+          }
+        },
+        "LZC32_2._LZC_enc2_5_io_out_e": {
+          "hide_name": 0,
+          "bits": [ 978, 973 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_enc2_5_io_out_e"
+          }
+        },
+        "LZC32_2._LZC_enc2_6_io_out_e": {
+          "hide_name": 0,
+          "bits": [ 971, 966 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_enc2_6_io_out_e"
+          }
+        },
+        "LZC32_2._LZC_enc2_7_io_out_e": {
+          "hide_name": 0,
+          "bits": [ 970, 965 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_enc2_7_io_out_e"
+          }
+        },
+        "LZC32_2._LZC_enc2_8_io_out_e": {
+          "hide_name": 0,
+          "bits": [ 963, 958 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_enc2_8_io_out_e"
+          }
+        },
+        "LZC32_2._LZC_enc2_9_io_out_e": {
+          "hide_name": 0,
+          "bits": [ 962, 957 ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_enc2_9_io_out_e"
+          }
+        },
+        "LZC32_2._LZC_enc2_io_out_e": {
+          "hide_name": 0,
+          "bits": [ "0", "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 _LZC_enc2_io_out_e"
+          }
+        },
+        "LZC32_2.io_in_d": {
+          "hide_name": 0,
+          "bits": [ "1", "1", "1", "1", "1", "1", "1", "1", 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 251 ],
+          "attributes": {
+            "hdlname": "LZC32_2 io_in_d"
+          }
+        },
+        "LZC32_2.io_out_c": {
+          "hide_name": 0,
+          "bits": [ 199, 200, 201, 202, 203, "0" ],
+          "attributes": {
+            "hdlname": "LZC32_2 io_out_c"
+          }
+        },
+        "_GEN": {
+          "hide_name": 0,
+          "bits": [ 108 ],
+          "attributes": {
+            "hdlname": "_GEN"
+          }
+        },
+        "_LZC32_2_io_out_c": {
+          "hide_name": 0,
+          "bits": [ 199, 200, 201, 202, 203, "0" ],
+          "attributes": {
+            "hdlname": "_LZC32_2_io_out_c"
+          }
+        },
+        "_exp_subtractor_io_out_c": {
+          "hide_name": 0,
+          "bits": [ 107 ],
+          "attributes": {
+            "hdlname": "_exp_subtractor_io_out_c"
+          }
+        },
+        "_exp_subtractor_io_out_s": {
+          "hide_name": 0,
+          "bits": [ 396, 397, 398, 399, 400, 401, 402, 403 ],
+          "attributes": {
+            "hdlname": "_exp_subtractor_io_out_s"
+          }
+        },
+        "_full_adder_io_out_c": {
+          "hide_name": 0,
+          "bits": [ 299 ],
+          "attributes": {
+            "hdlname": "_full_adder_io_out_c"
+          }
+        },
+        "_full_adder_io_out_s": {
+          "hide_name": 0,
+          "bits": [ 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 251 ],
+          "attributes": {
+            "hdlname": "_full_adder_io_out_s"
+          }
+        },
+        "_innermux_exp_false_T_2": {
+          "hide_name": 0,
+          "bits": [ 363 ],
+          "attributes": {
+            "hdlname": "_innermux_exp_false_T_2"
+          }
+        },
+        "_innermux_exp_true_T_2": {
+          "hide_name": 0,
+          "bits": [ 175 ],
+          "attributes": {
+            "hdlname": "_innermux_exp_true_T_2"
+          }
+        },
+        "clock": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "hdlname": "clock"
+          }
+        },
+        "diff_sign": {
+          "hide_name": 0,
+          "bits": [ 140 ],
+          "attributes": {
+            "hdlname": "diff_sign"
+          }
+        },
+        "eqexp_arrange": {
+          "hide_name": 0,
+          "bits": [ 106 ],
+          "attributes": {
+            "hdlname": "eqexp_arrange"
+          }
+        },
+        "exp_subtractor.io_in_a": {
+          "hide_name": 0,
+          "bits": [ 141, 142, 143, 144, 145, 146, 147, 148 ],
+          "attributes": {
+            "hdlname": "exp_subtractor io_in_a"
+          }
+        },
+        "exp_subtractor.io_in_b": {
+          "hide_name": 0,
+          "bits": [ 149, 150, 151, 152, 153, 154, 155, 156 ],
+          "attributes": {
+            "hdlname": "exp_subtractor io_in_b"
+          }
+        },
+        "exp_subtractor.io_out_c": {
+          "hide_name": 0,
+          "bits": [ 107 ],
+          "attributes": {
+            "hdlname": "exp_subtractor io_out_c"
+          }
+        },
+        "exp_subtractor.io_out_s": {
+          "hide_name": 0,
+          "bits": [ 396, 397, 398, 399, 400, 401, 402, 403 ],
+          "attributes": {
+            "hdlname": "exp_subtractor io_out_s"
+          }
+        },
+        "exp_subtractor.result": {
+          "hide_name": 0,
+          "bits": [ 396, 397, 398, 399, 400, 401, 402, 403, 107 ],
+          "attributes": {
+            "hdlname": "exp_subtractor result"
+          }
+        },
+        "exp_wire_0": {
+          "hide_name": 0,
+          "bits": [ 141, 142, 143, 144, 145, 146, 147, 148 ],
+          "attributes": {
+            "hdlname": "exp_wire_0"
+          }
+        },
+        "exp_wire_1": {
+          "hide_name": 0,
+          "bits": [ 149, 150, 151, 152, 153, 154, 155, 156 ],
+          "attributes": {
+            "hdlname": "exp_wire_1"
+          }
+        },
+        "fracadd_in_b": {
+          "hide_name": 0,
+          "bits": [ 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481 ],
+          "attributes": {
+            "hdlname": "fracadd_in_b"
+          }
+        },
+        "full_adder.io_in_a": {
+          "hide_name": 0,
+          "bits": [ 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457, "1" ],
+          "attributes": {
+            "hdlname": "full_adder io_in_a"
+          }
+        },
+        "full_adder.io_in_b": {
+          "hide_name": 0,
+          "bits": [ 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553 ],
+          "attributes": {
+            "hdlname": "full_adder io_in_b"
+          }
+        },
+        "full_adder.io_out_c": {
+          "hide_name": 0,
+          "bits": [ 299 ],
+          "attributes": {
+            "hdlname": "full_adder io_out_c"
+          }
+        },
+        "full_adder.io_out_s": {
+          "hide_name": 0,
+          "bits": [ 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 251 ],
+          "attributes": {
+            "hdlname": "full_adder io_out_s"
+          }
+        },
+        "full_adder.result": {
+          "hide_name": 0,
+          "bits": [ 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 251, 299 ],
+          "attributes": {
+            "hdlname": "full_adder result"
+          }
+        },
+        "inc": {
+          "hide_name": 0,
+          "bits": [ 364, 365, 366, 367, 368, 369, 370, 371, 362 ],
+          "attributes": {
+            "hdlname": "inc"
+          }
+        },
+        "io_in_a": {
+          "hide_name": 0,
+          "bits": [ 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37 ],
+          "attributes": {
+            "hdlname": "io_in_a"
+          }
+        },
+        "io_in_b": {
+          "hide_name": 0,
+          "bits": [ 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69 ],
+          "attributes": {
+            "hdlname": "io_in_b"
+          }
+        },
+        "io_in_en": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "hdlname": "io_in_en"
+          }
+        },
+        "io_in_valid": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "hdlname": "io_in_valid"
+          }
+        },
+        "io_out_s": {
+          "hide_name": 0,
+          "bits": [ 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101 ],
+          "attributes": {
+            "hdlname": "io_out_s"
+          }
+        },
+        "io_out_valid": {
+          "hide_name": 0,
+          "bits": [ 102 ],
+          "attributes": {
+            "hdlname": "io_out_valid"
+          }
+        },
+        "norm_out_exp": {
+          "hide_name": 0,
+          "bits": [ 93, 94, 95, 96, 97, 98, 99, 100 ],
+          "attributes": {
+            "hdlname": "norm_out_exp"
+          }
+        },
+        "norm_out_frac_r": {
+          "hide_name": 0,
+          "bits": [ 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 1030, 1031, 1032, 1033, 1034, 1035, 1036, 1037, 1038, 1039, 1040, 1041, 1042, 1043, 1044, 1045, 1046, 1047, 1048, 1049, 1050, 1051, 1052, 1053, 1054, 1055, 1056, 1057, 1058, 1059, 1060, 1061, 1062, 1063, 1064, 1065, 1066, 1067, 1068, 1069, 1070, 1071, 1072, 1073, 1074, 1075, 1076, 1077, 1078, 1079, 1080, 1081, 1082, 1083, 1084, 1085, 1086, 1087, 1088, 1089, 1090, 1091, 1092 ],
+          "attributes": {
+            "hdlname": "norm_out_frac_r",
+            "unused_bits": "23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85"
+          }
+        },
+        "norm_out_sign": {
+          "hide_name": 0,
+          "bits": [ 101 ],
+          "attributes": {
+            "hdlname": "norm_out_sign"
+          }
+        },
+        "red": {
+          "hide_name": 0,
+          "bits": [ 166, 167, 168, 169, 170, 171, 172, 173, 174 ],
+          "attributes": {
+            "hdlname": "red"
+          }
+        },
+        "ref_exp": {
+          "hide_name": 0,
+          "bits": [ 157, 158, 159, 160, 161, 162, 163, 164 ],
+          "attributes": {
+            "hdlname": "ref_exp"
+          }
+        },
+        "reset": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "hdlname": "reset"
+          }
+        }
+      }
+    }
+  }
+}

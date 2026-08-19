@@ -1,0 +1,28 @@
+timestamp: 2026-08-17T21:46:24-05:00
+host: c370857w
+repo: /home/cbohannon/openhwfp-eval
+git_head: c1462a7ae2bee4a053519999bf696fe85d25ce20
+git_status:
+ M argo_testbed/intent_testbench.txt
+ M generated/cell_count_report.xml
+ M generated/ppa_report.html
+
+submodules:
+ 7041c53a0603b325c6fb658163377b03f1701408 OpenFloat (7041c53)
+ 072fe42b1cfc2ead6ca56e725adf964ec06f9a4c berkeley-hardfloat (remotes/origin/fix-ci-2-g072fe42)
+ ccd352028851db4b1ff8794b1faf0386b07fcc42 rial-tmpfix (heads/master)
+
+java:
+openjdk version "17.0.19" 2026-04-21
+OpenJDK Runtime Environment (build 17.0.19+10-1-24.04.2-Ubuntu)
+OpenJDK 64-Bit Server VM (build 17.0.19+10-1-24.04.2-Ubuntu, mixed mode, sharing)
+sbt:
+sbt version in this project: 1.12.2
+sbt runner version: 2.0.6
+
+[info] sbt runner (sbt-the-shell-script) is a runner to run any declared version of sbt.
+[info] Actual version of the sbt is declared using project/build.properties for each build.
+verilator:
+Verilator 5.020 2024-01-01 rev (Debian 5.020-1)
+yosys:
+Yosys 0.68+ (git sha1 a5af9d690, Release, GNU /usr/bin/c++ 13.3.0) [github.com/The-OpenROAD-Project/yosys at HEAD]

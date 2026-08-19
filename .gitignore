@@ -356,6 +356,7 @@ __pycache__/
 argo_testbed/generated_testbenches/
 argo_testbed/user_feedback.txt
 argo_testbed/user_chat.txt
+argo_testbed/intent_testbench.txt
 argo_testbed/legacy/vector_loop/llm_runs/**
 !argo_testbed/legacy/vector_loop/llm_runs/smoke1/
 !argo_testbed/legacy/vector_loop/llm_runs/smoke1/scenario.json
