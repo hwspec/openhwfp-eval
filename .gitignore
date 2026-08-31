@@ -336,8 +336,13 @@ orfs_designs/asap7/
 dataset/flow_instances.json
 dataset/flow_instances.jsonl
 wrapper_modules/
-cell_count_report.xml
-yosys_output.log
+/cell_count_report.xml
+/yosys_output.log
+# Local build / scratch tree. Explicit anchored rule: the only other match is
+# line 292 inside the vendored Xcode stanza, which is easy to delete by accident.
+/build/
+# Talk/presentation figures (not part of the evidence record)
+/talk_figures/
 # Root-level generated .sv (leftover from old runs; use generated/ for PPA)
 /*.sv
 # CIRCT formal verification output (not used; formal verification disabled)
@@ -375,3 +380,32 @@ src/test/scala/generated/
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
+
+### FORGE evidence protection — MUST REMAIN THE LAST BLOCK IN THIS FILE
+#
+# saved_results/ holds committed flow-instance evidence: Yosys XML + logs, ORFS
+# reports, and tool output that supports the rows in dataset/flow_instances.jsonl.
+# Several vendored template stanzas above use UNANCHORED blanket patterns that
+# match at any depth and have already silently swallowed Phase-1 evidence:
+#
+#   *.lib      lines 114, 255  (C / C++)      - also hides ASAP7 Liberty files
+#   *.out      lines 127, 259  (C / C++)
+#   *_archive  line  158       (Emacs org)
+#   *.class    lines 311, 370  (Scala / Java)
+#   *.log      line  312       (Scala)        - this is what ate yosys_output.log
+#
+# Git applies the LAST matching rule, so these negations only work from the
+# bottom of the file. Do not move them up, and add new rules ABOVE this block.
+#
+# Binary ORFS stage output (.odb/.gds/.spef/.def/.guide/.rtlil) is deliberately
+# NOT negated here; retention policy for those is a separate change.
+!saved_results/**/*.log
+!saved_results/**/*.out
+!saved_results/**/*.rpt
+!saved_results/**/*.xml
+!saved_results/**/*.json
+!saved_results/**/*.jsonl
+!saved_results/**/*.txt
+!saved_results/**/*.lib
+!saved_results/**/*.yaml
+!saved_results/**/*.csv
