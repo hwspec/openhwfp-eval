@@ -366,6 +366,7 @@ def merge_impl(jsonl_path: str, design_id: str, impl: Dict[str, Any]) -> int:
     period = impl.get("clock_period_ps")
     exact: Optional[int] = None
     placeholder: Optional[int] = None
+    conflict: Optional[int] = None
     template: Optional[Dict[str, Any]] = None
     for i, rec in enumerate(rows):
         if rec.get("design_id") != design_id:
@@ -375,12 +376,15 @@ def merge_impl(jsonl_path: str, design_id: str, impl: Dict[str, Any]) -> int:
         rec_impl = rec.get("implementation") or {}
         rec_period = rec_impl.get("clock_period_ps")
         rec_nick = rec_impl.get("nickname")
-        if rec_period == period and (rec_nick in (None, impl.get("nickname")) or rec_nick == impl.get("nickname")):
+        if rec_period == period and rec_nick in (None, impl.get("nickname")):
             exact = i
             break
         if rec_period == period:
-            exact = i
-            break
+            # Same design at the same period under a DIFFERENT nickname. That is a
+            # distinct flow instance (a re-run with other settings, a variant), not
+            # the same one. Record the clash and fall through to the append path so
+            # the existing evidence is not silently overwritten.
+            conflict = i
         if rec_impl.get("status") == "not_run" and rec_period is None and placeholder is None:
             placeholder = i
 
@@ -396,6 +400,13 @@ def merge_impl(jsonl_path: str, design_id: str, impl: Dict[str, Any]) -> int:
         changed = 1
         action = "Updated"
     elif template is not None:
+        if conflict is not None:
+            other = (rows[conflict].get("implementation") or {}).get("nickname")
+            print(
+                f"NOTE: {design_id} already has a record at {period} ps under nickname "
+                f"{other!r}; appending {impl.get('nickname')!r} as a separate flow "
+                f"instance rather than overwriting it."
+            )
         rec = copy.deepcopy(template)
         rec["flow_instance_id"] = _new_flow_id(design_id, impl)
         rec["implementation"] = impl

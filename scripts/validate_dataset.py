@@ -29,9 +29,11 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
 
 # overall_status is a free-form string in the current schema. Two writers emit it:
-#   export_flow_instances.py:overall_status()   -> pass|fail|ignored:<gate>, unknown
+#   export_flow_instances.py:overall_status()    -> pass|fail|ignored:<gate>, unknown
 #   extract_orfs_metrics.py:_overall_from_impl() -> fail:<failure_stage>, pass:implementation
-# Track the vocabulary so drift is visible before the schema is tightened.
+# Track the vocabulary so drift is visible before the schema is tightened. The
+# consistency check below imports those two functions rather than re-implementing
+# them -- see load_writer().
 KNOWN_PREFIXES = {"pass", "fail", "ignored", "unknown"}
 KNOWN_STAGES = {
     "verification", "synthesis", "implementation",
@@ -265,16 +267,56 @@ def check_evidence(rows: List[Dict[str, Any]], rep: Report) -> None:
 
 # --- check 15: overall_status vocabulary and consistency ---------------------
 
-def derived_status(rec: Dict[str, Any]) -> Optional[str]:
-    """Mirror of export_flow_instances.overall_status(), for cross-checking."""
-    verif = rec.get("verification") or {}
-    synth = rec.get("synthesis") or {}
-    impl = impl_of(rec)
-    for stage, part in (("implementation", impl), ("synthesis", synth), ("verification", verif)):
+# The validator used to keep its own copy of export_flow_instances.overall_status().
+# That copy went stale the moment the writer gained its implementation branches, and
+# the validator then reported a downgrade hazard that no longer existed. Import the
+# real functions instead: the check can only ever describe what the writers actually
+# do. Both modules are import-safe -- their top level is constants and defs, and main()
+# is guarded by __name__ -- so this keeps the validator read-only.
+
+def load_writer(module_name: str, filename: str, attr: str):
+    """Import one writer's status function. Returns None if it cannot be loaded."""
+    path = os.path.join(SCRIPT_DIR, filename)
+    if not os.path.isfile(path):
+        return None
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(f"_forge_{module_name}", path)
+        if spec is None or spec.loader is None:
+            return None
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        fn = getattr(mod, attr, None)
+        return fn if callable(fn) else None
+    except Exception:
+        return None
+
+
+# extract_orfs_metrics names this one private, but duplicating it here is precisely
+# the mistake this import exists to avoid.
+EXPORT_OVERALL = load_writer("export", "export_flow_instances.py", "overall_status")
+ORFS_OVERALL = load_writer("orfs", "extract_orfs_metrics.py", "_overall_from_impl")
+
+
+def fallback_overall_status(verif: Dict[str, Any], synth: Dict[str, Any],
+                            impl: Dict[str, Any]) -> str:
+    """Used only when export_flow_instances.py cannot be imported.
+
+    Mirrors that writer as of this commit: implementation failures outrank
+    everything, then earlier gates, then the deepest gate that passed.
+    """
+    impl_st = impl.get("status")
+    if impl_st == "fail":
+        return f"fail:{impl.get('failure_stage') or 'implementation'}"
+    if impl_st == "ignored":
+        return "ignored:implementation"
+    for stage, part in (("synthesis", synth), ("verification", verif)):
         if part.get("status") == "fail":
             return f"fail:{stage}"
         if part.get("status") == "ignored":
             return f"ignored:{stage}"
+    if impl_st == "pass":
+        return "pass:implementation"
     if synth.get("status") == "pass":
         return "pass:synthesis"
     if verif.get("status") == "pass":
@@ -282,9 +324,18 @@ def derived_status(rec: Dict[str, Any]) -> Optional[str]:
     return "unknown"
 
 
+def derived_status(rec: Dict[str, Any]) -> Optional[str]:
+    """What export_flow_instances.py would write for this record, right now."""
+    fn = EXPORT_OVERALL or fallback_overall_status
+    try:
+        return fn(rec.get("verification") or {}, rec.get("synthesis") or {}, impl_of(rec))
+    except Exception:
+        return None
+
+
 def check_overall_status(rows: List[Dict[str, Any]], rep: Report) -> None:
     vocab = collections.Counter()
-    downgradable: List[Dict[str, Any]] = []
+    disagree: List[Tuple[Dict[str, Any], str, str]] = []
     for rec in rows:
         raw = rec.get("overall_status")
         vocab[raw] += 1
@@ -305,29 +356,45 @@ def check_overall_status(rows: List[Dict[str, Any]], rep: Report) -> None:
             rep.warn(f"{label(rec)}: overall_status {raw!r} uses unrecognised stage {stage!r} "
                      f"(known: {sorted(KNOWN_STAGES)})")
 
-        # The two writers disagree by design. extract_orfs_metrics._overall_from_impl
-        # emits the richer implementation-derived value (pass:implementation,
-        # fail:<failure_stage>); export_flow_instances.overall_status() cannot produce
-        # either -- it has no pass:implementation branch and returns pass:synthesis
-        # first. Those rows are correct as written, so count them instead of warning
-        # per row, and report the re-export hazard once.
+        # Would a re-export change this row? With the writers in agreement, an
+        # implementation-derived value must survive the round trip untouched.
         want = derived_status(rec)
-        if want and raw != want:
-            impl_status = impl_of(rec).get("status")
-            if (impl_status == "fail" and raw.startswith("fail:")) or \
-               (impl_status == "pass" and raw == "pass:implementation"):
-                downgradable.append(rec)
-            else:
-                rep.warn(f"{label(rec)}: overall_status {raw!r} disagrees with component "
-                         f"statuses (derived {want!r})")
+        if want is not None and raw != want:
+            rep.warn(f"{label(rec)}: overall_status {raw!r} disagrees with component "
+                     f"statuses (export_flow_instances would write {want!r})")
 
-    if downgradable:
+        # Do the two writers agree on this row? They reach it by different routes:
+        # extract_orfs_metrics looks only at the implementation block, so a design
+        # that failed verification but routed cleanly is the case where they part.
+        if ORFS_OVERALL and EXPORT_OVERALL and impl_of(rec).get("status") in IMPL_ACTIVE:
+            try:
+                a = EXPORT_OVERALL(rec.get("verification") or {},
+                                   rec.get("synthesis") or {}, impl_of(rec))
+                b = ORFS_OVERALL(impl_of(rec))
+            except Exception:
+                a = b = None
+            if a is not None and a != b:
+                disagree.append((rec, a, b))
+
+    if disagree:
         rep.warn(
-            f"{len(downgradable)} row(s) carry an implementation-derived overall_status "
-            f"that export_flow_instances.overall_status() cannot produce -- re-exporting "
-            f"would downgrade them to synthesis-level status"
+            f"{len(disagree)} implementation row(s) get different overall_status values "
+            f"from the two writers -- whichever runs last wins, so the field is unstable"
         )
-    print(f"  overall_status   {len(vocab)} distinct value{'s' if len(vocab) != 1 else ''}")
+        for rec, a, b in disagree:
+            rep.warn(f"  {label(rec)}: export_flow_instances -> {a!r}, "
+                     f"extract_orfs_metrics -> {b!r}")
+
+    if EXPORT_OVERALL is None:
+        rep.warn("could not import export_flow_instances.overall_status; "
+                 "consistency checked against this script's fallback copy instead")
+    if ORFS_OVERALL is None:
+        rep.warn("could not import extract_orfs_metrics._overall_from_impl; "
+                 "skipped the writer-agreement check")
+
+    src = "live writers" if (EXPORT_OVERALL and ORFS_OVERALL) else "fallback"
+    print(f"  overall_status   {len(vocab)} distinct value"
+          f"{'s' if len(vocab) != 1 else ''} (checked against {src})")
 
 
 # --- driver ------------------------------------------------------------------

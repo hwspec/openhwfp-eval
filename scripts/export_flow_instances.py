@@ -152,12 +152,27 @@ def xml_lookup(xml_index: Dict[str, Dict[str, Any]], meta: Dict[str, Any]) -> Op
 
 
 def overall_status(verif: Dict[str, Any], synth: Dict[str, Any], impl: Dict[str, Any]) -> str:
-    for stage, rec in (("implementation", impl), ("synthesis", synth), ("verification", verif)):
+    """Deepest gate reached decides. Failures outrank passes.
+
+    Must stay vocabulary-compatible with extract_orfs_metrics._overall_from_impl:
+    a routed run reports pass:implementation or fail:<failure_stage> (e.g.
+    fail:timing), never the synthesis-level status it would otherwise fall back to.
+    Without the implementation branches below, re-exporting silently downgrades
+    every routed record.
+    """
+    impl_st = impl.get("status")
+    if impl_st == "fail":
+        return f"fail:{impl.get('failure_stage') or 'implementation'}"
+    if impl_st == "ignored":
+        return "ignored:implementation"
+    for stage, rec in (("synthesis", synth), ("verification", verif)):
         st = rec.get("status")
         if st == "fail":
             return f"fail:{stage}"
         if st == "ignored":
             return f"ignored:{stage}"
+    if impl_st == "pass":
+        return "pass:implementation"
     if synth.get("status") == "pass":
         return "pass:synthesis"
     if verif.get("status") == "pass":
@@ -165,8 +180,19 @@ def overall_status(verif: Dict[str, Any], synth: Dict[str, Any], impl: Dict[str,
     return "unknown"
 
 
-def flow_instance_id(design: str, backend: str, extra: str = "") -> str:
-    raw = f"{design}|{backend}|{extra}"
+def flow_instance_id(design: str, backend: str, period: Any = None, nickname: Any = None) -> str:
+    """Stable id for one flow instance.
+
+    Same shape as extract_orfs_metrics._new_flow_id, so both writers agree:
+        sha1(design_id|backend|clock_period_ps|nickname)[:16]
+
+    This previously hashed the run timestamp instead of period/nickname, which was
+    wrong twice over: the id changed on every export (so records could not be
+    matched across runs), and within one export the timestamp was constant, so two
+    rows sharing a design_id collided. Existing ids are preserved by merge_records;
+    only genuinely new designs are numbered under this scheme.
+    """
+    raw = f"{design}|{backend}|{period}|{nickname}"
     return hashlib.sha1(raw.encode("utf-8")).hexdigest()[:16]
 
 
@@ -237,7 +263,7 @@ def build_records(args: argparse.Namespace) -> List[Dict[str, Any]]:
             "area_note": "Generic Yosys cell count times AREA_PER_CELL=100 nm^2 heuristic; not a PDK area.",
         }
         rec = {
-            "flow_instance_id": flow_instance_id(did, "yosys-generic", env.get("timestamp", "")),
+            "flow_instance_id": flow_instance_id(did, "yosys-generic"),
             "design_id": did,
             "library": meta.get("library"),
             "operator": meta.get("operator"),
@@ -258,6 +284,69 @@ def build_records(args: argparse.Namespace) -> List[Dict[str, Any]]:
     return records
 
 
+# Regenerated from the RTL + Yosys XML on every export: safe to refresh in place.
+DESIGN_LEVEL_FIELDS = (
+    "library", "operator", "precision", "exponent_width", "mantissa_width",
+    "bitwidth", "pipeline_depth", "source_path", "source_commit",
+    "environment", "verification", "synthesis",
+)
+
+
+def load_existing(path: str) -> List[Dict[str, Any]]:
+    rows: List[Dict[str, Any]] = []
+    with open(path, "r", encoding="utf-8") as f:
+        for lineno, line in enumerate(f, 1):
+            if not line.strip():
+                continue
+            try:
+                rows.append(json.loads(line))
+            except json.JSONDecodeError as exc:
+                raise SystemExit(f"ERROR: {path}:{lineno}: malformed JSON: {exc}")
+    return rows
+
+
+def merge_records(fresh: List[Dict[str, Any]], path: str) -> tuple:
+    """Refresh design-level fields on existing rows without discarding evidence.
+
+    synthesis/verification/environment describe the design and are regenerated.
+    implementation describes one physical OpenROAD run: it is evidence, and it is
+    preserved along with the flow_instance_id that cites it. Rows for designs that
+    are no longer in the export are kept, not dropped.
+    """
+    rows = load_existing(path)
+    by_design: Dict[Any, List[Dict[str, Any]]] = {}
+    for rec in rows:
+        by_design.setdefault(rec.get("design_id"), []).append(rec)
+
+    stats = {"refreshed": 0, "preserved": 0, "added": 0, "kept": 0}
+    matched = set()
+    for new in fresh:
+        did = new.get("design_id")
+        targets = by_design.get(did)
+        if not targets:
+            rows.append(new)
+            stats["added"] += 1
+            continue
+        matched.add(did)
+        for rec in targets:
+            for field in DESIGN_LEVEL_FIELDS:
+                if field in new:
+                    rec[field] = new[field]
+            impl = rec.get("implementation") or {}
+            if impl.get("status") in (None, "", "not_run"):
+                rec["implementation"] = new["implementation"]
+            else:
+                stats["preserved"] += 1
+            rec["overall_status"] = overall_status(
+                rec.get("verification") or {},
+                rec.get("synthesis") or {},
+                rec.get("implementation") or {},
+            )
+            stats["refreshed"] += 1
+    stats["kept"] = sum(len(v) for d, v in by_design.items() if d not in matched)
+    return rows, stats
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Export Yosys/verification results as flow-instance JSONL")
     ap.add_argument("--xml", default=os.path.join(REPO_ROOT, "generated", "cell_count_report.xml"))
@@ -265,6 +354,12 @@ def main() -> int:
     ap.add_argument("--verify", default=os.path.join(REPO_ROOT, "dataset", "verify_status.json"))
     ap.add_argument("--out", default=os.path.join(REPO_ROOT, "dataset", "flow_instances.jsonl"))
     ap.add_argument("--json", default=os.path.join(REPO_ROOT, "dataset", "flow_instances.json"))
+    ap.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="DESTRUCTIVE: replace the output instead of merging into it. Discards "
+             "every OpenROAD implementation result already recorded there.",
+    )
     args = ap.parse_args()
 
     os.chdir(REPO_ROOT)
@@ -274,16 +369,38 @@ def main() -> int:
         return 1
 
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
+    existed = os.path.exists(args.out)
+    if args.overwrite and existed:
+        dropped = sum(
+            1 for r in load_existing(args.out)
+            if (r.get("implementation") or {}).get("status") not in (None, "", "not_run")
+        )
+        print(
+            f"WARNING: --overwrite is discarding {args.out} "
+            f"({dropped} implementation record(s) will be lost).",
+            file=sys.stderr,
+        )
+        final = records
+    elif existed:
+        final, stats = merge_records(records, args.out)
+        print(
+            f"Merged into {args.out}: {stats['refreshed']} refreshed, "
+            f"{stats['preserved']} implementation block(s) preserved, "
+            f"{stats['added']} added, {stats['kept']} untouched."
+        )
+    else:
+        final = records
+
     with open(args.out, "w", encoding="utf-8") as f:
-        for rec in records:
+        for rec in final:
             f.write(json.dumps(rec) + "\n")
     with open(args.json, "w", encoding="utf-8") as f:
-        json.dump(records, f, indent=2)
+        json.dump(final, f, indent=2)
 
-    n = len(records)
-    synth_ok = sum(1 for r in records if r["synthesis"]["status"] == "pass")
-    v_pass = sum(1 for r in records if r["verification"]["status"] == "pass")
-    v_fail = sum(1 for r in records if r["verification"]["status"] == "fail")
+    n = len(final)
+    synth_ok = sum(1 for r in final if (r.get("synthesis") or {}).get("status") == "pass")
+    v_pass = sum(1 for r in final if (r.get("verification") or {}).get("status") == "pass")
+    v_fail = sum(1 for r in final if (r.get("verification") or {}).get("status") == "fail")
     print(f"Wrote {n} flow instances -> {args.out}")
     print(f"  synthesis pass: {synth_ok}/{n}")
     print(f"  verification pass/fail/other: {v_pass}/{v_fail}/{n - v_pass - v_fail}")

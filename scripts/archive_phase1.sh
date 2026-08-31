@@ -6,6 +6,17 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
+# --no-export: snapshot only, do not regenerate records at all.
+EXPORT_RECORDS=1
+ARGS=()
+for a in "$@"; do
+  case "$a" in
+    --no-export) EXPORT_RECORDS=0 ;;
+    *) ARGS+=("$a") ;;
+  esac
+done
+set -- ${ARGS[@]+"${ARGS[@]}"}
+
 STAMP="${1:-$(date +%Y%m%d-%H%M%S)}"
 OUT="results/phase1-${STAMP}"
 mkdir -p "$OUT"
@@ -43,15 +54,60 @@ copy_if yosys_output.log
 } > "$OUT/environment.txt"
 echo "  wrote $OUT/environment.txt"
 
-python3 scripts/export_flow_instances.py \
-  --xml generated/cell_count_report.xml \
-  --generated generated \
-  --out "$OUT/flow_instances.jsonl" \
-  --json "$OUT/flow_instances.json"
+impl_count() {
+  [[ -f "$1" ]] || { echo 0; return; }
+  python3 - "$1" <<'EOF'
+import json, sys
+n = 0
+for line in open(sys.argv[1], encoding="utf-8"):
+    if line.strip():
+        st = (json.loads(line).get("implementation") or {}).get("status")
+        if st not in (None, "", "not_run"):
+            n += 1
+print(n)
+EOF
+}
 
-cp -a "$OUT/flow_instances.jsonl" dataset/flow_instances.jsonl
-cp -a "$OUT/flow_instances.json" dataset/flow_instances.json
-echo "  also copied records to dataset/"
+if [[ "$EXPORT_RECORDS" == "1" ]]; then
+  # Export into dataset/ FIRST so export_flow_instances.py can merge with what is
+  # already there, then snapshot the merged result into $OUT.
+  #
+  # The old order was the reverse: export into a fresh $OUT (nothing to merge
+  # against, so every implementation block came back "not_run") and then cp -a
+  # over dataset/. That silently destroyed all recorded OpenROAD results.
+  BEFORE="$(impl_count dataset/flow_instances.jsonl)"
+  BACKUP=""
+  if [[ -f dataset/flow_instances.jsonl ]]; then
+    BACKUP="$(mktemp)"
+    cp -a dataset/flow_instances.jsonl "$BACKUP"
+  fi
+
+  python3 scripts/export_flow_instances.py \
+    --xml generated/cell_count_report.xml \
+    --generated generated \
+    --out dataset/flow_instances.jsonl \
+    --json dataset/flow_instances.json
+
+  AFTER="$(impl_count dataset/flow_instances.jsonl)"
+  if (( AFTER < BEFORE )); then
+    echo "ERROR: export dropped implementation records ($BEFORE -> $AFTER)." >&2
+    if [[ -n "$BACKUP" ]]; then
+      cp -a "$BACKUP" dataset/flow_instances.jsonl
+      echo "ERROR: dataset/flow_instances.jsonl restored from backup. Aborting." >&2
+    fi
+    exit 1
+  fi
+  [[ -n "$BACKUP" ]] && rm -f "$BACKUP"
+  echo "  records merged into dataset/ ($AFTER implementation record(s) intact)"
+
+  cp -a dataset/flow_instances.jsonl "$OUT/flow_instances.jsonl"
+  cp -a dataset/flow_instances.json "$OUT/flow_instances.json"
+  echo "  snapshotted records to $OUT/"
+else
+  echo "  --no-export: dataset/ untouched; snapshotting existing records"
+  copy_if dataset/flow_instances.jsonl
+  copy_if dataset/flow_instances.json
+fi
 
 echo
 echo "Done. Keep $OUT (gitignored). Commit dataset/flow_instances.jsonl if you want the records in git."
