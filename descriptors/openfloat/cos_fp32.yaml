@@ -1,0 +1,56 @@
+library: openfloat
+operator: cos
+stem: FP_cos_32_23
+module: FP_cos_32_23
+tier: 2
+format:
+  name: fp32
+  exp_bits: 8
+  sig_bits: 24
+  subnormals: true
+generator:
+  factory: openfloat.cos
+  params:
+    bw: 32
+    iters: 23
+sim:
+  protocol: valid_poll
+  clock: clock
+  reset: reset
+  reset_active: high
+  reset_cycles: 10
+ports:
+  a:
+    chisel: io.in_angle
+    dir: in
+    width: 32
+  result:
+    chisel: io.out_cos
+    dir: out
+    width: 32
+  enable:
+    chisel: io.in_en
+    dir: in
+    width: 1
+    constant: 1
+  valid_in:
+    chisel: io.in_valid
+    dir: in
+    width: 1
+  valid_out:
+    chisel: io.out_valid
+    dir: out
+    width: 1
+ignore_ports:
+- io_out_sin
+profile:
+  rounding_modes:
+  - rne
+  rounding_control: none
+  exception_flags: none
+  subnormals: unknown
+  nan_payload: unspecified
+  signed_zero: unspecified
+  not_evaluated_reason: No rounding-mode input and no exception-flag output on the module.
+  ulp_budget: 4.0
+notes: CORDIC emits cos and sin together. Only cos is checked; io_out_sin is unbound.

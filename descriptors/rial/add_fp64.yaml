@@ -1,0 +1,51 @@
+library: rial
+operator: add
+stem: RialAddFP64
+module: AddFPGeneric
+tier: 1
+format:
+  name: fp64
+  exp_bits: 11
+  sig_bits: 53
+  subnormals: true
+generator:
+  factory: rial.add
+  params:
+    spec: FP64
+    round: roundToEven
+    pipeline: none
+sim:
+  protocol: combinational
+  clock: clock
+  reset: reset
+  reset_active: high
+  reset_cycles: 10
+ports:
+  a:
+    chisel: io.x
+    dir: in
+    width: 64
+  b:
+    chisel: io.y
+    dir: in
+    width: 64
+  result:
+    chisel: io.z
+    dir: out
+    width: 64
+ignore_ports: []
+profile:
+  rounding_modes:
+  - rne
+  rounding_control: elaboration
+  exception_flags: none
+  subnormals: flushed
+  nan_payload: unspecified
+  signed_zero: unspecified
+  not_evaluated_reason: RoundSpec is a constructor argument, so other modes need separate DUTs. RealSpec
+    sets disableSubnormal=true for every Rial format, so subnormal operands and results are outside the
+    design's scope.
+stimulus:
+  testfloat_function: f64_add
+  level: 1
+  seed: 1

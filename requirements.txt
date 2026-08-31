@@ -1,0 +1,8 @@
+# Verification framework Python toolchain
+# NOTE: Python version has to be <= 3.13 for cocotb
+cocotb>=1.9,<3
+cocotb-bus>=0.2
+gmpy2>=2.2
+PyYAML>=6.0
+jsonschema>=4.20
+pytest>=8.0

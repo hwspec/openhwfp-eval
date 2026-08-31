@@ -1,0 +1,338 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hwspec.org/openhwfp-eval/descriptor.schema.json",
+  "title": "OpenHWFP design descriptor",
+  "description": "One FP operator configuration. Drives elaboration, verification and dataset metadata.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "library",
+    "operator",
+    "stem",
+    "module",
+    "format",
+    "sim",
+    "ports",
+    "profile"
+  ],
+  "oneOf": [
+    {
+      "required": [
+        "generator"
+      ],
+      "not": {
+        "required": [
+          "source"
+        ]
+      }
+    },
+    {
+      "required": [
+        "source"
+      ],
+      "not": {
+        "required": [
+          "generator"
+        ]
+      }
+    }
+  ],
+  "properties": {
+    "library": {
+      "type": "string",
+      "minLength": 1
+    },
+    "operator": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stem": {
+      "type": "string",
+      "description": "Output filename without extension. generated/<library>/<stem>.sv"
+    },
+    "module": {
+      "type": "string",
+      "description": "Verilog top module name. Often differs from stem."
+    },
+    "tier": {
+      "type": "integer",
+      "enum": [
+        1,
+        2
+      ],
+      "default": 1
+    },
+    "format": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exp_bits",
+        "sig_bits"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "exp_bits": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "sig_bits": {
+          "type": "integer",
+          "minimum": 2,
+          "description": "Includes the hidden bit. fp32 is 24."
+        },
+        "subnormals": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "generator": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Elaborated by sbt into generated/<library>/<stem>.sv. Mutually exclusive with source.",
+      "required": [
+        "factory"
+      ],
+      "properties": {
+        "factory": {
+          "type": "string",
+          "description": "Key into the Scala factory registry, e.g. openfloat.add"
+        },
+        "params": {
+          "type": "object"
+        }
+      }
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Repo-relative path to RTL that already exists, usually inside a submodule. Read in place, never copied. Mutually exclusive with generator."
+    },
+    "sim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol"
+      ],
+      "properties": {
+        "protocol": {
+          "type": "string",
+          "enum": [
+            "combinational",
+            "fixed_latency",
+            "valid_poll"
+          ]
+        },
+        "latency": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Required for fixed_latency."
+        },
+        "clock": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "clock"
+        },
+        "reset": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "reset"
+        },
+        "reset_active": {
+          "type": "string",
+          "enum": [
+            "high",
+            "low"
+          ],
+          "default": "high"
+        },
+        "reset_cycles": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 10
+        }
+      }
+    },
+    "ports": {
+      "type": "object",
+      "description": "Role to signal. Roles a and result are always required.",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "chisel",
+          "dir",
+          "width"
+        ],
+        "properties": {
+          "chisel": {
+            "type": "string",
+            "description": "Chisel-level name, e.g. io.in_a. Flattened to RTL by the manifest builder."
+          },
+          "rtl": {
+            "type": "string",
+            "description": "Optional override when the RTL name is not a simple flattening."
+          },
+          "dir": {
+            "type": "string",
+            "enum": [
+              "in",
+              "out"
+            ]
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "encoding": {
+            "type": "string",
+            "description": "For rounding_mode. Currently only hardfloat."
+          },
+          "order": {
+            "type": "string",
+            "description": "For flags. hardfloat is {invalid,infinite,overflow,underflow,inexact}."
+          },
+          "constant": {
+            "description": "Tie this input to a fixed value for the whole run."
+          }
+        }
+      }
+    },
+    "ignore_ports": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "RTL ports deliberately left unbound. Anything not here and not in ports is a build error."
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rounding_modes",
+        "rounding_control",
+        "exception_flags"
+      ],
+      "properties": {
+        "rounding_modes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "rne",
+              "rtz",
+              "rdn",
+              "rup",
+              "rna",
+              "rto"
+            ]
+          },
+          "minItems": 1
+        },
+        "rounding_control": {
+          "type": "string",
+          "enum": [
+            "port",
+            "elaboration",
+            "none"
+          ]
+        },
+        "exception_flags": {
+          "type": "string",
+          "enum": [
+            "ieee5",
+            "none"
+          ]
+        },
+        "tininess": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "before",
+              "after"
+            ]
+          }
+        },
+        "subnormals": {
+          "type": "string",
+          "enum": [
+            "supported",
+            "flushed",
+            "unknown"
+          ],
+          "default": "unknown"
+        },
+        "nan_payload": {
+          "type": "string",
+          "enum": [
+            "ieee",
+            "canonical",
+            "unspecified"
+          ],
+          "default": "unspecified"
+        },
+        "signed_zero": {
+          "type": "string",
+          "enum": [
+            "ieee",
+            "unspecified"
+          ],
+          "default": "unspecified"
+        },
+        "ulp_budget": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Tier 2 only. Max tolerated ULP error."
+        },
+        "not_evaluated_reason": {
+          "type": "string"
+        }
+      }
+    },
+    "stimulus": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "testfloat_function": {
+          "type": "string",
+          "description": "testfloat_gen function name, e.g. f32_add."
+        },
+        "level": {
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ],
+          "default": 1
+        },
+        "max_vectors": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Subsample via testfloat_gen -n. f32_mulAdd level 1 is 6.1M."
+        },
+        "seed": {
+          "type": "integer",
+          "default": 1
+        },
+        "reference": {
+          "type": "string",
+          "enum": [
+            "testfloat",
+            "identity"
+          ],
+          "default": "testfloat",
+          "description": "identity means the expected result is the input, for round-trip checks."
+        }
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

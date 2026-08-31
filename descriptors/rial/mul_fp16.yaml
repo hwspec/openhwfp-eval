@@ -1,0 +1,51 @@
+library: rial
+operator: mul
+stem: RialMultFP16
+module: MultFPGeneric
+tier: 1
+format:
+  name: fp16
+  exp_bits: 5
+  sig_bits: 11
+  subnormals: true
+generator:
+  factory: rial.mul
+  params:
+    spec: FP16
+    round: roundToEven
+    pipeline: none
+sim:
+  protocol: combinational
+  clock: clock
+  reset: reset
+  reset_active: high
+  reset_cycles: 10
+ports:
+  a:
+    chisel: io.x
+    dir: in
+    width: 16
+  b:
+    chisel: io.y
+    dir: in
+    width: 16
+  result:
+    chisel: io.z
+    dir: out
+    width: 16
+ignore_ports: []
+profile:
+  rounding_modes:
+  - rne
+  rounding_control: elaboration
+  exception_flags: none
+  subnormals: flushed
+  nan_payload: unspecified
+  signed_zero: unspecified
+  not_evaluated_reason: RoundSpec is a constructor argument, so other modes need separate DUTs. RealSpec
+    sets disableSubnormal=true for every Rial format, so subnormal operands and results are outside the
+    design's scope.
+stimulus:
+  testfloat_function: f16_mul
+  level: 1
+  seed: 1

@@ -1,0 +1,63 @@
+library: openfloat
+operator: mul
+stem: FP_mult_32_13
+module: FP_mult_32_13
+tier: 1
+format:
+  name: fp32
+  exp_bits: 8
+  sig_bits: 24
+  subnormals: true
+generator:
+  factory: openfloat.mult
+  params:
+    bw: 32
+    pd: 13
+sim:
+  protocol: fixed_latency
+  latency: 13
+  clock: clock
+  reset: reset
+  reset_active: high
+  reset_cycles: 10
+ports:
+  a:
+    chisel: io.in_a
+    dir: in
+    width: 32
+  b:
+    chisel: io.in_b
+    dir: in
+    width: 32
+  result:
+    chisel: io.out_s
+    dir: out
+    width: 32
+  enable:
+    chisel: io.in_en
+    dir: in
+    width: 1
+    constant: 1
+  valid_in:
+    chisel: io.in_valid
+    dir: in
+    width: 1
+  valid_out:
+    chisel: io.out_valid
+    dir: out
+    width: 1
+ignore_ports: []
+profile:
+  rounding_modes:
+  - rne
+  rounding_control: none
+  exception_flags: none
+  subnormals: unknown
+  nan_payload: unspecified
+  signed_zero: unspecified
+  not_evaluated_reason: No rounding-mode input and no exception-flag output on the module.
+stimulus:
+  testfloat_function: f32_mul
+  level: 1
+  seed: 1
+notes: out_valid is present but the module is fixed latency; drive by latency, not by polling.

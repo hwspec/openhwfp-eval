@@ -1,0 +1,35 @@
+{
+  "design": "rial/RialSMGFP32",
+  "library": "rial",
+  "stem": "RialSMGFP32",
+  "module": "MathFunctions",
+  "source": "generated/rial/RialSMGFP32.sv",
+  "tool": "Verilator 5.051 devel rev v5.050-40-g6c20fdb7b (mod)",
+  "ports": [
+    {
+      "name": "clock",
+      "dir": "in",
+      "width": 1
+    },
+    {
+      "name": "reset",
+      "dir": "in",
+      "width": 1
+    },
+    {
+      "name": "io_sel",
+      "dir": "in",
+      "width": 2
+    },
+    {
+      "name": "io_x",
+      "dir": "in",
+      "width": 32
+    },
+    {
+      "name": "io_z",
+      "dir": "out",
+      "width": 32
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+library: hardfloat
+operator: recfn_roundtrip
+stem: FPTest_8_24
+module: FPTest_8_24
+tier: 1
+format:
+  name: fp32
+  exp_bits: 8
+  sig_bits: 24
+  subnormals: true
+generator:
+  factory: hardfloat.recfn_test
+  params:
+    expW: 8
+    sigW: 24
+sim:
+  protocol: combinational
+  clock: clock
+  reset: reset
+  reset_active: high
+  reset_cycles: 10
+ports:
+  a:
+    chisel: io.in
+    dir: in
+    width: 32
+  result:
+    chisel: io.out
+    dir: out
+    width: 32
+ignore_ports: []
+profile:
+  rounding_modes:
+  - rne
+  rounding_control: none
+  exception_flags: none
+  subnormals: supported
+  nan_payload: canonical
+  signed_zero: ieee
+  not_evaluated_reason: Format round trip, not an arithmetic operation. Rounding and flags do not apply.
+stimulus:
+  testfloat_function: f32
+  level: 1
+  seed: 1
+  reference: identity
+notes: recFNFromFN then fNFromRecFN. Expected output is the input; no flags are raised.
