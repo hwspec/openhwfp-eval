@@ -333,8 +333,12 @@ openroad_results/
 results/
 orfs_designs/src/
 orfs_designs/asap7/
+# The flow-instance dataset is the point of this repository, so the JSONL is
+# tracked (see dataset/schema.json, scripts/validate_dataset.py).
+# flow_instances.json is the same records in a second serialization: nothing
+# reads it, it is not schema-validated, and appending one record rewrites 55
+# of its lines instead of 1. It stays ignored as a derived convenience file.
 dataset/flow_instances.json
-dataset/flow_instances.jsonl
 wrapper_modules/
 /cell_count_report.xml
 /yosys_output.log
@@ -391,7 +395,7 @@ hs_err_pid*
 #   *.lib      lines 114, 255  (C / C++)      - also hides ASAP7 Liberty files
 #   *.out      lines 127, 259  (C / C++)
 #   *_archive  line  158       (Emacs org)
-#   *.class    lines 311, 370  (Scala / Java)
+#   *.class    lines 311, 374  (Scala / Java)
 #   *.log      line  312       (Scala)        - this is what ate yosys_output.log
 #
 # Git applies the LAST matching rule, so these negations only work from the
