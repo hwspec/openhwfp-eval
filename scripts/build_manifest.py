@@ -95,14 +95,26 @@ def check_one(desc, lock, path):
         resolved[role] = dict(spec, rtl=rtl)
 
     # 3. coverage
-    clock = desc["sim"].get("clock") or "clock"
-    reset = desc["sim"].get("reset") or "reset"
+    implicit = set()
+    for field, fallback in (("clock", "clock"), ("reset", "reset")):
+        name = desc["sim"].get(field, fallback)
+        if name is None:
+            continue
+        if field in desc["sim"] and name not in lock_ports:
+            near = [n for n in lock_ports if field[:3] in n.lower()]
+            hint = f" Did you mean {near}?" if near else ""
+            raise ContractError(
+                f"{where}: sim.{field} is '{name}', which {design} does not have. "
+                f"Module has: {', '.join(sorted(lock_ports))}.{hint} "
+                f"Use null if this design has no {field}.")
+        implicit.add(name)
+
     mapped = {r["rtl"] for r in resolved.values()}
     ignored = set(desc.get("ignore_ports", []))
     for name in ignored:
         if name not in lock_ports:
             raise ContractError(f"{where}: ignore_ports lists '{name}', which the module does not have")
-    unaccounted = set(lock_ports) - mapped - ignored - {clock, reset}
+    unaccounted = set(lock_ports) - mapped - ignored - implicit
     if unaccounted:
         raise ContractError(
             f"{where}: unaccounted ports on {design}: {', '.join(sorted(unaccounted))}. "
