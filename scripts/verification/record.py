@@ -92,8 +92,6 @@ def build_record(job, cmp, vectors) -> dict:
             "sha256": vectors.sha256,
             "path": os.path.relpath(vectors.path),
         },
-        "directed_tests": vectors.count,
-        "random_tests": 0,
         "checks_performed": cmp.checks,
         "vectors_excluded_by_profile": cmp.excluded,
         "exclusion_reasons": dict(sorted(cmp.exclusions.items())),

@@ -33,8 +33,8 @@ class Profile:
     exception_flags: str
     tininess: List[str] = field(default_factory=lambda: ["after"])
     subnormals: str = "unknown"
-    nan_payload: str = "unspecified"
-    signed_zero: str = "unspecified"
+    nan_payload: str = "ignored"
+    signed_zero: str = "ignored"
     ulp_budget: Optional[float] = None
     not_evaluated_reason: Optional[str] = None
 
@@ -46,8 +46,8 @@ class Profile:
             exception_flags=prof["exception_flags"],
             tininess=list(prof.get("tininess") or ["after"]),
             subnormals=prof.get("subnormals", "unknown"),
-            nan_payload=prof.get("nan_payload", "unspecified"),
-            signed_zero=prof.get("signed_zero", "unspecified"),
+            nan_payload=prof.get("nan_payload", "ignored"),
+            signed_zero=prof.get("signed_zero", "ignored"),
             ulp_budget=prof.get("ulp_budget"),
             not_evaluated_reason=prof.get("not_evaluated_reason"),
         )

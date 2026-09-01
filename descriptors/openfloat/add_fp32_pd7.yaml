@@ -53,8 +53,8 @@ profile:
   rounding_control: none
   exception_flags: none
   subnormals: unknown
-  nan_payload: unspecified
-  signed_zero: unspecified
+  nan_payload: ignored
+  signed_zero: ignored
   not_evaluated_reason: No rounding-mode input and no exception-flag output on the module.
 stimulus:
   testfloat_function: f32_add

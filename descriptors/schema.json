@@ -273,17 +273,17 @@
           "enum": [
             "ieee",
             "canonical",
-            "unspecified"
+            "ignored"
           ],
-          "default": "unspecified"
+          "default": "ignored"
         },
         "signed_zero": {
           "type": "string",
           "enum": [
             "ieee",
-            "unspecified"
+            "ignored"
           ],
-          "default": "unspecified"
+          "default": "ignored"
         },
         "ulp_budget": {
           "type": "number",

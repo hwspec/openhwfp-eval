@@ -49,8 +49,8 @@ profile:
   rounding_control: none
   exception_flags: none
   subnormals: unknown
-  nan_payload: unspecified
-  signed_zero: unspecified
+  nan_payload: ignored
+  signed_zero: ignored
   not_evaluated_reason: No rounding-mode input and no exception-flag output on the module.
   ulp_budget: 4.0
 notes: CORDIC emits cos and sin together. Only cos is checked; io_out_sin is unbound.

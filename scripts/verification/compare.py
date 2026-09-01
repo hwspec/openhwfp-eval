@@ -76,24 +76,29 @@ def categorize(kind, operands, got, expected, fmt, ulp):
 
 
 def describe(cat) -> str:
-    """One readable line per category. Written for whoever reads the dataset, not the debugger."""
+    """One readable line per category. Written for whoever reads the dataset, not the debugger.
+
+    Every line names what came out and what was wanted, in that order, so a reader never has to
+    decode the signature's got->expected arrow to know which side is which.
+    """
     ins = " x ".join(cat["input_classes"])
+    got, exp = cat["got_class"], cat["expected_class"]
     if cat["kind"] == "nan_mismatch":
-        return f"{ins} returned {cat['got_class']} where {cat['expected_class']} is required"
+        return f"{ins}: got {got}, expected {exp}"
     if cat["kind"] == "infinity":
-        if cat["got_class"] == cat["expected_class"] == "inf":
-            return f"{ins} returned an infinity of the wrong sign"
-        return f"{ins} returned {cat['got_class']} where {cat['expected_class']} is required"
+        if got == exp == "inf":
+            return f"{ins}: got an infinity of the wrong sign"
+        return f"{ins}: got {got}, expected {exp}"
     if cat["kind"] == "nan_payload":
-        return f"{ins} produced a NaN with a different payload"
+        return f"{ins}: got a NaN with a different payload"
     if cat["kind"] == "signed_zero":
-        return f"{ins} produced a zero of the wrong sign"
+        return f"{ins}: got a zero of the wrong sign"
     if cat["kind"] == "flags":
-        return f"{ins} produced the right value with the wrong exception flags"
+        return f"{ins}: correct value, wrong exception flags"
     band = cat["ulp_band"]
     if band == "1":
-        return f"{ins} was 1 ulp from the correctly rounded result"
-    return f"{ins} returned {cat['got_class']} where {cat['expected_class']} was expected ({band} ulp)"
+        return f"{ins}: got {got}, expected {exp}, 1 ulp off"
+    return f"{ins}: got {got}, expected {exp}, {band} ulp off"
 
 
 @dataclass

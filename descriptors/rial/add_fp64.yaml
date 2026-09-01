@@ -40,8 +40,8 @@ profile:
   rounding_control: elaboration
   exception_flags: none
   subnormals: flushed
-  nan_payload: unspecified
-  signed_zero: unspecified
+  nan_payload: ignored
+  signed_zero: ignored
   not_evaluated_reason: RoundSpec is a constructor argument, so other modes need separate DUTs. RealSpec
     sets disableSubnormal=true for every Rial format, so subnormal operands and results are outside the
     design's scope.
