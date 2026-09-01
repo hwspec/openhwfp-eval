@@ -9,7 +9,7 @@ SPECIALIZE_TYPE ?= RISCV
 SOFTFLOAT_BUILD := berkeley-softfloat-3/build/$(PLATFORM)
 TESTFLOAT_BUILD := berkeley-testfloat-3/build/$(PLATFORM)
 
-.PHONY: help setup plan manifest rtl locks verify summary test check ppa \
+.PHONY: help setup plan manifest rtl locks locks-check locks-update verify summary selftest build ppa \
         clean clean-vectors clean-sim extraclean
 
 help:
@@ -18,12 +18,14 @@ help:
 	@echo "  setup          build SoftFloat + TestFloat, create .venv"
 	@echo "  plan           schema-check descriptors, write the elaboration plan"
 	@echo "  rtl            elaborate every design in the plan to generated/"
-	@echo "  locks          regenerate port lockfiles in descriptors/_locks (fail if changed)"
-	@echo "  manifest       validate descriptors against lockfiles, write the manifest"
+	@echo "  locks          compares the RTL-extracted port map against the lockfile, writes lockfile if non-existent"
+	@echo "  locks-check    write nothing, fail when lockfile and RTL aren't coherent, or a lockfile doesn't exist yet; good for CI-checks"
+	@echo "  locks-update   accept current RTL as the new truth and rewrite every lockfile"
+	@echo "  manifest       compares descriptor against the lockfiles, then compiles manifest from descriptors to prepare for verification"
 	@echo "  verify         run tier 1 verification over every design"
 	@echo "  summary        print the coverage matrix from existing records"
-	@echo "  test           run unit tests and check descriptor YAML syntax"
-	@echo "  check          run entire frontend: plan -> rtl -> locks -> manifest -> test"
+	@echo "  selftest       run unit tests, YAML schema syntactic correctness, and descriptor vs.lockfile checks"
+	@echo "  build          run entire frontend: plan -> rtl -> locks -> manifest -> selftest"
 	@echo
 	@echo "  ppa            Yosys cell counts and the HTML report (destroys generated/)"
 	@echo
@@ -39,22 +41,40 @@ help:
 setup:
 	bash scripts/setup_verification.sh
 
-# When onboarding a brand new design, we need skeleton manifest so the elaborator can run, just for its first pass
-# After the first time, _locks/ should be committed and stay as an artifact to detect when RTL drifts from the descriptor contract
+# Develops an elaboration plan from descriptors
 plan:
 	$(PYTHON) scripts/build_manifest.py --plan-only
 
 rtl: plan
 	sbt -batch "runMain Generate.GenerateAllTestModules"
 
+# Compares the RTL-extracted port map against the lockfile
+# Writes lockfile if non-existent
+locks:
+	$(PYTHON) scripts/scaffold.py generated/ --quiet
+
+# Write nothing, fail when lockfile and RTL aren't coherent, or a lockfile doesn't exist yet
+# Good for CI-checks
+locks-check:
+	$(PYTHON) scripts/scaffold.py generated/ --check --quiet
+
+# Accept current RTL as the new truth and rewrite every lockfile
+locks-update:
+	$(PYTHON) scripts/scaffold.py generated/ --update --quiet
+
+# Compares descriptor against the lockfiles, then compiles manifest from descriptors to prepare for verification
 manifest:
 	$(PYTHON) scripts/build_manifest.py
 
-locks:
-	$(PYTHON) scripts/scaffold.py generated/ --quiet
-	@git diff --quiet --exit-code descriptors/_locks/ \
-	  || { echo "error: port lockfiles changed since last run. Review the diff, then update the descriptors."; exit 1; }
-	@echo "port lockfiles match the elaborated RTL"
+# Unit tests, YAML schema syntactic correctness, and descriptor vs.lockfile checks
+selftest:
+	$(PYTHON) scripts/build_manifest.py --check
+	$(PYTHON) -m pytest tests/ -q
+
+build: rtl locks manifest selftest
+	@echo
+	@echo "Frontend is consistent: descriptors, RTL and lockfiles are in sync."
+	@echo "Next, run make verify to simulate test vectors."
 
 # ---------------------------------------------------------------- run
 
@@ -63,14 +83,6 @@ verify:
 
 summary:
 	$(PYTHON) -m scripts.verification.summarize
-
-test:
-	$(PYTHON) scripts/build_manifest.py --check
-	$(PYTHON) -m pytest tests/ -q
-
-check: rtl locks manifest test
-	@echo
-	@echo "frontend is consistent: descriptors, RTL and lockfiles are in sync"
 
 ppa:
 	bash scripts/run_ppa_estimation.sh

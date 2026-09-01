@@ -65,12 +65,19 @@ def collect_environment() -> Dict[str, str]:
     return {k: v for k, v in env.items() if v}
 
 
+def _submodule_paths() -> List[str]:
+    out = _run(["git", "config", "--file", os.path.join(REPO_ROOT, ".gitmodules"),
+                "--get-regexp", r"^submodule\..*\.path$"])
+    paths = [line.split(" ", 1)[1] for line in out.splitlines() if " " in line] if out else []
+    return sorted(paths)
+
+
 def git_submodule_commits() -> Dict[str, str]:
     commits = {}
     head = _run(["git", "rev-parse", "HEAD"])
     if head:
         commits["openhwfp-eval"] = head
-    for name in ("OpenFloat", "berkeley-hardfloat", "rial-tmpfix"):
+    for name in _submodule_paths():
         p = subprocess.run(
             ["git", "-C", os.path.join(REPO_ROOT, name), "rev-parse", "HEAD"],
             capture_output=True,
