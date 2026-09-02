@@ -30,6 +30,9 @@ import yaml
 from jsonschema import Draft202012Validator
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(ROOT, "scripts"))
+from verification.budgets import BUDGETS, budget_for  # noqa: E402
+
 DESC_DIR = os.path.join(ROOT, "descriptors")
 LOCK_DIR = os.path.join(DESC_DIR, "_locks")
 OUT = os.path.join(ROOT, "generated", "descriptor_manifest.json")
@@ -144,8 +147,15 @@ def check_one(desc, lock, path):
         raise ContractError(
             f"{where}: claims {len(prof['rounding_modes'])} rounding modes but has no rounding_mode "
             f"port. One DUT cannot cover several modes without one.")
-    if desc.get("tier", 1) == 2 and "ulp_budget" not in prof:
-        raise ContractError(f"{where}: tier 2 requires profile.ulp_budget")
+    if desc.get("tier", 1) == 2:
+        if desc["operator"] not in BUDGETS:
+            raise ContractError(
+                f"{where}: no ULP budget for operator '{desc['operator']}'. "
+                f"Add it to scripts/verification/budgets.py and SPECIFICATION.md.")
+        if "ulp_budget" in prof:
+            raise ContractError(
+                f"{where}: tier 2 ulp_budget is derived per-format from budgets.py; "
+                f"remove it from the descriptor.")
     if desc.get("tier", 1) == 1 and "ulp_budget" in prof:
         raise ContractError(f"{where}: tier 1 is bit exact; drop profile.ulp_budget")
 
@@ -267,6 +277,9 @@ def build(check_only=False, plan_only=False):
             continue
 
         fmt = desc["format"]
+        profile = dict(desc["profile"])
+        if desc.get("tier", 1) == 2:
+            profile["ulp_budget"] = budget_for(desc["operator"], fmt.get("name"))
         entries.append({
             "design_id": design,
             "descriptor_path": where,
@@ -281,7 +294,7 @@ def build(check_only=False, plan_only=False):
             "sim": desc["sim"],
             "ports": resolved,
             "ignore_ports": desc.get("ignore_ports", []),
-            "profile": desc["profile"],
+            "profile": profile,
             "conformance_level": conformance_level(desc["profile"]),
             "stimulus": desc.get("stimulus", {}),
             "notes": desc.get("notes"),

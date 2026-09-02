@@ -35,6 +35,7 @@ ports:
     chisel: io.sel
     dir: in
     width: 2
+    constant: 1
 ignore_ports: []
 profile:
   rounding_modes:
@@ -47,5 +48,8 @@ profile:
   not_evaluated_reason: RoundSpec is a constructor argument, so other modes need separate DUTs. RealSpec
     sets disableSubnormal=true for every Rial format, so subnormal operands and results are outside the
     design's scope.
-  ulp_budget: 4.0
+stimulus:
+  reference: mpfr
+  seed: 1
+  count: 20000
 notes: io_sel is resolved by the generator from MathFuncConfig; see manifest constants.

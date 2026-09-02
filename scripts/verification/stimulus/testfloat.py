@@ -49,6 +49,10 @@ class VectorSet:
                 if self.reference == "identity":
                     yield values[:1], values[0], 0
                     continue
+                if self.reference == "mpfr":
+                    # operands then one expected column, no flags. Tier 2 does not check flags.
+                    yield values[:self.operands], values[self.operands], None
+                    continue
                 if len(cols) < 2:
                     continue
                 yield values[:-2], values[-2], values[-1]

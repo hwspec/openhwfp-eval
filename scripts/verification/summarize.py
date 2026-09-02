@@ -35,21 +35,25 @@ def rollup(records):
             "precision": r["precision"],
             "tier": r["tier"],
             "conformance_level": r["conformance_level"],
-            "flag_check": r["flag_check"],
-            "reference_model": r["reference_model"],
-            "runs": 0, "passed": 0, "failed": 0,
+            "flag_check": r.get("flag_check", "none"),
+            "reference_model": r.get("reference_model", (r.get("reference") or {}).get("model", "")),
+            "runs": 0, "passed": 0, "failed": 0, "aborted": 0,
             "checks": 0, "mismatches": 0,
             "modes": set(), "tininess": set(),
             "max_ulp": 0.0, "coverage": collections.Counter(),
             "canary_ok": True,
-            "not_evaluated_reason": r["profile"].get("not_evaluated_reason"),
+            "not_evaluated_reason": (r.get("profile") or {}).get("not_evaluated_reason"),
         })
         d["runs"] += 1
+        d["modes"].add(r["rounding_mode"])
+        d["tininess"].add(r["tininess"])
+        # An aborted run carries no metrics; count it and move on.
+        if r["status"] == "aborted":
+            d["aborted"] += 1
+            continue
         d["passed" if r["status"] == "pass" else "failed"] += 1
         d["checks"] += r["checks_performed"]
         d["mismatches"] += r["mismatch_count"]
-        d["modes"].add(r["rounding_mode"])
-        d["tininess"].add(r["tininess"])
         d["max_ulp"] = max(d["max_ulp"], r["max_ulp"])
         d["coverage"].update(r["special_case_coverage"])
         d["canary_ok"] = d["canary_ok"] and r.get("canary_ok", False)
@@ -58,7 +62,12 @@ def rollup(records):
         d["modes"] = sorted(d["modes"])
         d["tininess"] = sorted(d["tininess"])
         d["coverage"] = dict(sorted(d["coverage"].items()))
-        d["status"] = "pass" if d["failed"] == 0 and d["checks"] > 0 else "fail"
+        if d["runs"] == d["aborted"]:
+            d["status"] = "aborted"
+        elif d["failed"] == 0 and d["checks"] > 0:
+            d["status"] = "pass"
+        else:
+            d["status"] = "fail"
     return list(by_design.values())
 
 
@@ -73,7 +82,7 @@ def render(rows):
     print("-" * (width + 74))
     for r in sorted(rows, key=lambda x: (x["library"], x["operator"], x["precision"] or "")):
         modes = "+".join(r["modes"])
-        mark = "pass" if r["status"] == "pass" else "FAIL"
+        mark = {"pass": "pass", "aborted": "ABORTED"}.get(r["status"], "FAIL")
         canary = "" if r["canary_ok"] else "  [CANARY NOT CONFIRMED]"
         print(f"{r['design_id']:<{width}}  {r['conformance_level']:<8} {r['flag_check']:<5} "
               f"{r['runs']:>4} {r['checks']:>10,} {r['mismatches']:>9,}  {modes:<24} {mark}{canary}")

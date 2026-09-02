@@ -52,5 +52,8 @@ profile:
   nan_payload: ignored
   signed_zero: ignored
   not_evaluated_reason: No rounding-mode input and no exception-flag output on the module.
-  ulp_budget: 4.0
+stimulus:
+  reference: mpfr
+  seed: 1
+  count: 20000
 notes: CORDIC emits cos and sin together. Only cos is checked; io_out_sin is unbound.

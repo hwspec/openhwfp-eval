@@ -324,10 +324,16 @@
           "type": "string",
           "enum": [
             "testfloat",
-            "identity"
+            "identity",
+            "mpfr"
           ],
           "default": "testfloat",
-          "description": "identity means the expected result is the input, for round-trip checks."
+          "description": "identity means the expected result is the input. mpfr means tier-2 expected values come from the MPFR reference, keyed on the operator."
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "mpfr only: number of seeded random samples, on top of the corner lattice."
         }
       }
     },

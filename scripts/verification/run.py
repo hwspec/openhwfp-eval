@@ -78,15 +78,26 @@ def build_once(design, build_dir):
 
 def run_one(runner, design, rounding, tininess, max_vectors, results_dir):
     stim = design.get("stimulus") or {}
-    function = stim.get("testfloat_function")
-    if not function:
-        return None, f"{design['design_id']}: no stimulus.testfloat_function; skipped"
 
-    vectors = generate(
-        function=function, rounding=rounding, tininess=tininess,
-        level=stim.get("level", 1), seed=stim.get("seed", 1),
-        max_vectors=stim.get("max_vectors"), reference=stim.get("reference", "testfloat"),
-    )
+    if stim.get("reference") == "mpfr":
+        # Tier 2: operands from a edge case coverage lattice plus seeded samples, reference is MPFR
+        from .formats import FpFormat
+        from .stimulus.mpfr import generate as generate_mpfr
+        vectors = generate_mpfr(
+            function=design["operator"], fmt=FpFormat.from_manifest(design["format"]),
+            rounding=rounding, seed=stim.get("seed", 1), count=stim.get("count", 20000),
+            level=stim.get("level", 1),
+        )
+    else:
+        # Tier 1: operands and reference from testfloat
+        function = stim.get("testfloat_function")
+        if not function:
+            return None, f"{design['design_id']}: no stimulus.testfloat_function; skipped"
+        vectors = generate(
+            function=function, rounding=rounding, tininess=tininess,
+            level=stim.get("level", 1), seed=stim.get("seed", 1),
+            max_vectors=stim.get("max_vectors"), reference=stim.get("reference", "testfloat"),
+        )
 
     dsn = design["design_id"].replace("/", "__")
     result_path = os.path.join(results_dir, f"{dsn}__{rounding}__{tininess}.json")
@@ -117,18 +128,25 @@ def run_one(runner, design, rounding, tininess, max_vectors, results_dir):
             results_xml=str(Path(runner.build_dir) / "results.xml"),
             extra_env={"OPENHWFP_JOB": job_path},
         )
-        crashed = False
-    except (SystemExit, Exception):
+        crashed, reason = False, None
+    except (SystemExit, Exception) as exc:
         # A mismatch also raises here; the record is written before the driver gives up.
         crashed = True
+        first = str(exc).strip().splitlines()
+        reason = first[0] if first else exc.__class__.__name__
     finally:
         os.unlink(job_path)
 
     if os.path.exists(result_path):
         with open(result_path) as fh:
             return json.load(fh), None
-    detail = "simulation crashed before writing one" if crashed else "driver produced none"
-    return None, f"{design['design_id']} {rounding}/{tininess}: no record ({detail})"
+    if crashed:
+        # A DUT $stop or assertion killed the sim before the driver wrote a record. Keep the row
+        # rather than losing it: a design that aborts is a finding, not a hole in the dataset.
+        from .record import write_aborted
+        write_aborted(job, reason or "simulation aborted before any record")
+        return None, f"{design['design_id']} {rounding}/{tininess}: aborted ({reason})"
+    return None, f"{design['design_id']} {rounding}/{tininess}: no record (driver produced none)"
 
 
 def main():
