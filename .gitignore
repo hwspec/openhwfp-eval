@@ -333,15 +333,24 @@ openroad_results/
 results/
 orfs_designs/src/
 orfs_designs/asap7/
+# The flow-instance dataset is the point of this repository, so the JSONL is
+# tracked (see dataset/schema.json, scripts/validate_dataset.py).
+# flow_instances.json is the same records in a second serialization: nothing
+# reads it, it is not schema-validated, and appending one record rewrites 55
+# of its lines instead of 1. It stays ignored as a derived convenience file.
 dataset/flow_instances.json
-dataset/flow_instances.jsonl
 wrapper_modules/
-cell_count_report.xml
-yosys_output.log
+/cell_count_report.xml
+/yosys_output.log
+# Local build / scratch tree. Explicit anchored rule: the only other match is
+# line 292 inside the vendored Xcode stanza, which is easy to delete by accident.
+/build/
+# Talk/presentation figures (not part of the evidence record)
+/talk_figures/
 # Root-level generated .sv (leftover from old runs; use generated/ for PPA)
 /*.sv
-# CIRCT formal verification output (not used; formal verification disabled)
-verification/
+# CIRCT formal output, unrelated to the verification/ package which IS tracked
+circt_formal/
 # Yosys/estimate.py temp files
 tmp_*.sv
 tmp_*.ys
@@ -375,3 +384,28 @@ src/test/scala/generated/
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
+# re-add saved_results logs, etc.
+!saved_results/**/*.log
+!saved_results/**/*.out
+!saved_results/**/*.rpt
+!saved_results/**/*.xml
+!saved_results/**/*.json
+!saved_results/**/*.jsonl
+!saved_results/**/*.txt
+!saved_results/**/*.lib
+!saved_results/**/*.yaml
+!saved_results/**/*.csv
+
+# LLM cache
+.claude/
+
+# Python verification toolchain
+.venv/
+__pycache__/
+sim_build/
+scripts/verification/**/sim_build/
+vectors/
+verification_results/
+.ruff_cache/
+
+!*.scala.bak

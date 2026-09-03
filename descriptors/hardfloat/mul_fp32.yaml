@@ -1,0 +1,70 @@
+library: hardfloat
+operator: mul
+stem: FPMUL_8_24
+module: FPMUL_8_24
+tier: 1
+format:
+  name: fp32
+  exp_bits: 8
+  sig_bits: 24
+  subnormals: true
+generator:
+  factory: hardfloat.op
+  params:
+    expW: 8
+    sigW: 24
+    mode: MUL
+sim:
+  protocol: combinational
+  clock: clock
+  reset: reset
+  reset_active: high
+  reset_cycles: 10
+ports:
+  a:
+    chisel: io.in_a
+    dir: in
+    width: 32
+  b:
+    chisel: io.in_b
+    dir: in
+    width: 32
+  result:
+    chisel: io.out
+    dir: out
+    width: 32
+  rounding_mode:
+    chisel: io.ctrl.roundingMode
+    dir: in
+    width: 3
+    encoding: hardfloat
+  tininess:
+    chisel: io.ctrl.detectTininess
+    dir: in
+    width: 1
+  flags:
+    chisel: io.exceptionFlags
+    dir: out
+    width: 5
+    order: hardfloat
+ignore_ports: []
+profile:
+  rounding_modes:
+  - rne
+  - rtz
+  - rdn
+  - rup
+  - rna
+  - rto
+  rounding_control: port
+  exception_flags: ieee5
+  tininess:
+  - before
+  - after
+  subnormals: supported
+  nan_payload: canonical
+  signed_zero: ieee
+stimulus:
+  testfloat_function: f32_mul
+  level: 1
+  seed: 1

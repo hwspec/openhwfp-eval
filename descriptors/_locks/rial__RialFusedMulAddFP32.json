@@ -1,0 +1,40 @@
+{
+  "design": "rial/RialFusedMulAddFP32",
+  "library": "rial",
+  "stem": "RialFusedMulAddFP32",
+  "module": "FusedMulAddFPGeneric",
+  "source": "generated/rial/RialFusedMulAddFP32.sv",
+  "tool": "Verilator 5.051 devel rev v5.050-40-g6c20fdb7b (mod)",
+  "ports": [
+    {
+      "name": "clock",
+      "dir": "in",
+      "width": 1
+    },
+    {
+      "name": "reset",
+      "dir": "in",
+      "width": 1
+    },
+    {
+      "name": "io_x",
+      "dir": "in",
+      "width": 32
+    },
+    {
+      "name": "io_y",
+      "dir": "in",
+      "width": 32
+    },
+    {
+      "name": "io_z",
+      "dir": "in",
+      "width": 32
+    },
+    {
+      "name": "io_w",
+      "dir": "out",
+      "width": 32
+    }
+  ]
+}

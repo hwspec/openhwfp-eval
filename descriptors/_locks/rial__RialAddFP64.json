@@ -1,0 +1,35 @@
+{
+  "design": "rial/RialAddFP64",
+  "library": "rial",
+  "stem": "RialAddFP64",
+  "module": "AddFPGeneric",
+  "source": "generated/rial/RialAddFP64.sv",
+  "tool": "Verilator 5.051 devel rev v5.050-40-g6c20fdb7b (mod)",
+  "ports": [
+    {
+      "name": "clock",
+      "dir": "in",
+      "width": 1
+    },
+    {
+      "name": "reset",
+      "dir": "in",
+      "width": 1
+    },
+    {
+      "name": "io_x",
+      "dir": "in",
+      "width": 64
+    },
+    {
+      "name": "io_y",
+      "dir": "in",
+      "width": 64
+    },
+    {
+      "name": "io_z",
+      "dir": "out",
+      "width": 64
+    }
+  ]
+}

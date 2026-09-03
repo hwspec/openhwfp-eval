@@ -34,11 +34,29 @@
     },
     "verification": {
       "type": "object",
+      "description": "Aggregated from verification_results/*.json.",
       "properties": {
-        "status": { "type": "string", "enum": ["pass", "fail", "ignored", "unknown", "not_run"] },
+        "status": { "type": "string", "enum": ["pass", "fail", "aborted", "ignored", "unknown", "not_run"] },
         "failure_stage": { "type": ["string", "null"] },
         "failure_category": { "type": ["string", "null"] },
-        "failure_message": { "type": ["string", "null"] }
+        "failure_message": { "type": ["string", "null"] },
+        "tier": { "type": ["integer", "null"] },
+        "conformance_level": { "type": ["string", "null"] },
+        "reference": { "type": ["object", "null"] },
+        "reference_model": { "type": ["string", "null"] },
+        "profile": { "type": ["object", "null"] },
+        "flag_check": { "type": ["string", "null"] },
+        "checks_performed": { "type": ["integer", "null"] },
+        "vectors_excluded_by_profile": { "type": ["integer", "null"] },
+        "mismatch_count": { "type": ["integer", "null"] },
+        "fraction_within_ulp_budget": { "type": ["number", "null"], "description": "(checks - mismatches) / checks" },
+        "max_ulp": { "type": ["number", "null"] },
+        "mean_ulp": { "type": ["number", "null"] },
+        "special_case_coverage": { "type": ["object", "null"] },
+        "canary_ok": { "type": ["boolean", "null"] },
+        "modes_covered": { "type": ["array", "null"], "items": { "type": "string" } },
+        "tininess_covered": { "type": ["array", "null"], "items": { "type": "string" } },
+        "runs": { "type": ["array", "null"], "items": { "type": "object" }, "description": "Verbose per-(mode,tininess) records minus identity/environment fields." }
       }
     },
     "synthesis": {

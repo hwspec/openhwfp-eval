@@ -1,0 +1,82 @@
+library: hardfloat
+operator: div
+stem: FPDIV_11_53
+module: FPDIV_11_53
+tier: 1
+format:
+  name: fp64
+  exp_bits: 11
+  sig_bits: 53
+  subnormals: true
+generator:
+  factory: hardfloat.div
+  params:
+    expW: 11
+    sigW: 53
+sim:
+  protocol: valid_poll
+  clock: clock
+  reset: reset
+  reset_active: high
+  reset_cycles: 10
+ports:
+  a:
+    chisel: io.in_a
+    dir: in
+    width: 64
+  b:
+    chisel: io.in_b
+    dir: in
+    width: 64
+  result:
+    chisel: io.out
+    dir: out
+    width: 64
+  valid_in:
+    chisel: io.valid
+    dir: in
+    width: 1
+  valid_out:
+    chisel: io.ready
+    dir: out
+    width: 1
+  ready_in:
+    chisel: io.divReady
+    dir: out
+    width: 1
+  rounding_mode:
+    chisel: io.ctrl.roundingMode
+    dir: in
+    width: 3
+    encoding: hardfloat
+  tininess:
+    chisel: io.ctrl.detectTininess
+    dir: in
+    width: 1
+  flags:
+    chisel: io.exceptionFlags
+    dir: out
+    width: 5
+    order: hardfloat
+ignore_ports: []
+profile:
+  rounding_modes:
+  - rne
+  - rtz
+  - rdn
+  - rup
+  - rna
+  - rto
+  rounding_control: port
+  exception_flags: ieee5
+  tininess:
+  - before
+  - after
+  subnormals: supported
+  nan_payload: canonical
+  signed_zero: ieee
+stimulus:
+  testfloat_function: f64_div
+  level: 1
+  seed: 1
+  max_vectors: 20000

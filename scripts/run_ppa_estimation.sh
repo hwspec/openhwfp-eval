@@ -9,21 +9,52 @@ echo "=========================================="
 echo "Yosys PPA Workflow for All Test Modules"
 echo "=========================================="
 
-# Step 0: Clean generated folder
-echo ""
-echo "Step 0: Cleaning generated folder..."
-if [ -d "generated" ]; then
-    rm -rf generated/*
-    echo "  ✓ Cleaned generated/ folder"
-else
-    echo "  ℹ generated/ folder doesn't exist yet (will be created)"
+PY_BIN="${PY_BIN:-python3}"
+[ -x .venv/bin/python ] && PY_BIN=.venv/bin/python
+
+# Single-design mode: RTL and manifest are already built; synth just this one design
+# into a scoped XML and update/insert its row.
+DESIGN="${DESIGN:-}"
+if [ -n "$DESIGN" ]; then
+    lib="${DESIGN%%/*}"
+    stem="${DESIGN##*/}"
+    sv="generated/${lib}/${stem}.sv"
+    xml="generated/cell_count_${lib}_${stem}.xml"
+    if [ ! -f "$sv" ]; then
+        echo "ERROR: $sv not found. Run 'make build' (or 'make rtl') first."
+        exit 1
+    fi
+    echo ""
+    echo "Single-design ppa: $DESIGN"
+    PPA_XML_OUT="$xml" python3 scripts/estimate.py "$sv"
+    "$PY_BIN" scripts/export_flow_instances.py --design "$DESIGN" --xml "$xml"
+    exit $?
 fi
+
+# Step 0: Clear only the Yosys artifacts: the RTL, manifest, plan and generator constants under
+# generated/ are what the verification flow depends on and are regenerated below anyway; wiping all
+# of generated/ would destroy them mid-run.
+echo ""
+echo "Step 0: Clearing previous Yosys artifacts..."
+rm -f generated/cell_count_report.xml generated/cell_count_report.html generated/ppa_report.html
+echo "  ✓ Cleared Yosys reports"
 
 # Step 1: Generate Verilog
 echo ""
-echo "Step 1: Generating Verilog from Chisel modules..."
-echo "This will generate .sv files for OpenFloat, HardFloat, and Rial modules"
-sbt "test:runMain Generate.GenerateAllTestModules"
+echo "Step 0: Building the descriptor manifest..."
+PY_BIN="${PY_BIN:-python3}"
+[ -x .venv/bin/python ] && PY_BIN=.venv/bin/python
+"$PY_BIN" scripts/build_manifest.py
+
+if [ $? -ne 0 ]; then
+    echo "Error: descriptor contract failed; fix the descriptors before generating"
+    exit 1
+fi
+
+echo ""
+echo "Step 1: Generating Verilog from descriptors..."
+echo "Every design named in generated/elaboration_plan.json"
+sbt "runMain Generate.GenerateAllTestModules"
 
 if [ $? -ne 0 ]; then
     echo "Error: Verilog generation failed"

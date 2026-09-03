@@ -95,13 +95,43 @@ verilator --version
 ```
 ________________________________________________________________________________________________________
 
-### To run tests
+#### Setup
 
+Run `make setup` the first time you run the repo to build dependencies necessary for the verification flow (e.g. testfloat, various Python libs).
+
+### Generating the dataset from scratch
+
+Dataset generation is primarily automated via the `Makefile`; you should not have to run individual scripts in `scripts/` manually.
+The default flow has 4 stages. To go from hardware design to results in `dataset/flow_instances.jsonl` run the following commands in the repo root:
 ```bash
-$ sbt test
+make build
+make verify
+make ppa
+make impl
 ```
+Or, alternatively, `make all`. 
+To run just one design, you can add `DESIGN=lib/stem` to the end of any command above, e.g. `make verify DESIGN=openfloat/FP_add_32_1`.
+The commands above are detailed in the below section which dive into each part of the flow.
 
-#### Yosys (generic cell-count / Phase-1 PPA)
+#### 1. Build: Elaboration and coherence checks
+
+TODO
+
+`make build`
+
+#### 2. Verification: Generated RTL + berkeley-testfloat/GPFR --> cocotb + verilator
+
+TODO
+
+`make verify`
+
+#### 3. PPA: Yosys (generic cell-count / Phase-1 PPA)
+
+TODO
+
+`make ppa`
+
+Or, alternatively, to run each step manually then store results separately:
 
 ```bash
 sudo apt install -y yosys
@@ -111,9 +141,13 @@ bash scripts/archive_phase1.sh
 
 This writes Verilog under `generated/`, Yosys cell counts, `generated/ppa_report.html`, and flow-instance records in `dataset/flow_instances.jsonl`. Archive copies XML/HTML/logs/records into `results/phase1-<timestamp>/`.
 
-Those cell counts are **generic Yosys estimates**, not routed ASAP7 area.
+Those cell counts are generic Yosys estimates, not routed ASAP7 area.
 
-#### OpenROAD / ASAP7 (physical implementation)
+#### 4. Implementation: OpenROAD / ASAP7 (physical implementation)
+
+TODO
+
+`make impl`
 
 **Docker is the default** (pull a prebuilt image). **Local source build** works on Ubuntu 24.04 but takes 1–3 hours and needs `sudo ./setup.sh`. Skip Bazel; that path is for OpenROAD developers.
 

@@ -1,0 +1,62 @@
+library: openfloat
+operator: sqrt
+stem: FP_sqrt_32_23_23
+module: FP32_sqrt_23_23
+tier: 1
+format:
+  name: fp32
+  exp_bits: 8
+  sig_bits: 24
+  subnormals: true
+generator:
+  factory: openfloat.sqrt
+  params:
+    bw: 32
+    L: 23
+    latency: 23
+sim:
+  protocol: valid_poll
+  clock: clock
+  reset: reset
+  reset_active: high
+  reset_cycles: 10
+ports:
+  a:
+    chisel: io.in_a
+    dir: in
+    width: 32
+  result:
+    chisel: io.out_s
+    dir: out
+    width: 32
+  valid_in:
+    chisel: io.in_valid
+    dir: in
+    width: 1
+  ready_in:
+    chisel: io.in_ready
+    dir: out
+    width: 1
+  valid_out:
+    chisel: io.out_valid
+    dir: out
+    width: 1
+  ready_out:
+    chisel: io.out_ready
+    dir: in
+    width: 1
+    constant: 1
+ignore_ports: []
+profile:
+  rounding_modes:
+  - rne
+  rounding_control: none
+  exception_flags: none
+  subnormals: unknown
+  nan_payload: ignored
+  signed_zero: ignored
+  not_evaluated_reason: No rounding-mode input and no exception-flag output on the module.
+stimulus:
+  testfloat_function: f32_sqrt
+  level: 2
+  seed: 1

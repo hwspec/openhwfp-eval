@@ -1,0 +1,51 @@
+library: rial
+operator: add
+stem: RialAddFP32
+module: AddFPGeneric
+tier: 1
+format:
+  name: fp32
+  exp_bits: 8
+  sig_bits: 24
+  subnormals: true
+generator:
+  factory: rial.add
+  params:
+    spec: FP32
+    round: roundToEven
+    pipeline: none
+sim:
+  protocol: combinational
+  clock: clock
+  reset: reset
+  reset_active: high
+  reset_cycles: 10
+ports:
+  a:
+    chisel: io.x
+    dir: in
+    width: 32
+  b:
+    chisel: io.y
+    dir: in
+    width: 32
+  result:
+    chisel: io.z
+    dir: out
+    width: 32
+ignore_ports: []
+profile:
+  rounding_modes:
+  - rne
+  rounding_control: elaboration
+  exception_flags: none
+  subnormals: flushed
+  nan_payload: ignored
+  signed_zero: ignored
+  not_evaluated_reason: RoundSpec is a constructor argument, so other modes need separate DUTs. RealSpec
+    sets disableSubnormal=true for every Rial format, so subnormal operands and results are outside the
+    design's scope.
+stimulus:
+  testfloat_function: f32_add
+  level: 1
+  seed: 1

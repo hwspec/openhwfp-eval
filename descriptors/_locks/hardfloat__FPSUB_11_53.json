@@ -1,0 +1,50 @@
+{
+  "design": "hardfloat/FPSUB_11_53",
+  "library": "hardfloat",
+  "stem": "FPSUB_11_53",
+  "module": "FPSUB_11_53",
+  "source": "generated/hardfloat/FPSUB_11_53.sv",
+  "tool": "Verilator 5.051 devel rev v5.050-40-g6c20fdb7b (mod)",
+  "ports": [
+    {
+      "name": "clock",
+      "dir": "in",
+      "width": 1
+    },
+    {
+      "name": "reset",
+      "dir": "in",
+      "width": 1
+    },
+    {
+      "name": "io_in_a",
+      "dir": "in",
+      "width": 64
+    },
+    {
+      "name": "io_in_b",
+      "dir": "in",
+      "width": 64
+    },
+    {
+      "name": "io_ctrl_roundingMode",
+      "dir": "in",
+      "width": 3
+    },
+    {
+      "name": "io_ctrl_detectTininess",
+      "dir": "in",
+      "width": 1
+    },
+    {
+      "name": "io_out",
+      "dir": "out",
+      "width": 64
+    },
+    {
+      "name": "io_exceptionFlags",
+      "dir": "out",
+      "width": 5
+    }
+  ]
+}

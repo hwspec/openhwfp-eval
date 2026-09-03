@@ -557,8 +557,12 @@ def estimate_area_nm2(ncells: int, a: int = AREA_PER_CELL) -> float:
     """Estimate total area in nm² for 7nm technology."""
     return ncells * a
 
-def create_xml_report(results: List[Tuple[str, Tuple[int, int]]]) -> None:
-    """Create XML report from analysis results."""
+def create_xml_report(results: List[Tuple[str, Tuple[int, int]]], output_file: str = "generated/cell_count_report.xml") -> None:
+    """Create XML report from analysis results.
+
+    output_file defaults to the full-report path, so we have single design runs pass a scoped path
+    (via PPA_XML_OUT) so it doesn't wipe out the full cell_count_report.xml.
+    """
     try:
         # Create the root element
         root = ET.Element("CellCountReport")
@@ -588,8 +592,7 @@ def create_xml_report(results: List[Tuple[str, Tuple[int, int]]]) -> None:
         # Create the XML tree and write to file
         # Paths are relative to where script is run from (root directory)
         tree = ET.ElementTree(root)
-        output_file = "generated/cell_count_report.xml"
-        os.makedirs("generated", exist_ok=True)
+        os.makedirs(os.path.dirname(output_file) or ".", exist_ok=True)
         with open(output_file, "wb") as f:
             tree.write(f, encoding='utf-8', xml_declaration=True)
             
@@ -761,7 +764,11 @@ def main():
             logger.info(f"  Successfully processed {len(successful_files)}/{len(fns)} files ({100*len(successful_files)//len(fns)}%)")
         
         # Create XML report
-        create_xml_report(list(results.items()))
+        # PPA_XML_OUT lets a single-design ppa run write a scoped report instead of overwriting full generated/cell_count_report.xml
+        create_xml_report(
+            list(results.items()),
+            os.environ.get("PPA_XML_OUT", "generated/cell_count_report.xml"),
+        )
         
         # Print summary
         total_cells = sum(cells[1] for _, cells in results.items())

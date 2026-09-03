@@ -21,6 +21,23 @@ mkdir -p openroad_results
 
 log() { echo "$@" | tee -a "$LOG"; }
 
+# The sweep used to also merge every result into
+# saved_results/phase1-20260817-214624/flow_instances.jsonl -- a committed,
+# timestamped evidence archive. Rewriting an archive in place destroys the thing
+# that makes it evidence. Records now go to dataset/flow_instances.jsonl only;
+# set SWEEP_ALSO_JSONL=<path> to deliberately merge into a second file.
+ALSO_JSONL="${SWEEP_ALSO_JSONL:-}"
+ALSO_ARGS=()
+if [[ -n "$ALSO_JSONL" ]]; then
+  case "$ALSO_JSONL" in
+    saved_results/*)
+      log "WARNING: SWEEP_ALSO_JSONL points into saved_results/ ($ALSO_JSONL)."
+      log "WARNING: that is an archived snapshot; it will be modified in place."
+      ;;
+  esac
+  ALSO_ARGS=(--also-jsonl "$ALSO_JSONL")
+fi
+
 if [[ ! -f "$ORFS_DIR/env.sh" ]]; then
   echo "ERROR: $ORFS_DIR/env.sh not found" >&2
   exit 1
@@ -59,7 +76,7 @@ for job in "${JOBS[@]}"; do
   log ""
   log "======== [$i/$n] $nick  period=${period}ps  $(date -Iseconds) ========"
   if [[ ! -f "$sv" ]]; then
-    log "ERROR: missing $sv (do not rerun run_ppa_estimation.sh — it deletes generated/)"
+    log "ERROR: missing $sv (run 'make rtl' to regenerate it)"
     fail=$((fail + 1))
     continue
   fi
@@ -71,7 +88,7 @@ for job in "${JOBS[@]}"; do
     fail=$((fail + 1))
   fi
   python3 scripts/extract_orfs_metrics.py --nickname "$nick" \
-    --also-jsonl saved_results/phase1-20260817-214624/flow_instances.jsonl 2>&1 | tee -a "$LOG"
+    ${ALSO_ARGS[@]+"${ALSO_ARGS[@]}"} 2>&1 | tee -a "$LOG"
 done
 
 log ""

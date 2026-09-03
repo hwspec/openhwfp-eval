@@ -1,0 +1,83 @@
+library: hardfloat
+operator: sqrt
+stem: FPSQRT_8_24
+module: FPSQRT_8_24
+tier: 1
+format:
+  name: fp32
+  exp_bits: 8
+  sig_bits: 24
+  subnormals: true
+generator:
+  factory: hardfloat.sqrt
+  params:
+    expW: 8
+    sigW: 24
+sim:
+  protocol: valid_poll
+  clock: clock
+  reset: reset
+  reset_active: high
+  reset_cycles: 10
+ports:
+  a:
+    chisel: io.in_a
+    dir: in
+    width: 32
+  b:
+    chisel: io.in_b
+    dir: in
+    width: 32
+    constant: 0
+  result:
+    chisel: io.out
+    dir: out
+    width: 32
+  valid_in:
+    chisel: io.valid
+    dir: in
+    width: 1
+  valid_out:
+    chisel: io.ready
+    dir: out
+    width: 1
+  ready_in:
+    chisel: io.sqrtReady
+    dir: out
+    width: 1
+  rounding_mode:
+    chisel: io.ctrl.roundingMode
+    dir: in
+    width: 3
+    encoding: hardfloat
+  tininess:
+    chisel: io.ctrl.detectTininess
+    dir: in
+    width: 1
+  flags:
+    chisel: io.exceptionFlags
+    dir: out
+    width: 5
+    order: hardfloat
+ignore_ports: []
+profile:
+  rounding_modes:
+  - rne
+  - rtz
+  - rdn
+  - rup
+  - rna
+  - rto
+  rounding_control: port
+  exception_flags: ieee5
+  tininess:
+  - before
+  - after
+  subnormals: supported
+  nan_payload: canonical
+  signed_zero: ieee
+stimulus:
+  testfloat_function: f32_sqrt
+  level: 2
+  seed: 1
+notes: io_in_b is DontCare inside the wrapper. Tied to 0 so the run is reproducible.
