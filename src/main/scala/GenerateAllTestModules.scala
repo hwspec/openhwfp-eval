@@ -1,6 +1,7 @@
 package Generate
 
 import FloatingPoint.fpu._
+import FloatingPoint.{FP16, FP32, FP64, FP128, FloatingPointFormat}
 import hardfloat._
 import rial.arith.{AddFPGeneric, MultFPGeneric, FusedMulAddFPGeneric, RealSpec, RoundSpec}
 import rial.math.{MathFuncConfig, MathFuncPipelineConfig, MathFunctions, FuncKind}
@@ -78,16 +79,25 @@ object GenerateAllTestModules extends App {
   //   expW: 11
   //   sigW: 53
   //   mode: MUL
+  // OpenFloat takes a custom FloatingPointFormat type...
+  private def openfloatFormat(bw: Int): FloatingPointFormat = bw match {
+    case 16  => FP16
+    case 32  => FP32
+    case 64  => FP64
+    case 128 => FP128
+    case other => sys.error(s"no OpenFloat format for bw=$other")
+  }
+
   private def build(factory: String, p: ujson.Obj): RawModule = {
     def i(k: String): Int    = p(k).num.toInt
     def s(k: String): String = p(k).str
 
     factory match {
-      case "openfloat.add"  => new FP_add(i("bw"), i("pd"))
-      case "openfloat.mult" => new FP_mult(i("bw"), i("pd"))
-      case "openfloat.div"  => new FP_div(i("bw"), i("L"), i("latency"))
-      case "openfloat.sqrt" => new FP_sqrt(i("bw"), i("L"), i("latency"))
-      case "openfloat.cos"  => new FP_cos(i("bw"), i("iters"))
+      case "openfloat.add"  => new FP_add(openfloatFormat(i("bw")), i("pd"))
+      case "openfloat.mult" => new FP_mult(openfloatFormat(i("bw")), i("pd"))
+      case "openfloat.div"  => new FP_div(openfloatFormat(i("bw")), i("L"), i("latency"))
+      case "openfloat.sqrt" => new FP_sqrt(openfloatFormat(i("bw")), i("L"), i("latency"))
+      case "openfloat.cos"  => new FP_cos(openfloatFormat(i("bw")), i("iters"))
 
       case "hardfloat.recfn_test" => new FPTest(i("expW"), i("sigW"))
       case "hardfloat.op"         => new FPOPTest(i("expW"), i("sigW"), hardfloatMode(s("mode")))

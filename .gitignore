@@ -407,3 +407,5 @@ scripts/verification/**/sim_build/
 vectors/
 verification_results/
 .ruff_cache/
+
+!*.scala.bak

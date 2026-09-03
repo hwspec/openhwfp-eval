@@ -41,7 +41,7 @@ ports:
     chisel: io.ready
     dir: out
     width: 1
-  accept_out:
+  ready_in:
     chisel: io.sqrtReady
     dir: out
     width: 1

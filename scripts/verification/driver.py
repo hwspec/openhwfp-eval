@@ -212,19 +212,19 @@ async def _run_fixed_latency(dut, clk, handles, vectors, cmp, latency, limit):
 async def _run_valid_poll(dut, clk, handles, vectors, cmp, limit, timeout_cycles=4000):
     valid_in = handles.get("valid_in")
     valid_out = handles.get("valid_out")
-    accept = handles.get("accept_out")
+    ready_in = handles.get("ready_in")
 
     for i, (operands, expected, expected_flags) in enumerate(vectors.rows()):
         if limit and i >= limit:
             break
 
-        if accept is not None:
+        if ready_in is not None:
             waited = 0
-            while not _get(accept):
+            while not _get(ready_in):
                 await RisingEdge(clk)
                 waited += 1
                 if waited > timeout_cycles:
-                    raise AssertionError(f"vector {i}: DUT never asserted accept")
+                    raise AssertionError(f"vector {i}: DUT never asserted ready_in")
 
         _drive_operands(handles, operands)
         if valid_in is not None:

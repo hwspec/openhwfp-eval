@@ -70,7 +70,8 @@ is a software model this tier does not have yet.
 4. Write `descriptors/<library>/<op>_<fmt>.yaml`, mapping roles to signals and declaring the profile.
 5. `python3 scripts/build_manifest.py`. It will tell you precisely what is wrong.
 
-Known roles: `a b c result flags rounding_mode tininess enable valid_in valid_out accept_out select`.
+Known roles: `a b c result flags rounding_mode tininess valid_in ready_in valid_out ready_out select`.
+The handshake roles pair by channel: `valid_in`/`ready_in` on the input side, `valid_out`/`ready_out` on the output side (a decoupled ready/valid interface). Tie `ready_out` with `constant: 1` for a fixed-latency pipe that is always consumed.
 
 ## Why a wrong descriptor cannot pass quietly
 

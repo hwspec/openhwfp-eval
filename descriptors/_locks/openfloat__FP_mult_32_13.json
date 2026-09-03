@@ -2,7 +2,7 @@
   "design": "openfloat/FP_mult_32_13",
   "library": "openfloat",
   "stem": "FP_mult_32_13",
-  "module": "FP_mult_32_13",
+  "module": "FP32_mult_13",
   "source": "generated/openfloat/FP_mult_32_13.sv",
   "tool": "Verilator 5.051 devel rev v5.050-40-g6c20fdb7b (mod)",
   "ports": [
@@ -17,7 +17,12 @@
       "width": 1
     },
     {
-      "name": "io_in_en",
+      "name": "io_in_ready",
+      "dir": "out",
+      "width": 1
+    },
+    {
+      "name": "io_out_ready",
       "dir": "in",
       "width": 1
     },

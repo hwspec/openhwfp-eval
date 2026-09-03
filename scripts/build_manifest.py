@@ -41,7 +41,7 @@ PLAN_OUT = os.path.join(ROOT, "generated", "elaboration_plan.json")
 # Roles the driver understands. Anything else in ports is a typo.
 KNOWN_ROLES = {
     "a", "b", "c", "result", "flags", "rounding_mode", "tininess",
-    "enable", "valid_in", "valid_out", "accept_out", "select",
+    "valid_in", "ready_in", "valid_out", "ready_out", "select",
 }
 
 

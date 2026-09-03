@@ -1,7 +1,7 @@
 library: openfloat
 operator: cos
 stem: FP_cos_32_23
-module: FP_cos_32_23
+module: FP32_cos_23
 tier: 2
 format:
   name: fp32
@@ -28,19 +28,23 @@ ports:
     chisel: io.out_cos
     dir: out
     width: 32
-  enable:
-    chisel: io.in_en
-    dir: in
-    width: 1
-    constant: 1
   valid_in:
     chisel: io.in_valid
     dir: in
+    width: 1
+  ready_in:
+    chisel: io.in_ready
+    dir: out
     width: 1
   valid_out:
     chisel: io.out_valid
     dir: out
     width: 1
+  ready_out:
+    chisel: io.out_ready
+    dir: in
+    width: 1
+    constant: 1
 ignore_ports:
 - io_out_sin
 profile:

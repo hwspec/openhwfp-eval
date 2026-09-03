@@ -21,7 +21,7 @@ SOFTFLOAT_BUILD := berkeley-softfloat-3/build/$(PLATFORM)
 TESTFLOAT_BUILD := berkeley-testfloat-3/build/$(PLATFORM)
 
 .PHONY: help setup plan manifest rtl locks locks-check locks-update verify summary selftest build ppa impl all \
-        clean clean-vectors clean-sim extraclean
+        clean clean-vectors clean-sim clean-dataset extraclean
 
 help:
 	@echo "openhwfp-eval"
@@ -48,10 +48,11 @@ help:
 	@echo "    TIER=1|2              verify: restrict to one tier"
 	@echo "    CONFIRM=1             all: skip the confirmation prompt"
 	@echo
-	@echo "  clean          remove generated RTL, records, sim builds, dataset exports"
+	@echo "  clean          remove generated RTL, records, sim builds (keeps dataset/flow_instances.jsonl)"
 	@echo "  clean-vectors  remove the cached TestFloat vector files"
 	@echo "  clean-sim      remove Verilator build trees only"
-	@echo "  extraclean     clean + vectors + .venv + native builds + sbt output"
+	@echo "  clean-dataset  blank the flow-instance dataset for a fresh run"
+	@echo "  extraclean     clean + vectors + dataset + .venv + native builds + sbt output"
 	@echo
 	@echo "  PLATFORM=$(PLATFORM)  SPECIALIZE_TYPE=$(SPECIALIZE_TYPE)"
 
@@ -132,9 +133,9 @@ all:
 # ---------------------------------------------------------------- clean
 
 clean:
-	@echo "removing generated RTL, verification records, sim builds, dataset exports"
+	@echo "removing generated RTL, verification records, sim builds (keeps dataset/flow_instances.jsonl)"
 	rm -rf generated verification_results sim_build
-	rm -f dataset/flow_instances.jsonl dataset/flow_instances.json results.xml yosys_output.log
+	rm -f results.xml yosys_output.log
 	find . -name '__pycache__' -type d \
 	  -not -path './berkeley-*' -not -path './OpenFloat/*' -not -path './rial-tmpfix/*' \
 	  -exec rm -rf {} + 2>/dev/null || true
@@ -146,7 +147,11 @@ clean-vectors:
 	@echo "removing cached TestFloat vectors"
 	rm -rf vectors
 
-extraclean: clean clean-vectors
+clean-dataset:
+	@echo "removing the flow-instance dataset"
+	rm -f dataset/flow_instances.jsonl dataset/flow_instances.json
+
+extraclean: clean clean-vectors clean-dataset
 	@echo "removing .venv, native builds and sbt output"
 	rm -rf .venv target project/target project/project
 	@# Both packages ship a clean target that also removes their executables.
