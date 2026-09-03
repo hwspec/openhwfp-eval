@@ -62,6 +62,8 @@ def rollup(records):
         d["modes"] = sorted(d["modes"])
         d["tininess"] = sorted(d["tininess"])
         d["coverage"] = dict(sorted(d["coverage"].items()))
+        d["fraction_within_ulp_budget"] = (
+            (d["checks"] - d["mismatches"]) / d["checks"] if d["checks"] else None)
         if d["runs"] == d["aborted"]:
             d["status"] = "aborted"
         elif d["failed"] == 0 and d["checks"] > 0:
@@ -78,14 +80,16 @@ def render(rows):
 
     width = max(len(r["design_id"]) for r in rows)
     print(f"{'design':<{width}}  {'lvl':<8} {'flags':<5} {'runs':>4} {'checks':>10} "
-          f"{'mismatch':>9}  {'modes':<24} status")
-    print("-" * (width + 74))
+          f"{'mismatch':>9} {'within':>7}  {'modes':<24} status")
+    print("-" * (width + 82))
     for r in sorted(rows, key=lambda x: (x["library"], x["operator"], x["precision"] or "")):
         modes = "+".join(r["modes"])
         mark = {"pass": "pass", "aborted": "ABORTED"}.get(r["status"], "FAIL")
         canary = "" if r["canary_ok"] else "  [CANARY NOT CONFIRMED]"
+        frac = r["fraction_within_ulp_budget"]
+        within = f"{frac*100:6.2f}%" if frac is not None else "     --"
         print(f"{r['design_id']:<{width}}  {r['conformance_level']:<8} {r['flag_check']:<5} "
-              f"{r['runs']:>4} {r['checks']:>10,} {r['mismatches']:>9,}  {modes:<24} {mark}{canary}")
+              f"{r['runs']:>4} {r['checks']:>10,} {r['mismatches']:>9,} {within}  {modes:<24} {mark}{canary}")
 
     print()
     by_lib = collections.defaultdict(lambda: {"pass": 0, "fail": 0, "checks": 0})

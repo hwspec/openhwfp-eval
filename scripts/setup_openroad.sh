@@ -4,7 +4,7 @@
 # Docker (default, recommended for first paper runs):
 #   bash scripts/setup_openroad.sh
 #
-# Local source build (no Docker; 1–3 hours, ~20GB):
+# Local source build (no Docker; 1-3 hours, ~20GB):
 #   bash scripts/setup_openroad.sh --local
 set -euo pipefail
 

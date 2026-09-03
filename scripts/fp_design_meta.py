@@ -1,57 +1,30 @@
 #!/usr/bin/env python3
-"""Parse generated FP module filenames into dataset metadata."""
+"""Design metadata for generated FP modules, read from the descriptor manifest.
+
+Build the manifest first:
+    python3 scripts/build_manifest.py
+"""
 
 from __future__ import annotations
 
+import functools
+import json
 import os
 import re
 from typing import Any, Dict, Optional
 
-FP_MAP = {
-    (5, 10): "fp16",
-    (8, 23): "fp32",
-    (8, 24): "fp32",
-    (11, 52): "fp64",
-    (11, 53): "fp64",
-}
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MANIFEST_PATH = os.path.join(ROOT, "generated", "descriptor_manifest.json")
 
-BITS_MAP = {16: "fp16", 32: "fp32", 64: "fp64"}
 
-OPENFLOAT_OPS = {
-    "add": "add",
-    "mult": "mul",
-    "divider": "div",
-    "div": "div",
-    "sqrt": "sqrt",
-    "cos": "cos",
-}
+@functools.lru_cache(maxsize=1)
+def load_manifest(path: str = MANIFEST_PATH) -> Dict[str, Any]:
+    if not os.path.exists(path):
+        return {}
+    with open(path) as fh:
+        data = json.load(fh)
 
-HARDFLOAT_OPS = {
-    "ADD": "add",
-    "SUB": "sub",
-    "MUL": "mul",
-    "DIV": "div",
-    "SQRT": "sqrt",
-    "TEST": "recfn_roundtrip",
-}
-
-RIAL_OPS = {
-    "Add": "add",
-    "Mult": "mul",
-    "FusedMulAdd": "fma",
-    "Sqrt": "sqrt",
-    "InvSqrt": "invsqrt",
-    "Sin": "sin",
-    "Cos": "cos",
-    "Reciprocal": "reciprocal",
-    "Exp": "exp",
-    "Log": "log",
-    "Sigmoid": "sigmoid",
-    "Acos": "acos",
-    "SoftPlus": "softplus",
-    "SMG": "smg",
-    "Atan2": "atan2",
-}
+    return {d["design_id"]: d for d in data.get("designs", [])}
 
 
 def _norm_path(path: str) -> str:
@@ -59,88 +32,80 @@ def _norm_path(path: str) -> str:
 
 
 def library_from_path(path: str) -> str:
-    p = _norm_path(path).lower()
-    if "/openfloat/" in p or p.startswith("openfloat"):
-        return "openfloat"
-    if "/hardfloat/" in p or p.startswith("hardfloat"):
-        return "hardfloat"
-    if "/rial/" in p or p.startswith("rial"):
-        return "rial"
-    name = os.path.basename(path).lower()
-    if name.startswith("rial"):
-        return "rial"
-    if name.startswith("fpadd") or name.startswith("fpsub") or name.startswith("fpmul") or name.startswith("fpdiv") or name.startswith("fpsqrt") or name.startswith("fptest"):
-        return "hardfloat"
-    if name.startswith("fp_"):
-        return "openfloat"
+    parts = _norm_path(path).split("/")
+    if "generated" in parts:
+        i = parts.index("generated")
+        if i + 1 < len(parts) - 1:
+            return parts[i + 1]
+    known = {d.split("/")[0] for d in load_manifest()}
+    base = os.path.basename(path).lower()
+    for lib in known:
+        if base.startswith(lib):
+            return lib
     return "unknown"
 
 
 def parse_generated_sv(path: str) -> Dict[str, Any]:
-    """Return design metadata for a GenerateAllTestModules .sv path."""
     rel = _norm_path(path)
-    base = os.path.splitext(os.path.basename(path))[0]
+    stem = os.path.splitext(os.path.basename(path))[0]
     lib = library_from_path(path)
+    did = f"{lib}/{stem}"
+
     meta: Dict[str, Any] = {
         "source_path": rel,
         "module_filename": os.path.basename(path),
-        "stem": base,
+        "stem": stem,
         "library": lib,
+        "design_id": did,
         "operator": None,
         "precision": None,
         "exponent_width": None,
         "mantissa_width": None,
+        "significand_width": None,
         "pipeline_depth": None,
         "bitwidth": None,
+        "manifest_status": "missing",
     }
 
-    of = re.match(r"FP_(add|mult|divider|div|sqrt|cos)_(\d+)(?:_(\d+))?(?:_(\d+))?$", base)
-    if of:
-        op, bits, a, b = of.group(1), int(of.group(2)), of.group(3), of.group(4)
-        meta.update(
-            library="openfloat",
-            operator=OPENFLOAT_OPS.get(op, op),
-            bitwidth=bits,
-            precision=BITS_MAP.get(bits),
-        )
-        if op in ("add", "mult") and a is not None:
-            meta["pipeline_depth"] = int(a)
-        elif op in ("divider", "div", "sqrt") and a is not None:
-            meta["pipeline_depth"] = int(a)
-            if b is not None:
-                meta["extra_latency"] = int(b)
-        elif op == "cos" and a is not None:
-            meta["pipeline_depth"] = int(a)
+    entry = load_manifest().get(did)
+    if entry is None:
         return meta
 
-    hf = re.match(r"FP(TEST|ADD|SUB|MUL|DIV|SQRT)_(\d+)_(\d+)$", base, re.IGNORECASE)
-    if hf:
-        op, e, m = hf.group(1).upper(), int(hf.group(2)), int(hf.group(3))
-        meta.update(
-            library="hardfloat",
-            operator=HARDFLOAT_OPS.get(op, op.lower()),
-            exponent_width=e,
-            mantissa_width=m,
-            precision=FP_MAP.get((e, m)),
-            pipeline_depth=0,
-        )
-        return meta
+    derived = entry["derived"]
+    meta.update(
+        operator=entry["operator"],
+        precision=derived["precision"],
+        exponent_width=derived["exponent_width"],
+        mantissa_width=derived["mantissa_width"],
+        significand_width=derived["significand_width"],
+        bitwidth=derived["bitwidth"],
+        module_name=entry["module"],
+        tier=entry["tier"],
+        conformance_level=entry["conformance_level"],
+        profile=entry["profile"],
+        generator=entry["generator"],
+        descriptor_path=entry["descriptor_path"],
+        clock_port=entry["sim"].get("clock") or "clock",
+        reset_port=entry["sim"].get("reset") or "reset",
+        protocol=entry["sim"]["protocol"],
+        manifest_status="ok",
+    )
 
-    rial = re.match(r"Rial([A-Za-z]+)(FP(?:16|32|64))$", base)
-    if rial:
-        op_raw, fp = rial.group(1), rial.group(2).lower()
-        meta.update(
-            library="rial",
-            operator=RIAL_OPS.get(op_raw, op_raw.lower()),
-            precision=fp,
-            pipeline_depth=0,
-        )
-        return meta
+    # Pipeline depth is a per-library elaboration parameter, not a universal field.
+    params = entry["generator"].get("params", {})
+    for key in ("pd", "latency"):
+        if key in params:
+            meta["pipeline_depth"] = params[key]
+            break
+    else:
+        meta["pipeline_depth"] = 0 if entry["sim"]["protocol"] == "combinational" else None
 
     return meta
 
 
 def design_id(meta: Dict[str, Any]) -> str:
+    if meta.get("design_id"):
+        return meta["design_id"]
     lib = meta.get("library") or "unknown"
     stem = meta.get("stem") or os.path.splitext(os.path.basename(meta.get("source_path", "unknown")))[0]
     return f"{lib}/{stem}"
@@ -159,3 +124,22 @@ def detect_clock_reset(sv_text: str) -> Dict[str, Optional[str]]:
     if clock is None and re.search(r"\bclock\b", sv_text):
         clock = "clock"
     return {"clock_port": clock, "reset_port": reset}
+
+
+if __name__ == "__main__":
+    import sys
+    manifest = load_manifest()
+    if not manifest:
+        print(f"no manifest at {MANIFEST_PATH}; run scripts/build_manifest.py")
+        sys.exit(1)
+    targets = sys.argv[1:] or sorted(d["derived"]["source_path"] for d in manifest.values())
+    missing = 0
+    for t in targets:
+        m = parse_generated_sv(t)
+        flag = "" if m["manifest_status"] == "ok" else "  <-- MISSING"
+        if flag:
+            missing += 1
+        print(f"{m['design_id']:34s} {str(m['operator']):14s} {str(m['precision']):6s} "
+              f"e={str(m['exponent_width']):3s} m={str(m['mantissa_width']):3s} "
+              f"pd={str(m['pipeline_depth']):5s}{flag}")
+    print(f"\n{len(targets)} designs, {missing} missing from manifest")

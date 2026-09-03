@@ -26,9 +26,8 @@ from .stimulus.testfloat import generate
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / "generated" / "descriptor_manifest.json"
 
-# Verilator shells out to verilator_includer, a python3 script. cocotb has already exported a
-# PYTHONPATH for our interpreter, so a different python3 on PATH aborts the C++ build. Put ours
-# first and the two always agree.
+# Verilator shells out to verilator_includer, a python3 script
+# cocotb has already exported a PYTHONPATH for our interpreter, so a different python3 on PATH aborts the C++ build
 os.environ["PATH"] = os.path.dirname(sys.executable) + os.pathsep + os.environ.get("PATH", "")
 
 

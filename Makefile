@@ -1,15 +1,26 @@
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
 
-# Prefer the project venv once it exists; fall back so `make setup` works before it does.
+# Prefer the project venv once it exists
 PYTHON := $(shell [ -x .venv/bin/python ] && echo .venv/bin/python || echo python3)
+
+# DESIGN=library/stem targets one design across verify/ppa/impl/all;
+# leaving it empty targets all designs
+DESIGN  ?=
+PERIOD  ?= 2000
+TIER    ?=
+CONFIRM ?=
+_LIB  = $(word 1,$(subst /, ,$(DESIGN)))
+_STEM = $(word 2,$(subst /, ,$(DESIGN)))
+_SV   = generated/$(_LIB)/$(_STEM).sv
+_NICK = $(_LIB)_$(_STEM)
 
 PLATFORM        ?= Linux-x86_64-GCC
 SPECIALIZE_TYPE ?= RISCV
 SOFTFLOAT_BUILD := berkeley-softfloat-3/build/$(PLATFORM)
 TESTFLOAT_BUILD := berkeley-testfloat-3/build/$(PLATFORM)
 
-.PHONY: help setup plan manifest rtl locks locks-check locks-update verify summary selftest build ppa \
+.PHONY: help setup plan manifest rtl locks locks-check locks-update verify summary selftest build ppa impl all \
         clean clean-vectors clean-sim extraclean
 
 help:
@@ -22,12 +33,20 @@ help:
 	@echo "  locks-check    write nothing, fail when lockfile and RTL aren't coherent, or a lockfile doesn't exist yet; good for CI-checks"
 	@echo "  locks-update   accept current RTL as the new truth and rewrite every lockfile"
 	@echo "  manifest       compares descriptor against the lockfiles, then compiles manifest from descriptors to prepare for verification"
-	@echo "  verify         run tier 1 verification over every design"
+	@echo "  verify         run verification (both tiers) over every design"
 	@echo "  summary        print the coverage matrix from existing records"
 	@echo "  selftest       run unit tests, YAML schema syntactic correctness, and descriptor vs.lockfile checks"
 	@echo "  build          run entire frontend: plan -> rtl -> locks -> manifest -> selftest"
 	@echo
 	@echo "  ppa            Yosys cell counts and the HTML report (destroys generated/)"
+	@echo "  impl           OpenROAD ASAP7 implementation (needs ORFS)"
+	@echo "  all            one design (or all) through verify -> ppa -> impl"
+	@echo
+	@echo "  To tune design knobs (verify/ppa/impl/all):"
+	@echo "    DESIGN=library/stem   run one design, e.g. DESIGN=hardfloat/FPADD_8_24"
+	@echo "    PERIOD=<ps>           impl clock period (default $(PERIOD))"
+	@echo "    TIER=1|2              verify: restrict to one tier"
+	@echo "    CONFIRM=1             all: skip the confirmation prompt"
 	@echo
 	@echo "  clean          remove generated RTL, records, sim builds, dataset exports"
 	@echo "  clean-vectors  remove the cached TestFloat vector files"
@@ -78,14 +97,37 @@ build: rtl locks manifest selftest
 
 # ---------------------------------------------------------------- run
 
+# run.py handles picking tier 1 (testfloat) or tier 2 (MPFR) per design.
+# DESIGN=library/stem runs one design
+# TIER=1|2 restricts to a tier
 verify:
-	$(PYTHON) -m scripts.verification.run --tier 1
+	$(PYTHON) -m scripts.verification.run $(if $(DESIGN),--design $(DESIGN)) $(if $(TIER),--tier $(TIER))
 
 summary:
 	$(PYTHON) -m scripts.verification.summarize
 
 ppa:
-	bash scripts/run_ppa_estimation.sh
+	DESIGN="$(DESIGN)" bash scripts/run_ppa_estimation.sh
+
+# OpenROAD ASAP7 physical implementation
+impl:
+ifeq ($(strip $(DESIGN)),)
+	bash scripts/run_orfs_sweep.sh
+else
+	$(PYTHON) scripts/prepare_orfs_design.py $(_SV) --period $(PERIOD) --nickname $(_NICK)
+	bash scripts/run_openroad_design.sh $(_NICK)
+	$(PYTHON) scripts/extract_orfs_metrics.py --nickname $(_NICK)
+endif
+
+# Whole flow: verify -> ppa -> impl
+# Prompts before running unless CONFIRM=1 (or a non-Y/y answer aborts)
+all:
+	@if [ -n "$(strip $(DESIGN))" ]; then n=1; else \
+	   n=$$($(PYTHON) -c "import json;print(len(json.load(open('generated/descriptor_manifest.json'))['designs']))"); fi; \
+	 echo "make all: $$n design(s) through verify + ppa + impl."; \
+	 [ -z "$(strip $(DESIGN))" ] && echo "  (no DESIGN: impl runs the run_orfs_sweep.sh job list, not all $$n)"; \
+	 if [ "$(CONFIRM)" != "1" ]; then read -p "Proceed? [Y/n] " a; case "$$a" in ""|Y|y) ;; *) echo aborted; exit 1;; esac; fi; \
+	 $(MAKE) verify DESIGN=$(DESIGN) && $(MAKE) ppa DESIGN=$(DESIGN) && $(MAKE) impl DESIGN=$(DESIGN) PERIOD=$(PERIOD)
 
 # ---------------------------------------------------------------- clean
 

@@ -27,10 +27,28 @@ carries the observed `max_ulp`/`mean_ulp` regardless of the pass/fail verdict.
 `ulp` is the number of representable steps between the DUT result and the correctly rounded
 reference. Format columns are the three IEEE binary formats we currently target.
 
+### Correctly rounded - 0 ULP (tier 1)
+
+IEEE 754-2019 §5.4.1 mandates these be correctly rounded, so the budget is 0 at every format. Tier 1
+checks them bit-exactly against berkeley-softfloat. `recfn_roundtrip` is a recode/decode identity,
+also bit-exact. Libraries that implement `sqrt`/`reciprocal` as *approximations* (Rial) are flagged
+as non-conforming under the 0 budget; `max_ulp` reports how far off.
+
 | function | definition | fp16 | fp32 | fp64 | source |
 |---|---|---|---|---|---|
+| add | $x + y$ | 0 | 0 | 0 | IEEE 754-2019 §5.4.1 |
+| sub | $x - y$ | 0 | 0 | 0 | IEEE 754-2019 §5.4.1 |
+| mul | $x \times y$ | 0 | 0 | 0 | IEEE 754-2019 §5.4.1 |
+| div | $x / y$ | 0 | 0 | 0 | IEEE 754-2019 §5.4.1 |
 | sqrt | $\sqrt{x}$ | 0 | 0 | 0 | IEEE 754-2019 §5.4.1 (correctly rounded); CUDA |
 | reciprocal | $1/x$ | 0 | 0 | 0 | IEEE 754-2019 §5.4.1 (division); CUDA |
+| fma | $x \times y + z$ | 0 | 0 | 0 | IEEE 754-2019 §5.4.1 |
+| recfn_roundtrip | recode then decode | 0 | 0 | 0 | identity roundtrip (bit-exact) |
+
+### Bounded - CUDA per-function ULP (tier 2)
+
+| function | definition | fp16 | fp32 | fp64 | source |
+|---|---|---|---|---|---|
 | exp | $e^{x}$ | 2 | 2 | 1 | CUDA |
 | log | $\ln x$ | 1 | 1 | 1 | CUDA |
 | sin | $\sin x$ | 2 | 2 | 2 | CUDA |

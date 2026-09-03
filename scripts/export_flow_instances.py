@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Build flow-instance records from Yosys XML + generated RTL + optional verify overlay.
+Build flow-instance records from Yosys XML + generated RTL + verification records (verification_results/).
 
 Usage (from repo root, after run_ppa_estimation.sh):
   python3 scripts/export_flow_instances.py
@@ -89,30 +89,74 @@ def git_submodule_commits() -> Dict[str, str]:
     return commits
 
 
-def load_verify_rules(path: str) -> List[Dict[str, Any]]:
-    if not os.path.exists(path):
-        return []
-    with open(path, "r", encoding="utf-8") as f:
-        obj = json.load(f)
-    return obj.get("rules", [])
+# Fields already carried at the flow-instance top level or unique to one run's environment.
+_DROP_FROM_RUN = {"design_id", "library", "operator", "precision", "descriptor_path", "environment"}
+NOT_RUN = {"status": "not_run", "failure_stage": None, "failure_category": None, "failure_message": None}
 
 
-def apply_verify_rules(meta: Dict[str, Any], rules: List[Dict[str, Any]]) -> Dict[str, Any]:
-    for rule in rules:
-        match = rule.get("match") or {}
-        ok = True
-        for k, v in match.items():
-            if str(meta.get(k, "")).lower() != str(v).lower():
-                ok = False
-                break
-        if ok:
-            return {
-                "status": rule.get("verification_status", "unknown"),
-                "failure_stage": rule.get("failure_stage"),
-                "failure_category": rule.get("failure_category"),
-                "failure_message": rule.get("failure_message"),
-            }
-    return {"status": "unknown", "failure_stage": None, "failure_category": None, "failure_message": None}
+def _failure_synthesis(status: str, runs: List[Dict[str, Any]]) -> Dict[str, Any]:
+    if status == "pass":
+        return {"failure_stage": None, "failure_category": None, "failure_message": None}
+    if status == "aborted":
+        reasons = [r.get("abort_reason") for r in runs if r.get("abort_reason")]
+        return {"failure_stage": "simulation", "failure_category": "dut_abort",
+                "failure_message": reasons[0] if reasons else "DUT aborted the simulation"}
+    worst = max(runs, key=lambda r: r.get("mismatch_count", 0))
+    cats = worst.get("mismatch_categories") or []
+    total = sum(r.get("mismatch_count", 0) for r in runs)
+    max_ulp = max((r.get("max_ulp") or 0) for r in runs)
+    return {"failure_stage": "simulation",
+            "failure_category": cats[0]["kind"] if cats else "ulp_exceeded",
+            "failure_message": f"{total} mismatches; max_ulp {max_ulp:.3g}; "
+                               f"budget {(worst.get('reference') or {}).get('ulp_budget')}"}
+
+
+def _verification_block(runs: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """One verbose per-design block, aggregated across runs."""
+    status = ("aborted" if all(r["status"] == "aborted" for r in runs)
+              else "fail" if any(r["status"] == "fail" for r in runs) else "pass")
+    checks = sum(r.get("checks_performed", 0) for r in runs)
+    mism = sum(r.get("mismatch_count", 0) for r in runs)
+    ulps = [r["max_ulp"] for r in runs if r.get("max_ulp") is not None]
+    wsum = sum((r.get("mean_ulp") or 0) * r.get("checks_performed", 0) for r in runs)
+    cov: Dict[str, int] = {}
+    for r in runs:
+        for k, v in (r.get("special_case_coverage") or {}).items():
+            cov[k] = cov.get(k, 0) + v
+    first = runs[0]
+    block = {
+        "status": status,
+        "tier": first.get("tier"),
+        "conformance_level": first.get("conformance_level"),
+        "reference": first.get("reference"),
+        "reference_model": first.get("reference_model"),
+        "profile": first.get("profile"),
+        "flag_check": first.get("flag_check"),
+        "checks_performed": checks,
+        "vectors_excluded_by_profile": sum(r.get("vectors_excluded_by_profile", 0) for r in runs),
+        "mismatch_count": mism,
+        "fraction_within_ulp_budget": (checks - mism) / checks if checks else None,
+        "max_ulp": max(ulps) if ulps else None,
+        "mean_ulp": wsum / checks if checks else None,
+        "special_case_coverage": dict(sorted(cov.items())),
+        "canary_ok": all(r.get("canary_ok", False) for r in runs),
+        "modes_covered": sorted({r["rounding_mode"] for r in runs if r.get("rounding_mode")}),
+        "tininess_covered": sorted({r["tininess"] for r in runs if r.get("tininess")}),
+        "runs": [{k: v for k, v in r.items() if k not in _DROP_FROM_RUN} for r in runs],
+    }
+    block.update(_failure_synthesis(status, runs))
+    return block
+
+
+def load_verification(results_dir: str) -> Dict[str, Dict[str, Any]]:
+    """Group verification_results/*.json by design_id."""
+    import glob
+    by_design: Dict[str, List[Dict[str, Any]]] = {}
+    for f in sorted(glob.glob(os.path.join(results_dir, "*.json"))):
+        with open(f, "r", encoding="utf-8") as fh:
+            r = json.load(fh)
+        by_design.setdefault(r["design_id"], []).append(r)
+    return {did: _verification_block(runs) for did, runs in by_design.items()}
 
 
 def parse_xml_modules(xml_path: str) -> Dict[str, Dict[str, Any]]:
@@ -174,7 +218,7 @@ def overall_status(verif: Dict[str, Any], synth: Dict[str, Any], impl: Dict[str,
         return "ignored:implementation"
     for stage, rec in (("synthesis", synth), ("verification", verif)):
         st = rec.get("status")
-        if st == "fail":
+        if st in ("fail", "aborted"):
             return f"fail:{stage}"
         if st == "ignored":
             return f"ignored:{stage}"
@@ -205,7 +249,7 @@ def flow_instance_id(design: str, backend: str, period: Any = None, nickname: An
 
 def build_records(args: argparse.Namespace) -> List[Dict[str, Any]]:
     xml_index = parse_xml_modules(args.xml)
-    rules = load_verify_rules(args.verify)
+    verification = load_verification(args.results_dir)
     env = collect_environment()
     commits = git_submodule_commits()
 
@@ -236,10 +280,13 @@ def build_records(args: argparse.Namespace) -> List[Dict[str, Any]]:
             meta = parse_generated_sv(path)
             meta["source_path"] = path
         did = design_id(meta)
+        # Single-design mode: build only the requested row and leave the rest of the dataset alone
+        if getattr(args, "design", None) and did != args.design:
+            continue
         xml_row = xml_lookup(xml_index, meta)
         cells = xml_row["cell_count"] if xml_row else None
         synth_status = "pass" if cells and cells > 0 else ("fail" if xml_row is not None else "unknown")
-        verif = apply_verify_rules(meta, rules)
+        verif = verification.get(did) or dict(NOT_RUN)
         impl = {
             "status": "not_run",
             "backend": "openroad-asap7",
@@ -354,11 +401,47 @@ def merge_records(fresh: List[Dict[str, Any]], path: str) -> tuple:
     return rows, stats
 
 
+def upsert_one(out_path: str, json_path: str, rec: Dict[str, Any]) -> bool:
+    """Update or insert (upsert!) a single design's row in the JSONL + JSON, keeping every other row.
+
+    Returns True if an existing row was replaced. A prior implementation block persists because
+    ppa/synthesis has no business clearing ORFS results that a later impl run patched in.
+    """
+    rows: List[Dict[str, Any]] = []
+    if os.path.exists(out_path):
+        with open(out_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line:
+                    rows.append(json.loads(line))
+    did = rec["design_id"]
+    replaced = False
+    for i, r in enumerate(rows):
+        if r.get("design_id") == did:
+            existing_impl = r.get("implementation")
+            if existing_impl and existing_impl.get("status") != "not_run":
+                rec["implementation"] = existing_impl
+                rec["overall_status"] = overall_status(rec["verification"], rec["synthesis"], existing_impl)
+            rows[i] = rec
+            replaced = True
+            break
+    if not replaced:
+        rows.append(rec)
+    os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
+    with open(out_path, "w", encoding="utf-8") as f:
+        for r in rows:
+            f.write(json.dumps(r) + "\n")
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(rows, f, indent=2)
+    return replaced
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Export Yosys/verification results as flow-instance JSONL")
     ap.add_argument("--xml", default=os.path.join(REPO_ROOT, "generated", "cell_count_report.xml"))
     ap.add_argument("--generated", default=os.path.join(REPO_ROOT, "generated"))
-    ap.add_argument("--verify", default=os.path.join(REPO_ROOT, "dataset", "verify_status.json"))
+    ap.add_argument("--results-dir", default=os.path.join(REPO_ROOT, "verification_results"),
+                    help="verification_results/ directory; records join by design_id")
     ap.add_argument("--out", default=os.path.join(REPO_ROOT, "dataset", "flow_instances.jsonl"))
     ap.add_argument("--json", default=os.path.join(REPO_ROOT, "dataset", "flow_instances.json"))
     ap.add_argument(
@@ -367,13 +450,27 @@ def main() -> int:
         help="DESTRUCTIVE: replace the output instead of merging into it. Discards "
              "every OpenROAD implementation result already recorded there.",
     )
+    ap.add_argument("--design", default=None,
+                    help="library/stem: refresh only this row (upsert), keeping every other row and its impl block")
     args = ap.parse_args()
 
     os.chdir(REPO_ROOT)
     records = build_records(args)
     if not records:
-        print("ERROR: no records. Run bash scripts/run_ppa_estimation.sh first, or pass --xml.", file=sys.stderr)
+        if args.design:
+            print(f"ERROR: design {args.design} not found under {args.generated}", file=sys.stderr)
+        else:
+            print("ERROR: no records. Run bash scripts/run_ppa_estimation.sh first, or pass --xml.", file=sys.stderr)
         return 1
+
+    if args.design:
+        rec = records[0]
+        replaced = upsert_one(args.out, args.json, rec)
+        verb = "Updated" if replaced else "Added"
+        print(f"{verb} flow instance for {args.design} -> {args.out}")
+        print(f"  synthesis={rec['synthesis']['status']}  verification={rec['verification']['status']}  "
+              f"overall={rec['overall_status']}")
+        return 0
 
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
     existed = os.path.exists(args.out)
@@ -408,9 +505,13 @@ def main() -> int:
     synth_ok = sum(1 for r in final if (r.get("synthesis") or {}).get("status") == "pass")
     v_pass = sum(1 for r in final if (r.get("verification") or {}).get("status") == "pass")
     v_fail = sum(1 for r in final if (r.get("verification") or {}).get("status") == "fail")
+    counts: Dict[str, int] = {}
+    for r in records:
+        s = r["verification"]["status"]
+        counts[s] = counts.get(s, 0) + 1
     print(f"Wrote {n} flow instances -> {args.out}")
     print(f"  synthesis pass: {synth_ok}/{n}")
-    print(f"  verification pass/fail/other: {v_pass}/{v_fail}/{n - v_pass - v_fail}")
+    print("  verification: " + ", ".join(f"{k}={v}" for k, v in sorted(counts.items())))
     return 0
 
 

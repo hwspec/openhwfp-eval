@@ -9,6 +9,13 @@ from __future__ import annotations
 
 # operator -> {format name: max ULP, "default": fp32 value, "source": citation}
 BUDGETS = {
+    # Correctly rounded, 0 ULP (tier 1). IEEE 754-2019 §5.4.1.
+    "add":        {"fp16": 0, "fp32": 0, "fp64": 0, "default": 0, "source": "IEEE-754 §5.4.1"},
+    "sub":        {"fp16": 0, "fp32": 0, "fp64": 0, "default": 0, "source": "IEEE-754 §5.4.1"},
+    "mul":        {"fp16": 0, "fp32": 0, "fp64": 0, "default": 0, "source": "IEEE-754 §5.4.1"},
+    "div":        {"fp16": 0, "fp32": 0, "fp64": 0, "default": 0, "source": "IEEE-754 §5.4.1"},
+    "fma":        {"fp16": 0, "fp32": 0, "fp64": 0, "default": 0, "source": "IEEE-754 §5.4.1"},
+    "recfn_roundtrip": {"fp16": 0, "fp32": 0, "fp64": 0, "default": 0, "source": "identity (bit-exact)"},
     "sqrt":       {"fp16": 0, "fp32": 0, "fp64": 0, "default": 0, "source": "IEEE-754 §5.4.1 / CUDA"},
     "reciprocal": {"fp16": 0, "fp32": 0, "fp64": 0, "default": 0, "source": "IEEE-754 §5.4.1 / CUDA"},
     "exp":        {"fp16": 2, "fp32": 2, "fp64": 1, "default": 2, "source": "CUDA"},

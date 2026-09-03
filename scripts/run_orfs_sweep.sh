@@ -76,7 +76,7 @@ for job in "${JOBS[@]}"; do
   log ""
   log "======== [$i/$n] $nick  period=${period}ps  $(date -Iseconds) ========"
   if [[ ! -f "$sv" ]]; then
-    log "ERROR: missing $sv (do not rerun run_ppa_estimation.sh — it deletes generated/)"
+    log "ERROR: missing $sv (run 'make rtl' to regenerate it)"
     fail=$((fail + 1))
     continue
   fi

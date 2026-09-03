@@ -64,8 +64,6 @@ def build_record(job, cmp, vectors) -> dict:
             "not_evaluated_reason": profile.not_evaluated_reason,
         },
 
-        # Spelled out rather than left as a bare tier number, so a record explains itself
-        # without the schema next to it.
         "reference": {
             "tier": design["tier"],
             "kind": "exact" if design["tier"] == 1 else "bounded",
@@ -99,11 +97,7 @@ def build_record(job, cmp, vectors) -> dict:
         "vectors_excluded_by_profile": cmp.excluded,
         "exclusion_reasons": dict(sorted(cmp.exclusions.items())),
         "mismatch_count": cmp.mismatches,
-        # Fraction fully within spec. Keeps the strict verdict but tells a 3-ulp near-miss apart
-        # from a design that is right everywhere except a handful of catastrophic inputs.
-        "within_budget_rate": (cmp.checks - cmp.mismatches) / cmp.checks if cmp.checks else None,
-        # Grouped by failure shape with one exemplar each. Listing every failing vector would
-        # bloat the corpus without teaching anything a count does not.
+        "fraction_within_ulp_budget": (cmp.checks - cmp.mismatches) / cmp.checks if cmp.checks else None,
         "mismatch_categories": categories,
         "mismatch_categories_without_exemplar": omitted,
         "special_case_coverage": dict(sorted(cmp.coverage.items())),
