@@ -86,7 +86,7 @@ locks-update:
 manifest:
 	$(PYTHON) scripts/build_manifest.py
 
-# Unit tests, YAML schema syntactic correctness, and descriptor vs.lockfile checks
+# Unit tests, YAML schema syntactic correctness, and descriptor vs. lockfile checks
 selftest:
 	$(PYTHON) scripts/build_manifest.py --check
 	$(PYTHON) -m pytest tests/ -q
