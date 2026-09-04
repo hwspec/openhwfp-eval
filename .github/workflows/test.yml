@@ -40,5 +40,8 @@ jobs:
       - name: Run unit tests, YAML schema, and descriptor vs. lockfile checks
         run: make selftest
 
+      - name: Elaborate RTL
+        run: make rtl
+
       - name: Run RTL vs. lockfile checks
         run: make locks-check
