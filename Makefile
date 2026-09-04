@@ -147,13 +147,13 @@ clean-vectors:
 	@echo "removing cached TestFloat vectors"
 	rm -rf vectors
 
-clean-dataset:
-	@echo "removing the flow-instance dataset"
-	rm -f dataset/flow_instances.jsonl dataset/flow_instances.json
-
-extraclean: clean clean-vectors clean-dataset
+extraclean: clean clean-vectors
 	@echo "removing .venv, native builds and sbt output"
 	rm -rf .venv target project/target project/project
 	@# Both packages ship a clean target that also removes their executables.
 	-$(MAKE) -C $(SOFTFLOAT_BUILD) clean >/dev/null
 	-$(MAKE) -C $(TESTFLOAT_BUILD) clean >/dev/null
+
+clean-dataset:
+	@echo "removing the flow-instance dataset"
+	rm -f dataset/flow_instances.jsonl dataset/flow_instances.json

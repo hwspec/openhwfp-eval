@@ -26,8 +26,28 @@ jobs:
       - name: Set up SBT
         uses: sbt/setup-sbt@v1
 
-      - name: Install Verilator
-        run: sudo apt-get update && sudo apt-get install -y verilator
+      - name: Cache Verilator
+        id: cache-verilator
+        uses: actions/cache@v4
+        with:
+          path: ~/verilator-5.044
+          key: verilator-5.044-${{ runner.os }}
+          
+      - name: Build Verilator 5.044
+        if: steps.cache-verilator.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git autoconf automake libtool make g++ flex bison libfl-dev zlib1g-dev help2man
+          git clone https://github.com/verilator/verilator.git
+          cd verilator
+          git checkout tags/v5.044 -b v5.044build
+          autoconf
+          ./configure --prefix=$HOME/verilator-5.044
+          make -j"$(nproc)"
+          make install
+
+      - name: Add Verilator to PATH
+        run: echo "$HOME/verilator-5.044/bin" >> "$GITHUB_PATH"
 
       - name: Set up Python
         uses: actions/setup-python@v5
