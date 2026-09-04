@@ -6,25 +6,27 @@ It will include testbenches and use-case examples for open-source hardware float
 
 Contents will be migrated from our private repository shortly.
 
-### Cloning the Repository with Submodules
+# Setup
 
-You can clone this repository **with all submodules** in one step:
+## Cloning 
+
+You can clone this repository **with all submodules** in one step (note `--shallow-submodules`; multiple libraries have unnecessary nested submodules):
 
 ```bash
-git clone --recurse-submodules https://github.com/hwspec/openhwfp-eval.git
+git clone --recurse-submodules --shallow-submodules https://github.com/hwspec/openhwfp-eval.git
 ```
-or, if you alreadt cloned the repo w/o submodules, initialize and update them with:
+or, if you already cloned the repo w/o submodules, initialize and update them with (again note `--recursive`):
 ```bash
 git submodule update --init --recursive
 ```
 
-### Dependencies
+## Dependencies
 
-#### JDK 8 or newer
+### JDK 8 or newer
 
 We recommend LTS releases Java 8 and Java 11. You can install the JDK as recommended by your operating system, or use the prebuilt binaries from [AdoptOpenJDK](https://adoptopenjdk.net/).
 
-#### SBT
+### SBT
 
 SBT is the most common built tool in the Scala community. You can download it [here](https://www.scala-sbt.org/index.html).  
 
@@ -45,7 +47,7 @@ sudo apt install openjdk-17-jdk
    sbt --version
 ```
    
-#### Verilator
+### Verilator
 Start clean
 ```
 make distclean || true
@@ -95,11 +97,21 @@ verilator --version
 ```
 ________________________________________________________________________________________________________
 
-#### Setup
+### Python Setup
 
-Run `make setup` the first time you run the repo to build dependencies necessary for the verification flow (e.g. testfloat, various Python libs).
+Run `make setup` the first time you run the repo to build dependencies necessary for the verification flow (e.g. testfloat, various Python libs in `requirements.txt`).
 
-### Generating the dataset from scratch
+# Running
+
+## Architectural overview
+
+This repo utilizes a descriptor-centric approach to streamline external library integration into the dataset (it may be helpful to look at the YAMLs in `descriptors/` for examples). When the dataset generation flow is run, each module's parameters and configuration as defined in the descriptor YAML is:
+
+1. Verified against the **profile** declared in the descriptor,
+2. Synthesized and run through Yosys for PPA evaluation, and 
+3. Implemented and run through OpenROAD (ASAP7) for further evaluation.
+
+## Generating the dataset from scratch
 
 Dataset generation is primarily automated via the `Makefile`; you should not have to run individual scripts in `scripts/` manually.
 The default flow has 4 stages. To go from hardware design to results in `dataset/flow_instances.jsonl` run the following commands in the repo root:
@@ -111,23 +123,40 @@ make impl
 ```
 Or, alternatively, `make all`. 
 To run just one design, you can add `DESIGN=lib/stem` to the end of any command above, e.g. `make verify DESIGN=openfloat/FP_add_32_1`.
-The commands above are detailed in the below section which dive into each part of the flow.
+The commands above are detailed in the below sections which dive into each part of the flow.
 
 #### 1. Build: Elaboration and coherence checks
 
-TODO
-
 `make build`
+
+This step takes each descriptor and elaborates the corresponding hardware module either from Chisel to SV, or simply uses the SV in the library. One important feature of this flow are the lockfiles stored in the `descriptors/_locks` folder. These are automatically generated from the RTL port mapping (via `verilator --json-only`) when a new library is initially onboarded; thereafter the lockfiles should be committed to Git are used as a contract to ensure the elaborated I/O map is coherent with the descriptor's I/O map.
 
 #### 2. Verification: Generated RTL + berkeley-testfloat/GPFR --> cocotb + verilator
 
-TODO
-
 `make verify`
 
-#### 3. PPA: Yosys (generic cell-count / Phase-1 PPA)
+This step takes the descriptor's profile declaration, e.g. 
+```yaml
+profile:
+  rounding_modes:
+  - rne
+  - rtz
+  - rdn
+  - rup
+  - rna
+  - rto
+  rounding_control: port
+  exception_flags: ieee5
+  tininess:
+  - before
+  - after
+  subnormals: supported
+  nan_payload: canonical
+  signed_zero: ieee
+```
+and generates the corresponding test vector suite. There are two tiers of verification: tier 1 is bit-exact for non-transcendental functions and FP16, FP32, or FP64 via berkeley-testfloat, and tier 2 is testing with ULP bounds for transcendentals and other FP formats against the GNU MPFR reference library. Read more about the verification strategy in `scripts/verification/README.md`.
 
-TODO
+#### 3. PPA: Yosys (generic cell-count / Phase-1 PPA)
 
 `make ppa`
 
@@ -145,11 +174,9 @@ Those cell counts are generic Yosys estimates, not routed ASAP7 area.
 
 #### 4. Implementation: OpenROAD / ASAP7 (physical implementation)
 
-TODO
-
 `make impl`
 
-**Docker is the default** (pull a prebuilt image). **Local source build** works on Ubuntu 24.04 but takes 1–3 hours and needs `sudo ./setup.sh`. Skip Bazel; that path is for OpenROAD developers.
+**Docker is the default** (pull a prebuilt image). **Local source build** works on Ubuntu 24.04 but takes 1-3 hours and needs `sudo ./setup.sh`. Skip Bazel; that path is for OpenROAD developers.
 
 ```bash
 # Docker (recommended unless you cannot use Docker)
